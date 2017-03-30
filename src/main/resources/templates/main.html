@@ -165,9 +165,8 @@
 			}, //[可选]
 			ajaxTimeout : 50000, //[可选]全局Ajax请求超时时间(毫秒)
 			pageInfo : {
-				total : 'total',
 				pageCurrent : 'page',
-				size : 'size'
+				pageSize : 'size'
 			}, //[可选]分页参数
 			alertMsg : {
 				displayPosition : 'topcenter',
@@ -340,7 +339,7 @@
 										data-fresh="true"
 										data-options="{id:'datadictionary-page', faicon:'caret-right'}">数据字典</a></li>
 									<li><a
-										href="#" th:href="@{/business/user/page/}"
+										href="#" th:href="@{/user/page/}"
 										data-options="{id:'user-page', faicon:'caret-right'}">用户管理</a></li>
 									<li><a
 										href="#" th:href="@{/business/role/page/}"

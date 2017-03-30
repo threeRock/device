@@ -35,7 +35,7 @@
                 type     : op.type || 'GET',
                 url      : op.url,
                 data     : op.data || {},
-                cache    : false,
+                cache    : true,
                 dataType : 'html',
                 timeout  : BJUI.ajaxTimeout,
                 

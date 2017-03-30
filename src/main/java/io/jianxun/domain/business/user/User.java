@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import io.jianxun.domain.business.BusinessEntity;;
+import io.jianxun.domain.business.AbstractBusinessEntity;;
 
 /**
  * 系统用户
@@ -15,17 +15,20 @@ import io.jianxun.domain.business.BusinessEntity;;
  */
 @Entity
 @Table(name = "jx_sys_user")
-public class User extends BusinessEntity {
+public class User extends AbstractBusinessEntity {
 
 	private static final long serialVersionUID = 585375273427805552L;
 
-	//登录名称
+	// 登录名称
 	@NotNull(message = "{user.username.notnull}")
 	private String username;
-	//密码
+	// 密码
 	private String passowrd;
-	//显示名称
+	// 显示名称
 	private String displayName;
+
+	// 锁定
+	private boolean unlocked = true;
 
 	public String getUsername() {
 		return username;
@@ -50,10 +53,13 @@ public class User extends BusinessEntity {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
-	
-	
-	
-	
 
+	public boolean isUnlocked() {
+		return unlocked;
+	}
+
+	public void setUnlocked(boolean unlocked) {
+		this.unlocked = unlocked;
+	}
 
 }

@@ -251,7 +251,7 @@
                 
                 if (onSwitch) onSwitch.apply(that)
                 
-                //events
+                // events
                 $panel.trigger('bjui.navtab.switch')
             },
             closeTab: function(index, openTabid) {
@@ -436,7 +436,7 @@
             currentIndex = tools.getTabs().length - 1
             this.contextmenu($tab)
             
-            //events
+            // events
             $tab.on('click', function(e) {
                 var $target = $(e.target)
                 
@@ -463,7 +463,13 @@
             this.tools.closeTab(index)
     }
     
-    Navtab.prototype.closeCurrentTab = function(openTabid) { //openTabid can be empty. close current tab by default, and open the last tab
+    Navtab.prototype.closeCurrentTab = function(openTabid) { // openTabid can
+																// be empty.
+																// close current
+																// tab by
+																// default, and
+																// open the last
+																// tab
         if (currentIndex > 0)
             this.tools.closeTab(currentIndex, openTabid)
     }
@@ -574,6 +580,21 @@
                     } else {
                         data = pageData
                     }
+                    /**
+					 * 处理sort参数
+					 */
+                    var pageInfo = BJUI.pageInfo;
+                    var orderProperty = data[pageInfo["orderField"]];
+                    var orderDes = data[pageInfo["orderDirection"]];
+                    if(!orderProperty){
+                    	data["sort"] = "id,desc";
+                    }else{
+                    	if(orderDes){
+                    		data["sort"] = orderProperty +","+orderDes;
+                    	}
+                    }
+                    //end
+                    
                     options.data = $.extend({}, options.data || {}, data)
                 }
             }

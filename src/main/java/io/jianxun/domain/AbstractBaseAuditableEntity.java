@@ -16,7 +16,7 @@ import io.jianxun.domain.business.user.User;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AbstractBaseAuditableEntity extends AbstractBaseEntity implements Auditable {
+public abstract class AbstractBaseAuditableEntity extends AbstractBaseEntity implements Auditable {
 
 	private static final long serialVersionUID = 3042728613468697208L;
 
