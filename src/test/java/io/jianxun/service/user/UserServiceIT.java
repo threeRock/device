@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,7 +37,12 @@ public class UserServiceIT {
 	private LocaleMessageSourceService localeMessageSourceService;
 
 	// test data
-	private User testUser1;
+	private User testUser1, testUser2;
+
+	@Before
+	public void setUp() {
+		userService.deleteAll();
+	}
 
 	@Test
 	public void should_save_success() {
@@ -81,20 +89,71 @@ public class UserServiceIT {
 	}
 
 	@Test
-	public void find_active_all() {
-		testUser1 = new User();
-		testUser1.setUsername("TT");
-		testUser1.setActive(false);
-		userService.directSave(testUser1);
-		User testUser2 = new User();
-		testUser2.setUsername("TTT");
-		testUser2.setActive(true);
-		userService.save(testUser2);
+	public void find_active() {
+		initData();
 		List<User> user_db = userService.findActiveAll();
 		assertThat(user_db).isNotNull();
 		assertThat(user_db.size()).isEqualTo(1);
 		assertThat(user_db).contains(testUser2);
 
+		thrown.expect(BusinessException.class);
+		thrown.expectMessage(localeMessageSourceService.getMessage("entity.isnull"));
+		User searchUser = userService.findActiveOne(testUser1.getId());
+		searchUser = userService.findActiveOne(testUser2.getId());
+		assertThat(searchUser).isEqualTo(testUser2);
+
+		thrown.expect(BusinessException.class);
+		thrown.expectMessage(localeMessageSourceService.getMessage("entity.isnull"));
+		searchUser = userService.findActiveOne(UserPredicates.usernamePredicate(testUser1.getUsername()));
+		searchUser = userService.findActiveOne(UserPredicates.usernamePredicate(testUser2.getUsername()));
+		assertThat(searchUser).isEqualTo(testUser2);
+
+		Page<User> users = userService.findActivePage(UserPredicates.usernamePredicate(testUser1.getUsername()),
+				new PageRequest(0, 2));
+		assertThat(users.hasContent()).isFalse();
+		users = userService.findActivePage(UserPredicates.usernamePredicate(testUser2.getUsername()),
+				new PageRequest(0, 2));
+		assertThat(users.hasContent()).isFalse();
+		assertThat(users.getNumberOfElements()).isEqualTo(1);
+		assertThat(users.getContent().get(0).getUsername()).isEqualTo(testUser2.getUsername());
+
+		users = userService.findActivePage(new PageRequest(0, 2));
+		assertThat(users.hasContent()).isTrue();
+		assertThat(users.getNumberOfElements()).isEqualTo(1);
+		assertThat(users.getContent().get(0).getUsername()).isEqualTo(testUser2.getUsername());
+
+	}
+
+	@Test
+	public void count_active() {
+		initData();
+		long count = userService.countActiveAll();
+		assertThat(count).isEqualTo(1);
+		count = userService.countActiveAll(UserPredicates.usernamePredicate(testUser1.getUsername()));
+		assertThat(count).isEqualTo(0);
+		count = userService.countActiveAll(UserPredicates.usernamePredicate(testUser2.getUsername()));
+		assertThat(count).isEqualTo(1);
+	}
+
+	@Test
+	public void exists_active() {
+		initData();
+		boolean exist = userService.exists(UserPredicates.usernamePredicate(testUser1.getUsername()));
+		assertThat(exist).isFalse();
+		exist = userService.exists(UserPredicates.usernamePredicate(testUser2.getUsername()));
+		assertThat(exist).isTrue();
+
+	}
+
+	private void initData() {
+		testUser1 = new User();
+		testUser1.setUsername("TT");
+		testUser1.setActive(false);
+		userService.directSave(testUser1);
+		testUser2 = new User();
+		testUser2.setUsername("TTT");
+		testUser2.setActive(true);
+		userService.save(testUser2);
 	}
 
 }

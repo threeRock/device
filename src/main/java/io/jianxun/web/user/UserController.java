@@ -41,7 +41,7 @@ public class UserController {
 	String page(Model model, @QuerydslPredicate(root = User.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		Page<User> page = userService.findByPage(predicate, pageable);
+		Page<User> page = userService.findActivePage(predicate, pageable);
 		model.addAllAttributes(util.getPageMap(parameters, page));
 		model.addAllAttributes(util.getSearchMap(parameters));
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;

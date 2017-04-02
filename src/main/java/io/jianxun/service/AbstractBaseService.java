@@ -51,7 +51,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	}
 
 	public boolean exists(Predicate predicate) {
-		return this.repository.exists(predicate);
+		return this.repository.existsActive(predicate);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		return this.repository.findActiveAll(predicate, sort);
 	}
 
-	public List<T> fidnActiveAll(Sort sort) {
+	public List<T> findActiveAll(Sort sort) {
 		return this.repository.findActiveAll(sort);
 	}
 
@@ -75,7 +75,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		return this.repository.findActiveAll(pageable);
 	}
 
-	public Page<T> findByPage(Predicate predicate, Pageable pageable) {
+	public Page<T> findActivePage(Predicate predicate, Pageable pageable) {
 		return this.repository.findActiveAll(predicate, pageable);
 	}
 
@@ -131,21 +131,21 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	}
 
 	@Transactional(readOnly = false)
-	void delete(Iterable<? extends T> entities) {
+	public void delete(Iterable<? extends T> entities) {
 		for (T entity : entities) {
 			delete(entity);
 		}
 	}
 
 	@Transactional(readOnly = false)
-	void deleteAll() {
+	public void deleteAll() {
 		for (T element : findActiveAll()) {
 			delete(element);
 		}
 	}
 
 	@Transactional(readOnly = false)
-	void directDelete(T entity) {
+	public void directDelete(T entity) {
 		this.repository.delete(entity);
 	}
 
