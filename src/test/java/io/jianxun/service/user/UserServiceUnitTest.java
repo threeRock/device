@@ -37,4 +37,5 @@ public class UserServiceUnitTest {
 		User saveUser = userService.save(user);
 		assertThat(saveUser.getUsername()).isEqualTo("XXX");
 	}
+
 }

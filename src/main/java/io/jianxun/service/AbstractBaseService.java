@@ -1,12 +1,12 @@
 package io.jianxun.service;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -14,7 +14,6 @@ import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.AbstractBusinessEntity;
 import io.jianxun.repository.BusinessBaseRepository;
-import io.jianxun.service.spec.ActiveSpecification;
 
 @Transactional(readOnly = true)
 public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
@@ -25,16 +24,6 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	private LocaleMessageSourceService messageSourceService;
 
 	/**
-	 * 读取单个对象
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public T findOne(Long id) {
-		return repository.findOne(id);
-	}
-
-	/**
 	 * 单个可用对象
 	 * 
 	 * @param id
@@ -42,12 +31,52 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	 */
 	public T findActiveOne(Long id) {
 		Assert.notNull("id", messageSourceService.getMessage("id.notnull"));
-		T entity = findOne(id);
-		if (entity == null)
-			throw nullEntityExcepiton();
-		if (!isActive(entity))
-			throw notActiveExcepiton(entity);
+		T entity = repository.findActiveOne(id);
+		entityIsNullAndThrowExcption(entity);
 		return entity;
+	}
+
+	public T findActiveOne(Predicate predicate) {
+		T entity = this.repository.findActiveOne(predicate);
+		entityIsNullAndThrowExcption(entity);
+		return entity;
+	}
+
+	public long countActiveAll() {
+		return this.repository.countActive();
+	}
+
+	public long countActiveAll(Predicate predicate) {
+		return this.repository.countActive(predicate);
+	}
+
+	public boolean exists(Predicate predicate) {
+		return this.repository.exists(predicate);
+	}
+
+	/**
+	 * 获取可用
+	 * 
+	 * @return
+	 */
+	public List<T> findActiveAll() {
+		return this.repository.findActiveAll();
+	}
+
+	public List<T> findActiveAll(Predicate predicate, Sort sort) {
+		return this.repository.findActiveAll(predicate, sort);
+	}
+
+	public List<T> fidnActiveAll(Sort sort) {
+		return this.repository.findActiveAll(sort);
+	}
+
+	public Page<T> findActivePage(Pageable pageable) {
+		return this.repository.findActiveAll(pageable);
+	}
+
+	public Page<T> findByPage(Predicate predicate, Pageable pageable) {
+		return this.repository.findActiveAll(predicate, pageable);
 	}
 
 	/**
@@ -58,10 +87,15 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	 */
 
 	@Transactional(readOnly = false)
-	public T save(T entity) {
+	public <S extends T> S save(S entity) {
 		if (isActive(entity))
 			return this.repository.save(entity);
 		throw notActiveExcepiton(entity);
+	}
+
+	@Transactional(readOnly = false)
+	public <S extends T> S directSave(S entity) {
+		return this.repository.save(entity);
 	}
 
 	/**
@@ -71,50 +105,48 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public Collection<T> save(Collection<T> entities) {
-		for (T entity : entities) {
-			save(entity);
+	public <S extends T> List<S> save(Iterable<S> entities) {
+		List<S> result = new ArrayList<S>();
+		for (S entity : entities) {
+			result.add(save(entity));
 		}
-		return entities;
+		return result;
 	}
 
-	/**
-	 * 批量保存(不验证是否为可用)
-	 * 
-	 * @param entities
-	 * @return
-	 */
-	public Collection<T> batchSave(Collection<T> entities) {
-		return this.repository.save(entities);
+	@Transactional(readOnly = false)
+	public T delete(Long id) {
+		Assert.notNull("id", messageSourceService.getMessage("id.notnull"));
+		T entity = repository.findActiveOne(id);
+		entityIsNullAndThrowExcption(entity);
+		return delete(entity);
 	}
 
-	/**
-	 * 获取可用
-	 * 
-	 * @return
-	 */
-	public List<T> findActiveAll() {
-		return this.repository.findAll(activeSpec());
+	@Transactional(readOnly = false)
+	public T delete(T entity) {
+		if (isActive(entity)) {
+			entity.setActive(false);
+			return this.repository.save(entity);
+		}
+		throw notActiveExcepiton(entity);
 	}
 
-	public long countActiveAll() {
-		return this.repository.count(activeSpec());
+	@Transactional(readOnly = false)
+	void delete(Iterable<? extends T> entities) {
+		for (T entity : entities) {
+			delete(entity);
+		}
 	}
 
-	public List<T> findAll() {
-		return this.repository.findAll();
+	@Transactional(readOnly = false)
+	void deleteAll() {
+		for (T element : findActiveAll()) {
+			delete(element);
+		}
 	}
 
-	public long count() {
-		return this.repository.count();
-	}
-
-	public Page<T> findActivePage(Pageable pageable) {
-		return this.repository.findAll(activeSpec(), pageable);
-	}
-
-	public Page<T> findByPage(Predicate predicate, Pageable pageable) {
-		return this.repository.findAll(predicate, pageable);
+	@Transactional(readOnly = false)
+	void directDelete(T entity) {
+		this.repository.delete(entity);
 	}
 
 	/**
@@ -127,9 +159,9 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		return entity.isActive();
 	}
 
-	@SuppressWarnings("unchecked")
-	private Specification<T> activeSpec() {
-		return (Specification<T>) ActiveSpecification.activeSpec();
+	private void entityIsNullAndThrowExcption(T entity) {
+		if (null == entity)
+			throw nullEntityExcepiton();
 	}
 
 	private BusinessException nullEntityExcepiton() {

@@ -81,32 +81,15 @@ public class UserServiceIT {
 	}
 
 	@Test
-	public void should_activefalse_batchsave_success() {
-		List<User> users = Lists.newArrayList();
-		testUser1 = new User();
-		testUser1.setUsername("TT");
-		testUser1.setActive(false);
-		users.add(testUser1);
-		User testUser2 = new User();
-		testUser2.setUsername("TTT");
-		testUser2.setActive(true);
-		users.add(testUser2);
-		assertThat(userService.batchSave(users)).contains(testUser1);
-
-	}
-
-	@Test
 	public void find_active_all() {
-		List<User> users = Lists.newArrayList();
 		testUser1 = new User();
 		testUser1.setUsername("TT");
 		testUser1.setActive(false);
-		users.add(testUser1);
+		userService.directSave(testUser1);
 		User testUser2 = new User();
 		testUser2.setUsername("TTT");
 		testUser2.setActive(true);
-		users.add(testUser2);
-		userService.batchSave(users);
+		userService.save(testUser2);
 		List<User> user_db = userService.findActiveAll();
 		assertThat(user_db).isNotNull();
 		assertThat(user_db.size()).isEqualTo(1);
