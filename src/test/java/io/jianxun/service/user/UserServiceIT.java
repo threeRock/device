@@ -99,6 +99,9 @@ public class UserServiceIT {
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage(localeMessageSourceService.getMessage("entity.isnull"));
 		User searchUser = userService.findActiveOne(testUser1.getId());
+		searchUser = userService.findOne(testUser1.getId());
+		assertThat(searchUser).isNotNull();
+		assertThat(searchUser.isActive()).isFalse();
 		searchUser = userService.findActiveOne(testUser2.getId());
 		assertThat(searchUser).isEqualTo(testUser2);
 
@@ -143,6 +146,29 @@ public class UserServiceIT {
 		exist = userService.exists(UserPredicates.usernamePredicate(testUser2.getUsername()));
 		assertThat(exist).isTrue();
 
+	}
+
+	@Test
+	public void delete() {
+		initData();
+		User u = userService.findActiveOne(UserPredicates.usernamePredicate(testUser2.getUsername()));
+		assertThat(u).isNotNull();
+		userService.delete(u.getId());
+		assertThat(userService.findOne(u.getId())).isNotNull();
+		thrown.expect(BusinessException.class);
+		thrown.expectMessage(localeMessageSourceService.getMessage("entity.isnull"));
+		userService.findActiveOne(u.getId());
+
+		u = new User();
+		u.setUsername("T");
+		u.setDisplayName("T");
+		userService.save(u);
+		User searchUser = userService.findActiveOne(UserPredicates.usernamePredicate("T"));
+		assertThat(searchUser.getUsername()).isEqualTo("T");
+		userService.delete(searchUser);
+		thrown.expect(BusinessException.class);
+		thrown.expectMessage(localeMessageSourceService.getMessage("entity.isnull"));
+		userService.findActiveOne(UserPredicates.usernamePredicate("T"));
 	}
 
 	private void initData() {

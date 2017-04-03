@@ -36,6 +36,11 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		return entity;
 	}
 
+	public T findOne(Long id){
+		Assert.notNull("id", messageSourceService.getMessage("id.notnull"));
+		return this.repository.findOne(id);
+	}
+
 	public T findActiveOne(Predicate predicate) {
 		T entity = this.repository.findActiveOne(predicate);
 		entityIsNullAndThrowExcption(entity);
