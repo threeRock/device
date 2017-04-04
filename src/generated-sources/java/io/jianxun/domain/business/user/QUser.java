@@ -24,8 +24,14 @@ public class QUser extends EntityPathBase<User> {
 
     public final io.jianxun.domain.business.QAbstractBusinessEntity _super;
 
+    public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
+
+    public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
+
     //inherited
     public final BooleanPath active;
+
+    public final CollectionPath<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>> authorities = this.<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>>createCollection("authorities", org.springframework.security.core.GrantedAuthority.class, SimplePath.class, PathInits.DIRECT2);
 
     // inherited
     public final QUser createdBy;
@@ -33,7 +39,11 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
+    public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
+
     public final StringPath displayName = createString("displayName");
+
+    public final BooleanPath enabled = createBoolean("enabled");
 
     //inherited
     public final NumberPath<Long> id;
@@ -44,9 +54,7 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
-    public final StringPath passowrd = createString("passowrd");
-
-    public final BooleanPath unlocked = createBoolean("unlocked");
+    public final StringPath password = createString("password");
 
     public final StringPath username = createString("username");
 

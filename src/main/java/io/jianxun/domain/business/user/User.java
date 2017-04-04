@@ -1,8 +1,13 @@
 package io.jianxun.domain.business.user;
 
+import java.util.Collection;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jianxun.domain.business.AbstractBusinessEntity;;
 
@@ -15,7 +20,7 @@ import io.jianxun.domain.business.AbstractBusinessEntity;;
  */
 @Entity
 @Table(name = "jx_sys_user")
-public class User extends AbstractBusinessEntity {
+public class User extends AbstractBusinessEntity implements UserDetails {
 
 	private static final long serialVersionUID = 585375273427805552L;
 
@@ -23,12 +28,11 @@ public class User extends AbstractBusinessEntity {
 	@NotNull(message = "{user.username.notnull}")
 	private String username;
 	// 密码
-	private String passowrd;
+	private String password;
 	// 显示名称
 	private String displayName;
-
-	// 锁定
-	private boolean unlocked = true;
+	// 账户锁定
+	private boolean accountNonLocked;
 
 	public String getUsername() {
 		return username;
@@ -36,14 +40,6 @@ public class User extends AbstractBusinessEntity {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassowrd() {
-		return passowrd;
-	}
-
-	public void setPassowrd(String passowrd) {
-		this.passowrd = passowrd;
 	}
 
 	public String getDisplayName() {
@@ -54,12 +50,52 @@ public class User extends AbstractBusinessEntity {
 		this.displayName = displayName;
 	}
 
-	public boolean isUnlocked() {
-		return unlocked;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
 	}
 
-	public void setUnlocked(boolean unlocked) {
-		this.unlocked = unlocked;
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return this.accountNonLocked;
+	}
+
+	public void setAccountNonLocked(boolean accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return String.format("[用户id:%d,用户名称%s]", this.getId(), this.getUsername());
 	}
 
 }

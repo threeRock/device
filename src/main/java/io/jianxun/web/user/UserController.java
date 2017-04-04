@@ -10,13 +10,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.user.User;
+import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.user.UserService;
+import io.jianxun.web.dto.PasswordDto;
+import io.jianxun.web.utils.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -29,6 +35,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private LocaleMessageSourceService localeMessageSourceService;
 
 	@Autowired
 	private Utils util;
@@ -50,9 +58,33 @@ public class UserController {
 	/**
 	 * 新增表单页面
 	 */
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('USERCREATE')")
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
 		model.addAttribute("user", new User());
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 修改登录密碼
+	 * 
+	 * @param model
+	 * @param parameters
+	 * @return
+	 */
+	@GetMapping("changepassword/current")
+	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	String changePasswordForm(Model model) {
+		model.addAttribute("pwd", new PasswordDto());
+		return templatePrefix() + "changepassword";
+	}
+
+	@PostMapping("changepassword/current")
+	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	@ResponseBody
+	ReturnDto changePasswordSave(PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
+		userService.changePassword(password.getNewPassword());
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
 	}
 
 	private String templatePrefix() {

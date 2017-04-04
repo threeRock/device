@@ -79,6 +79,7 @@ public class ReturnDto {
 
 	public static ReturnDto ok(String message) {
 		ReturnDto.OK.setMessage(message);
+		ReturnDto.OK.setCloseCurrent(true);
 		return ReturnDto.OK;
 	}
 
@@ -94,8 +95,8 @@ public class ReturnDto {
 		ReturnDto.OK.setTabid(tabId);
 		return ReturnDto.OK;
 	}
-	
-	public static ReturnDto ok(String message, boolean closeCurrent, String tabId,String divId) {
+
+	public static ReturnDto ok(String message, boolean closeCurrent, String tabId, String divId) {
 		ReturnDto.OK.setMessage(message);
 		ReturnDto.OK.setCloseCurrent(closeCurrent);
 		ReturnDto.OK.setTabid(tabId);

@@ -21,7 +21,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 	@Autowired
 	protected BusinessBaseRepository<T> repository;
 	@Autowired
-	private LocaleMessageSourceService messageSourceService;
+	protected LocaleMessageSourceService messageSourceService;
 
 	/**
 	 * 单个可用对象

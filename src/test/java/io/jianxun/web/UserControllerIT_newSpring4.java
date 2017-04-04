@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,8 +26,8 @@ import io.jianxun.web.utils.Utils;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@Import(SecurityConfig.class)
-public class UserControllerUT {
+@Import({ SecurityConfig.class })
+public class UserControllerIT_newSpring4 {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -61,8 +62,17 @@ public class UserControllerUT {
 	@Test
 	public void get_page_should_success() throws Exception {
 		this.mockMvc
-				.perform(get("/user/page/").with(user("testUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
+				.perform(get("/user/page/").with(
+						user("testUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
 				.andDo(print()).andExpect(status().isOk());
+	}
+
+	@Test
+	public void chang_password_with_login_should_success() throws Exception {
+		this.mockMvc
+				.perform(get("/user/changepassword").with(user("userUser")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERCHANGEPASSWROD"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/changepassword"));
 	}
 
 }

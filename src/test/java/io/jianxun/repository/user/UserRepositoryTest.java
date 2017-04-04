@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +22,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.config.AuditorAwareImpl;
-import io.jianxun.config.DataJpaConfig;
 import io.jianxun.domain.business.user.QUser;
 import io.jianxun.domain.business.user.User;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = true)
-@Import(DataJpaConfig.class)
 public class UserRepositoryTest {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -56,17 +53,17 @@ public class UserRepositoryTest {
 		// init user
 		user = new User();
 		user.setUsername(USER_USERNAME);
-		user.setPassowrd("x");
+		user.setPassword("x");
 		user.setDisplayName(USER_USERNAME);
 
 		admin = new User();
 		admin.setUsername(ADMIN_USERNAME);
-		admin.setPassowrd("x");
+		admin.setPassword("x");
 		admin.setDisplayName(ADMIN_USERNAME);
 
 		unActiveUser = new User();
 		unActiveUser.setUsername(UNACTIVE_USERNAME);
-		unActiveUser.setPassowrd("x");
+		unActiveUser.setPassword("x");
 		unActiveUser.setDisplayName(UNACTIVE_USERNAME);
 		unActiveUser.setActive(false);
 		userRepository.save(Lists.newArrayList(user, admin, unActiveUser));
