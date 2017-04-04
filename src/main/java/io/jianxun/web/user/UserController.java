@@ -83,7 +83,7 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
 	@ResponseBody
 	ReturnDto changePasswordSave(PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
-		userService.changePassword(password.getNewPassword());
+		userService.changePassword(password);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
 	}
 

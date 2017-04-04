@@ -171,6 +171,22 @@ public class UserServiceIT {
 		userService.findActiveOne(UserPredicates.usernamePredicate("T"));
 	}
 
+	@Test
+	public void register() {
+		testUser1 = new User();
+		testUser1.setUsername("test");
+		testUser1.setPassword("xxxxxxxx");
+		userService.register(testUser1);
+		User searchUser = userService.findActiveOne(UserPredicates.usernamePredicate("test"));
+		assertThat(searchUser.getUsername()).isEqualTo("test");
+		assertThat(userService.validateOldePassword("xxxxxxxx", searchUser.getPassword()));
+
+		thrown.expect(BusinessException.class);
+		thrown.expectMessage(
+				localeMessageSourceService.getMessage("user.isRegistered", new Object[] { searchUser.getUsername() }));
+		userService.register(searchUser);
+	}
+
 	private void initData() {
 		testUser1 = new User();
 		testUser1.setUsername("TT");

@@ -10,10 +10,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import io.jianxun.domain.business.user.User;
 import io.jianxun.service.AbstractBaseService;
 import io.jianxun.service.BusinessException;
+import io.jianxun.web.dto.PasswordDto;
 
 @Service
 public class UserService extends AbstractBaseService<User> implements UserDetailsService {
@@ -29,10 +31,30 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 * @param newPassword
 	 */
 	@Transactional(readOnly = false)
-	public void changePassword(String newPassword) {
+	public void changePassword(PasswordDto password) {
 		logger.debug("操作人:{},操作内容:修改登录用户{}密码", new Object[] { currentLoginUser(), currentLoginUser() });
-		changePassword(currentLoginUser(), newPassword);
+		User current = currentLoginUser();
+		if (current == null)
+			throw new BusinessException(messageSourceService.getMessage("user.loginUserisnull"));
+		if (validateOldePassword(password.getOldPassword(), currentLoginUser().getPassword())) {
+			current.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
+			super.save(current);
+		}
+		throw new BusinessException(messageSourceService.getMessage("user.passworderror"));
 
+	}
+
+	/**
+	 * 验证密码是否匹配
+	 * @param rawPassword
+	 * @param encodedPassword
+	 * @return
+	 */
+	public boolean validateOldePassword(String rawPassword, String encodedPassword) {
+		if (StringUtils.isEmpty(encodedPassword)) {
+			logger.debug("密码为空,验证失败");
+		}
+		return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
 	}
 
 	/**
