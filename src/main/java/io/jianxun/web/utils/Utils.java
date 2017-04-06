@@ -21,10 +21,9 @@ public class Utils {
 	private final static String ORDER_FIELD = " orderField";
 	private final static String ORDER_DIRECTION = " orderDirection";
 	private final static String CONTENT = "content";
-	
+
 	public final static String PAGE_TEMPLATE_SUFFIX = "page";
 	public final static String SAVE_TEMPLATE_SUFFIX = "form";
-	
 
 	public Map<String, Object> getSearchMap(MultiValueMap<String, String> parameters) {
 		Map<String, Object> map = Maps.newHashMap();
