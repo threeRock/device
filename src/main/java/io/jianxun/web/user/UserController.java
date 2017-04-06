@@ -1,5 +1,7 @@
 package io.jianxun.web.user;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,14 +64,28 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USERCREATE')")
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
 		model.addAttribute("user", new User());
+		model.addAttribute("action", "create");
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 注册用户
+	 * @param user
+	 * @param parameters
+	 * @return
+	 */
+	@PostMapping("create")
+	@PreAuthorize("hasAuthority('USERCREATE')")
+	@ResponseBody
+	ReturnDto createSave(@Valid User user, @RequestParam MultiValueMap<String, String> parameters) {
+		userService.register(user);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.success"));
 	}
 
 	/**
 	 * 修改登录密碼
 	 * 
 	 * @param model
-	 * @param parameters
 	 * @return
 	 */
 	@GetMapping("changepassword/current")
@@ -82,7 +98,7 @@ public class UserController {
 	@PostMapping("changepassword/current")
 	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
 	@ResponseBody
-	ReturnDto changePasswordSave(PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
+	ReturnDto changePasswordSave(@Valid PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
 		userService.changePassword(password);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
 	}

@@ -91,7 +91,7 @@ public class UserServiceUnitTest {
 	@Test
 	public void changeCurrentLoginUserPassword_loginUserIsNull() {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(null);
-		when(messageSourceService.getMessage("user.loginUserIsNull")).thenReturn("loginUserisnull");
+		when(messageSourceService.getMessage("loginUser.IsNull")).thenReturn("loginUserisnull");
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("loginUserisnull");
 		userService.changePassword(new PasswordDto());
@@ -124,7 +124,7 @@ public class UserServiceUnitTest {
 	@Test
 	public void changeCurrentLoginUserPassword_success() {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(loginUser);
-		when(bCryptPasswordEncoder.matches("yyy", CURRENT_USER_ENCODE_PASSWOED)).thenReturn(false);
+		when(bCryptPasswordEncoder.matches("yyy", CURRENT_USER_ENCODE_PASSWOED)).thenReturn(true);
 		PasswordDto password = new PasswordDto();
 		password.setOldPassword("yyy");
 		password.setNewPassword("xxx");
