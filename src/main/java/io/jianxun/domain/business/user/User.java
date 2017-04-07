@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,6 +27,7 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 
 	// 登录名称
 	@NotNull(message = "{user.username.notnull}")
+	@Length(min = 6, message = "{user.username.length}")
 	private String username;
 	// 密码
 	private String password;

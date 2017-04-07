@@ -42,11 +42,20 @@ public class ValidatorUserTests {
 	@Test
 	public void shouldValidateWhenUserNameNotEmpty() {
 		User sysUser = new User();
-		sysUser.setUsername("tt");
+		sysUser.setUsername("tttttt");
 		Validator validator = createValidator();
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(sysUser);
 
 		assertThat(constraintViolations.size()).isEqualTo(0);
+
+		//
+		sysUser.setUsername("tttt");
+		constraintViolations = validator.validate(sysUser);
+
+		assertThat(constraintViolations.size()).isEqualTo(1);
+		
+		ConstraintViolation<User> violation = constraintViolations.iterator().next();
+		assertThat(violation.getMessage()).isEqualTo("用户名称最小6位");
 	}
 
 }
