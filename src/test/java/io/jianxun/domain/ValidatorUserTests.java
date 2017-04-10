@@ -30,6 +30,7 @@ public class ValidatorUserTests {
 
 		// LocaleContextHolder.setLocale(Locale.ENGLISH);
 		User sysUser = new User();
+		sysUser.setUsername(" ");
 		Validator validator = createValidator();
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(sysUser);
 

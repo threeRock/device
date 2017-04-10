@@ -4,9 +4,8 @@ import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -26,7 +25,7 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 	private static final long serialVersionUID = 585375273427805552L;
 
 	// 登录名称
-	@NotNull(message = "{user.username.notnull}")
+	@NotBlank(message = "{user.username.notnull}")
 	private String username;
 	// 密码
 	private String password;
