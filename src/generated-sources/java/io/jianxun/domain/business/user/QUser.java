@@ -31,8 +31,6 @@ public class QUser extends EntityPathBase<User> {
     //inherited
     public final BooleanPath active;
 
-    public final CollectionPath<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>> authorities = this.<org.springframework.security.core.GrantedAuthority, SimplePath<org.springframework.security.core.GrantedAuthority>>createCollection("authorities", org.springframework.security.core.GrantedAuthority.class, SimplePath.class, PathInits.DIRECT2);
-
     // inherited
     public final QUser createdBy;
 
@@ -55,6 +53,8 @@ public class QUser extends EntityPathBase<User> {
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
     public final StringPath password = createString("password");
+
+    public final ListPath<io.jianxun.domain.business.role.Role, io.jianxun.domain.business.role.QRole> roles = this.<io.jianxun.domain.business.role.Role, io.jianxun.domain.business.role.QRole>createList("roles", io.jianxun.domain.business.role.Role.class, io.jianxun.domain.business.role.QRole.class, PathInits.DIRECT2);
 
     public final StringPath username = createString("username");
 

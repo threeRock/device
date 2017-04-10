@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.role.Role;
 
-public class ValidatorUserTests {
+public class ValidatorRoleTests {
 
 	private Validator createValidator() {
 		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
@@ -26,26 +26,27 @@ public class ValidatorUserTests {
 	}
 
 	@Test
-	public void shouldNotValidateWhenUserNameEmpty() {
+	public void shouldNotValidateWhenNameBlank() {
 
 		// LocaleContextHolder.setLocale(Locale.ENGLISH);
-		User sysUser = new User();
-		sysUser.setUsername(" ");
+		Role role = new Role();
+		role.setName(" ");
 		Validator validator = createValidator();
-		Set<ConstraintViolation<User>> constraintViolations = validator.validate(sysUser);
+		Set<ConstraintViolation<Role>> constraintViolations = validator.validate(role);
 
 		assertThat(constraintViolations.size()).isEqualTo(1);
-		ConstraintViolation<User> violation = constraintViolations.iterator().next();
-		assertThat(violation.getPropertyPath().toString()).isEqualTo("username");
-		assertThat(violation.getMessage()).isEqualTo("用户名不能为空");
+		ConstraintViolation<Role> violation = constraintViolations.iterator().next();
+		assertThat(violation.getPropertyPath().toString()).isEqualTo("name");
+		assertThat(violation.getMessage()).isEqualTo("角色名不能为空");
 	}
 
 	@Test
-	public void shouldValidateWhenUserNameNotEmpty() {
-		User sysUser = new User();
-		sysUser.setUsername("tttttt");
+	public void shouldValidateWhenNameNotEmpty() {
+		Role role = new Role();
+		role.setName("tt");
 		Validator validator = createValidator();
-		Set<ConstraintViolation<User>> constraintViolations = validator.validate(sysUser);
+		Set<ConstraintViolation<Role>> constraintViolations = validator.validate(role);
+
 		assertThat(constraintViolations.size()).isEqualTo(0);
 	}
 

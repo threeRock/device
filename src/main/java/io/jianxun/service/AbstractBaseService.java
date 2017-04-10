@@ -98,6 +98,11 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		throw notActiveExcepiton(entity);
 	}
 
+	/**
+	 * 不验证是否可用直接保存
+	 * @param entity
+	 * @return
+	 */
 	@Transactional(readOnly = false)
 	public <S extends T> S directSave(S entity) {
 		return this.repository.save(entity);
