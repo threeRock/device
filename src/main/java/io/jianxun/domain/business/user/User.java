@@ -127,6 +127,21 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 		return false;
 	}
 
+	/**
+	 * @return the roles
+	 */
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	/**
+	 * @param roles
+	 *            the roles to set
+	 */
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

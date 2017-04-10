@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
@@ -25,7 +26,7 @@ public class Utils {
 	public final static String PAGE_TEMPLATE_SUFFIX = "page";
 	public final static String SAVE_TEMPLATE_SUFFIX = "form";
 
-	public Map<String, Object> getSearchMap(MultiValueMap<String, String> parameters) {
+	public void addSearchInfo(Model model, MultiValueMap<String, String> parameters) {
 		Map<String, Object> map = Maps.newHashMap();
 		Set<String> keySet = parameters.keySet();
 		for (String property : keySet) {
@@ -39,11 +40,11 @@ public class Utils {
 				}
 			}
 		}
-		return map;
+		model.addAllAttributes(map);
 	}
 
 	// 分页相关参数设定
-	public Map<String, Object> getPageMap(MultiValueMap<String, String> parameters, Page<?> page) {
+	public void addPageInfo(Model model, MultiValueMap<String, String> parameters, Page<?> page) {
 		Map<String, Object> map = Maps.newHashMap();
 		// 分页参数设定
 		map.put(PAGE, Integer.valueOf(page.getNumber()));
@@ -53,7 +54,19 @@ public class Utils {
 		map.put(ORDER_DIRECTION, page.getSort().iterator().next().getDirection());
 		// 列表数据设定
 		map.put(CONTENT, page.getContent());
-		return map;
+		model.addAllAttributes(map);
+	}
+
+	public void addCreateFormAction(Model model) {
+		getFormAction(model, "create");
+	}
+
+	public void addModifyFormAction(Model model) {
+		getFormAction(model, "modify");
+	}
+
+	private void getFormAction(Model model, String action) {
+		model.addAttribute("action", action);
 	}
 
 }

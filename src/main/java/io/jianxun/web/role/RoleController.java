@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -42,9 +43,18 @@ public class RoleController {
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<Role> page = roleService.findActivePage(predicate, pageable);
-		model.addAllAttributes(util.getPageMap(parameters, page));
-		model.addAllAttributes(util.getSearchMap(parameters));
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+	
+	@ModelAttribute(name = "role")
+	private void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+		if (id != null && id != -1L) {
+			Role role = roleService.findOne(id);
+			if (role != null)
+				model.addAttribute("role", role);
+		}
 	}
 
 	private String templatePrefix() {

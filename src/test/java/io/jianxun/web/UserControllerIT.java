@@ -1,5 +1,6 @@
 package io.jianxun.web;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -10,8 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-import org.assertj.core.util.Lists;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +31,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.google.common.collect.Lists;
+
+import io.jianxun.domain.business.role.Role;
 import io.jianxun.domain.business.user.User;
+import io.jianxun.service.role.RoleService;
 import io.jianxun.service.user.UserService;
 
 @RunWith(SpringRunner.class)
@@ -44,15 +51,31 @@ public class UserControllerIT {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoleService roleService;
 
 	private User user, loginUser;
+	private Role userManageRoleInfo, roleManageRoleInfo;
 
 	@Before
 	public void setUp() {
+
+		userManageRoleInfo = new Role();
+		userManageRoleInfo.setName("用户管理角色");
+		userManageRoleInfo.setPermissions(
+				Lists.newArrayList("USERLIST", "USERCREATE", "USERMODIFY", "USERREMOVE", "USERCHANGEPASSWROD"));
+		roleManageRoleInfo = new Role();
+		roleManageRoleInfo.setName("角色管理角色");
+		roleManageRoleInfo.setPermissions(Lists.newArrayList("ROLELIST", "ROLECREATE", "ROLEMODIFY", "ROLEREMOVE"));
+		List<Role> roles = roleService.save(Lists.newArrayList(userManageRoleInfo, roleManageRoleInfo));
+
 		user = new User();
 		user.setUsername(USERNAME);
+		user.setDisplayName(USERNAME);
 		user.setPassword(PASSWORD);
+		user.setRoles(roles);
 		user = userService.register(user);
+
 	}
 
 	/**
@@ -132,7 +155,8 @@ public class UserControllerIT {
 		this.mockMvc
 				.perform(get("/user/create").with(
 						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERCREATE"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/form"));
+				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/form"))
+				.andExpect(content().string(containsString("密码")));
 	}
 
 	@Test
@@ -147,7 +171,6 @@ public class UserControllerIT {
 				.perform(post("/user/create").param("username", "tt").param("password", "x").with(csrf())
 						.with(securityContext(securityContext)))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
-
 		this.mockMvc
 				.perform(post("/user/create").param("username", "").param("password", "").with(csrf())
 						.with(securityContext(securityContext)))
@@ -158,17 +181,11 @@ public class UserControllerIT {
 	@Test
 	public void modify_form() throws Exception {
 
-		// 没有权限或者权限错误
-		this.mockMvc
-				.perform(get("/user/modify/{id}", user.getId()).with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
-				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
-
 		this.mockMvc
 				.perform(get("/user/modify/{id}", user.getId()).with(
 						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERMODIFY"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/form"))
-				.andExpect(model().attributeExists("user"));
+				.andDo(print()).andExpect(status().isOk()).andExpect(model().attributeExists("user"))
+				.andExpect(view().name("user/form"));
 	}
 
 	@Test

@@ -8,26 +8,32 @@
 				<tr>
 					<td><label class="control-label x95">登录名：</label> <input
 						type="text" th:field="*{username}" name="username"
-						data-rule="required;remote[business/user/ajax/check/usernameunique, id]"
+						data-rule="required;remote[user/check/usernameunique, id]"
 						size="15" /></td>
 				</tr>
 				<tr>
-					<td><label  class="control-label x95">用户名称：</label> <input
+					<td><label class="control-label x95">用户名称：</label> <input
 						type="text" th:field="*{displayName}" name="displayName"
 						data-rule="required;length[2~10]" size="15" /></td>
 				</tr>
-				<tr>
+				<tr th:unless="${user.id}">
 					<td><label for="j_pwschange_newpassword"
-						class="control-label x95">新密码：</label> <input type="password"
+						class="control-label x95">密码：</label> <input type="password"
 						th:field="*{password}" data-rule="required" name="password"
-						id="j_pwschange_newpassword" value="" placeholder="新密码" size="15" /></td>
+						id="j_pwschange_newpassword" value="" placeholder="密码" size="15" /></td>
 				</tr>
-				<tr>
+				<tr th:unless="${user.id}">
 					<td><label for="j_pwschange_secpassword"
 						class="control-label x95">确认密码：</label> <input type="password"
-						data-rule="required;match(password)" name=""
-						id="j_pwschange_secpassword" value="" placeholder="确认新密码"
-						size="15" /></td>
+						data-rule="required;match(password)" id="j_pwschange_secpassword"
+						value="" placeholder="确认密码" size="15" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x95">角色：</label><span
+						th:each="item : ${roleList}"><input type="checkbox"
+							th:field="*{roles}" th:value="${item.id}" value=""
+							data-toggle="icheck" th:attr="data-label=${item.name}" />
+							&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
 				</tr>
 			</tbody>
 		</table>

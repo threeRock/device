@@ -24,6 +24,7 @@ import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.user.User;
 import io.jianxun.service.LocaleMessageSourceService;
+import io.jianxun.service.role.RoleService;
 import io.jianxun.service.user.UserService;
 import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.ReturnDto;
@@ -44,6 +45,8 @@ public class UserController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private RoleService roleService;
 
 	/**
 	 * 分页列表 支持 查询 分页 及 排序
@@ -54,8 +57,8 @@ public class UserController {
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<User> page = userService.findActivePage(predicate, pageable);
-		model.addAllAttributes(util.getPageMap(parameters, page));
-		model.addAllAttributes(util.getSearchMap(parameters));
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
@@ -66,7 +69,8 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USERCREATE')")
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
 		model.addAttribute("user", new User());
-		model.addAttribute("action", "create");
+		addRoleList(model);
+		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
 	}
 
@@ -86,7 +90,7 @@ public class UserController {
 	}
 
 	/**
-	 * 修改登录密碼
+	 * 修改登录密碼表单
 	 * 
 	 * @param model
 	 * @return
@@ -98,6 +102,13 @@ public class UserController {
 		return templatePrefix() + "changepassword";
 	}
 
+	/**
+	 * 修改登录密码保存
+	 * 
+	 * @param password
+	 * @param parameters
+	 * @return
+	 */
 	@PostMapping("changepassword/current")
 	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
 	@ResponseBody
@@ -106,15 +117,31 @@ public class UserController {
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
 	}
 
+	/**
+	 * 修改用户表单
+	 * 
+	 * @param id
+	 * @param model
+	 * @return
+	 */
 	@GetMapping(value = "/modify/{id}")
 	@PreAuthorize("hasAuthority('USERMODIFY')")
 	public String modify(@PathVariable("id") Long id, Model model) {
 		User user = userService.findActiveOne(id);
 		model.addAttribute("user", user);
+		addRoleList(model);
+		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
 	}
 
+	/**
+	 * 修改用户保存
+	 * 
+	 * @param entity
+	 * @param model
+	 * @return
+	 */
 	@PostMapping(value = "/modify")
 	@PreAuthorize("hasAuthority('USERMODIFY')")
 	@ResponseBody
@@ -129,6 +156,19 @@ public class UserController {
 	public ReturnDto remove(@PathVariable("id") Long id) {
 		userService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.remove.successd"));
+	}
+
+	private void addRoleList(Model model) {
+		model.addAttribute("roleList", roleService.findActiveAll(new Sort("name")));
+	}
+
+	@ModelAttribute(name = "user")
+	private void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+		if (id != null && id != -1L) {
+			User user = userService.findOne(id);
+			if (user != null)
+				model.addAttribute("user", user);
+		}
 	}
 
 	private String templatePrefix() {
