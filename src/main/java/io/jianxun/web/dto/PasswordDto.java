@@ -1,7 +1,8 @@
 package io.jianxun.web.dto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 /**
  * 密码修改dto
@@ -12,10 +13,10 @@ import javax.validation.constraints.NotNull;
  */
 public class PasswordDto {
 	@NotNull(message = "{oldPassword.notNull}")
-	@Min(value=6,message = "{password.minlength}")
+	@Length(min = 6, message = "{password.minlength}")
 	private String oldPassword;
 	@NotNull(message = "{newPassword.notNull}")
-	@Min(value=6,message = "{password.minlength}")
+	@Length(min = 6, message = "{password.minlength}")
 	private String newPassword;
 
 	public String getOldPassword() {

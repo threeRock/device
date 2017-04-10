@@ -34,11 +34,10 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 */
 	@Transactional(readOnly = false)
 	public void changePassword(PasswordDto password) {
-		logger.info("操作人:{},操作内容:修改登录用户{}密码",
-				new Object[] { currentLoginInfo.currentLoginUser(), currentLoginInfo.currentLoginUser() });
 		User current = currentLoginInfo.currentLoginUser();
 		if (current == null)
 			throw new BusinessException(messageSourceService.getMessage("loginUser.IsNull"));
+		logger.info("操作人:{},操作内容:修改登录用户{}密码", new Object[] { current, current });
 		if (validateOldePassword(password.getOldPassword(), currentLoginInfo.currentLoginUser().getPassword())) {
 			current.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
 			super.save(current);
@@ -51,8 +50,10 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	/**
 	 * 验证密码是否匹配
 	 * 
-	 * @param rawPassword  密码明文
-	 * @param encodedPassword   加密后密码
+	 * @param rawPassword
+	 *            密码明文
+	 * @param encodedPassword
+	 *            加密后密码
 	 * @return
 	 */
 	public boolean validateOldePassword(String rawPassword, String encodedPassword) {

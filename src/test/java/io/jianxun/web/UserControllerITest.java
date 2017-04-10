@@ -41,10 +41,10 @@ import io.jianxun.service.user.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class UserControllerIT {
+public class UserControllerITest {
 
 	private static final String USERNAME = "TT";
-	private static final String PASSWORD = "tt";
+	private static final String PASSWORD = "tttttt";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -75,6 +75,7 @@ public class UserControllerIT {
 		user.setPassword(PASSWORD);
 		user.setRoles(roles);
 		user = userService.register(user);
+		loginUser = user;
 
 	}
 
@@ -124,23 +125,21 @@ public class UserControllerIT {
 
 	@Test
 	public void change_password_save() throws Exception {
-		loginUser = userService.findActiveOne(user.getId());
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority("USERCHANGEPASSWROD"))));
 		this.mockMvc
-				.perform(post("/user/changepassword/current").param("oldPassword", "tt").param("newPassword", "p")
-						.with(csrf()).with(securityContext(securityContext)))
+				.perform(post("/user/changepassword/current").param("oldPassword", PASSWORD)
+						.param("newPassword", "ppppppp").with(csrf())
+						.with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
 		this.mockMvc
 				.perform(post("/user/changepassword/current").param("oldPassword", "errorpassword")
-						.param("newPassword", "p").with(csrf()).with(securityContext(securityContext)))
+						.param("newPassword", "p").with(csrf())
+						.with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 
 		this.mockMvc
 				.perform(post("/user/changepassword/current").param("oldPassword", "").param("newPassword", "")
-						.with(csrf()).with(securityContext(securityContext)))
+						.with(csrf()).with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 	}
 
@@ -162,18 +161,13 @@ public class UserControllerIT {
 	@Test
 	public void create_save() throws Exception {
 
-		loginUser = userService.findActiveOne(user.getId());
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority("USERCREATE"))));
-
 		this.mockMvc
 				.perform(post("/user/create").param("username", "tt").param("password", "x").with(csrf())
-						.with(securityContext(securityContext)))
+						.with(securityContext(initSecurityContext("USERCREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 		this.mockMvc
 				.perform(post("/user/create").param("username", "").param("password", "").with(csrf())
-						.with(securityContext(securityContext)))
+						.with(securityContext(initSecurityContext("USERCREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 
 	}
@@ -191,19 +185,17 @@ public class UserControllerIT {
 	@Test
 	public void modify_save() throws Exception {
 
-		loginUser = userService.findActiveOne(user.getId());
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority("USERMODIFY"))));
-
 		this.mockMvc
 				.perform(post("/user/modify").param("username", "tt").param("id", user.getId().toString()).with(csrf())
-						.with(securityContext(securityContext)))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
+						.with(securityContext(initSecurityContext("USERMODIFY"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
+				.andExpect(jsonPath("$.message").value("用户保存成功"));
+		;
 
 		// 登录名为空 请求失败
 		this.mockMvc
-				.perform(post("/user/create").param("username", "").with(csrf()).with(securityContext(securityContext)))
+				.perform(post("/user/create").param("username", "").with(csrf())
+						.with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 
 	}
@@ -211,14 +203,19 @@ public class UserControllerIT {
 	@Test
 	public void delete_save() throws Exception {
 
-		loginUser = userService.findActiveOne(user.getId());
+		this.mockMvc
+				.perform(get("/user/remove/{id}", user.getId()).with(csrf())
+						.with(securityContext(initSecurityContext("USERREMOVE"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
+				.andExpect(jsonPath("$.message").value("用户删除成功"));
+
+	}
+
+	private SecurityContext initSecurityContext(String permission) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority("USERREMOVE"))));
-
-		this.mockMvc.perform(get("/user/remove/{id}", user.getId()).with(csrf()).with(securityContext(securityContext)))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
-
+				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
+		return securityContext;
 	}
 
 }

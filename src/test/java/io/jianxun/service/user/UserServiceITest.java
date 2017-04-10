@@ -25,7 +25,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class UserServiceIT {
+public class UserServiceITest {
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();

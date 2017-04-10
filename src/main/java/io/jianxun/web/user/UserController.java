@@ -163,7 +163,7 @@ public class UserController {
 	}
 
 	@ModelAttribute(name = "user")
-	private void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
 			User user = userService.findOne(id);
 			if (user != null)
