@@ -307,7 +307,7 @@
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">我的账户 <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" th:href="@{/business/user/changepassword}"
+							<li><a href="#" th:href="@{/user/changepassword}"
 								data-toggle="dialog" data-id="changepwd_page" data-mask="true"
 								data-width="480" data-height="260">&nbsp;<span
 									class="glyphicon glyphicon-lock"></span> 修改密码&nbsp;
@@ -330,19 +330,15 @@
 
 						<li class="active"><a href="javascript:;"
 							data-toggle="slidebar"><i class="fa fa-check-square-o"></i>
-								装备信息管理</a>
+								设备信息管理</a>
 							<div class="items hide" data-noinit="true">
 								<ul
 									class="menu-items" data-tit="系统设置" data-faicon="cog">
 									<li><a
-										href="#" th:href="@{/business/datadic/page/}"
-										data-fresh="true"
-										data-options="{id:'datadictionary-page', faicon:'caret-right'}">数据字典</a></li>
-									<li><a
 										href="#" th:href="@{/user/page/}"
 										data-options="{id:'user-page', faicon:'caret-right'}">用户管理</a></li>
 									<li><a
-										href="#" th:href="@{/business/role/page/}"
+										href="#" th:href="@{/role/page/}"
 										data-options="{id:'role-page', faicon:'caret-right'}">角色管理</a></li>
 								</ul>
 

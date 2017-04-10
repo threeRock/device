@@ -6,8 +6,8 @@
 			type="hidden" name="orderField" th:value="${orderField}" /> <input
 			type="hidden" name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>登录名：</label><input type="text" th:value="${username}" value=""
-				name="username" class="form-control" size="10" />&nbsp;<label>用户名：</label><input
+			<label>登录名称</label><input type="text" th:value="${username}" value=""
+				name="username" class="form-control" size="10" />&nbsp;<label>显示名称</label><input
 				type="text" th:value="${displayName}" value="" name="displayName"
 				class="form-control" size="10" />&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
@@ -17,36 +17,35 @@
 	<div class="pull-left">
 		<button sec:authorize="hasAnyAuthority('ALL','USER_CREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
-			data-id="user-form-new" data-url="business/user/create">新增--用户信息</button>
+			data-id="user-form-new" data-url="business/user/create">新增用户</button>
 		<button sec:authorize="hasAnyAuthority('ALL','USER_RESETPASSWORD')"
 			type="button" data-toggle="navtab" class="btn-green"
 			data-id="user-form-restpassword"
-			data-url="business/user/resetpassword/{#bjui-selected}">重置密码--用户信息</button>
+			data-url="business/user/resetpassword/{#bjui-selected}">修改密码</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
 	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
 		<thead>
 			<tr>
-				<th data-order-field="username">登录名</th>
-				<th data-order-field="displayName">用户名</th>
-				<th>是否锁定</th>
+				<th data-order-field="username">登录名称</th>
+				<th data-order-field="displayName">显示名称</th>
+				<th>角色信息</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.username}">登录名</td>
-				<td th:text="${e.displayName}">用户名</td>
-				<td th:text="${!e.accountNonLocked}">是否锁定</td>
-				<td><a sec:authorize="hasAnyAuthority('ALL','USER_MODIFY')"
+				<td th:text="${e.displayName}">显示名称</td>
+				<td>角色信息</td>
+				<td><a sec:authorize="hasAnyAuthority('ALL','USERMODIFY')"
 					th:href="@{/business/user/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
-					data-id="user-modify-form" data-title="修改-用户信息">修改</a> <a
-					sec:authorize="hasAnyAuthority('ALL','USER_REMOVE')"
+					data-id="user-modify-form" data-title="修改用户">修改</a> <a
+					sec:authorize="hasAnyAuthority('ALL','USERREMOVE')"
 					th:href="@{/business/user/remove/{id}(id=${e.id})}" href="#"
-					class="btn btn-red" data-toggle="doajax"
-					data-confirm-msg="确定要删除该行信息吗？">删除</a></td>
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>
 	</table>

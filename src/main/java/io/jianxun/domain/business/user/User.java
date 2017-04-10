@@ -1,15 +1,28 @@
 package io.jianxun.domain.business.user;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;;
+import com.google.common.collect.Lists;
+
+import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.business.role.Role;;
 
 /**
  * 系统用户
@@ -34,6 +47,16 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 	// 账户锁定
 	private boolean accountNonLocked;
 
+	// 角色信息
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "jx_sys_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "role_id") })
+	// Fecth策略定义
+	@Fetch(FetchMode.SUBSELECT)
+	// 集合按id排序.
+	@OrderBy("id")
+	private List<Role> roles = Lists.newArrayList();
+
 	public String getUsername() {
 		return username;
 	}
@@ -51,8 +74,24 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 	}
 
 	@Override
+	@Transient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		if (this.roles.size() == 0)
+			return AuthorityUtils.commaSeparatedStringToAuthorityList("");
+		StringBuilder commaBuilder = new StringBuilder();
+		for (Role role : roles) {
+			if (!role.isActive())
+				continue;
+			List<String> permissions = role.getPermissions();
+			if (permissions == null || permissions.size() < 1) {
+				continue;
+			}
+			for (String permission : permissions) {
+				commaBuilder.append(permission.toUpperCase()).append(",");
+			}
+		}
+		String authorities = commaBuilder.substring(0, commaBuilder.length() - 1);
+		return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 	}
 
 	@Override
