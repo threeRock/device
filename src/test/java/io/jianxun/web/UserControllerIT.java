@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -151,6 +152,55 @@ public class UserControllerIT {
 				.perform(post("/user/create").param("username", "").param("password", "").with(csrf())
 						.with(securityContext(securityContext)))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
+
+	}
+
+	@Test
+	public void modify_form() throws Exception {
+
+		// 没有权限或者权限错误
+		this.mockMvc
+				.perform(get("/user/modify/{id}", user.getId()).with(user("testUser").password("password")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
+
+		this.mockMvc
+				.perform(get("/user/modify/{id}", user.getId()).with(
+						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERMODIFY"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/form"))
+				.andExpect(model().attributeExists("user"));
+	}
+
+	@Test
+	public void modify_save() throws Exception {
+
+		loginUser = userService.findActiveOne(user.getId());
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
+				Lists.newArrayList(new SimpleGrantedAuthority("USERMODIFY"))));
+
+		this.mockMvc
+				.perform(post("/user/modify").param("username", "tt").param("id", user.getId().toString()).with(csrf())
+						.with(securityContext(securityContext)))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
+
+		// 登录名为空 请求失败
+		this.mockMvc
+				.perform(post("/user/create").param("username", "").with(csrf()).with(securityContext(securityContext)))
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
+
+	}
+
+	@Test
+	public void delete_save() throws Exception {
+
+		loginUser = userService.findActiveOne(user.getId());
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
+				Lists.newArrayList(new SimpleGrantedAuthority("USERREMOVE"))));
+
+		this.mockMvc.perform(get("/user/remove/{id}", user.getId()).with(csrf()).with(securityContext(securityContext)))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
 	}
 

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,6 +72,7 @@ public class UserController {
 
 	/**
 	 * 注册用户
+	 * 
 	 * @param user
 	 * @param parameters
 	 * @return
@@ -101,6 +104,31 @@ public class UserController {
 	ReturnDto changePasswordSave(@Valid PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
 		userService.changePassword(password);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
+	}
+
+	@GetMapping(value = "/modify/{id}")
+	@PreAuthorize("hasAuthority('USERMODIFY')")
+	public String modify(@PathVariable("id") Long id, Model model) {
+		User user = userService.findActiveOne(id);
+		model.addAttribute("user", user);
+		return templatePrefix() + "form";
+
+	}
+
+	@PostMapping(value = "/modify")
+	@PreAuthorize("hasAuthority('USERMODIFY')")
+	@ResponseBody
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "user") User entity, Model model) {
+		userService.save(entity);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.successd"));
+	}
+
+	@GetMapping("remove/{id}")
+	@PreAuthorize("hasAuthority('USERREMOVE')")
+	@ResponseBody
+	public ReturnDto remove(@PathVariable("id") Long id) {
+		userService.delete(id);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.remove.successd"));
 	}
 
 	private String templatePrefix() {
