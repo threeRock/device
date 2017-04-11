@@ -17,8 +17,15 @@ public class UserPredicates {
 
 	// 用户名查询
 	public static Predicate usernamePredicate(String username) {
+		return usernameAndIdNotPredicate(username, null);
+	}
+
+	// 用户名及ID查询
+	public static Predicate usernameAndIdNotPredicate(String username, Long id) {
 		QUser user = QUser.user;
-		return user.username.eq(username);
+		if (id == null)
+			return user.username.eq(username);
+		return user.id.ne(id).and(usernamePredicate(username));
 	}
 
 }

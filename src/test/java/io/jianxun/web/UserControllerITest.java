@@ -54,7 +54,7 @@ public class UserControllerITest {
 	@Autowired
 	private RoleService roleService;
 
-	private User user, loginUser;
+	private User user, loginUser, other;
 	private Role userManageRoleInfo, roleManageRoleInfo;
 
 	@Before
@@ -76,6 +76,13 @@ public class UserControllerITest {
 		user.setRoles(roles);
 		user = userService.register(user);
 		loginUser = user;
+
+		other = new User();
+		other.setUsername(USERNAME + 1);
+		other.setDisplayName(USERNAME + 1);
+		other.setPassword(PASSWORD);
+		other.setRoles(roles);
+		other = userService.register(other);
 
 	}
 
@@ -108,6 +115,7 @@ public class UserControllerITest {
 				.andDo(print()).andExpect(status().isOk());
 	}
 
+	// 重置密码
 	@Test
 	public void chang_password_form() throws Exception {
 
@@ -169,6 +177,12 @@ public class UserControllerITest {
 				.perform(post("/user/create").param("username", "").param("password", "").with(csrf())
 						.with(securityContext(initSecurityContext("USERCREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
+		// 验证重复登录名称
+		this.mockMvc
+				.perform(post("/user/create").param("username", USERNAME).param("password", "x").with(csrf())
+						.with(securityContext(initSecurityContext("USERCREATE"))))
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
+						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TT 用户名已存在，不能重复使用  <br />"));
 
 	}
 
@@ -190,13 +204,25 @@ public class UserControllerITest {
 						.with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("用户保存成功"));
-		;
 
 		// 登录名为空 请求失败
 		this.mockMvc
 				.perform(post("/user/create").param("username", "").with(csrf())
 						.with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
+
+		// 验证ID和登录名称相同也可以保存
+		this.mockMvc
+				.perform(post("/user/modify").param("username", USERNAME).param("id", user.getId().toString())
+						.with(csrf()).with(securityContext(initSecurityContext("USERMODIFY"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
+				.andExpect(jsonPath("$.message").value("用户保存成功"));
+		// 验证ID不同登录名称相同不可以保存
+		this.mockMvc
+				.perform(post("/user/modify").param("username", USERNAME).param("id", other.getId().toString())
+						.with(csrf()).with(securityContext(initSecurityContext("USERMODIFY"))))
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
+						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TT 用户名已存在，不能重复使用  <br />"));
 
 	}
 
@@ -210,6 +236,8 @@ public class UserControllerITest {
 				.andExpect(jsonPath("$.message").value("用户删除成功"));
 
 	}
+
+	// 管理员修改密码
 
 	private SecurityContext initSecurityContext(String permission) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();

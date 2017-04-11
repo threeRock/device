@@ -12,7 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +49,15 @@ public class UserController {
 	private Utils util;
 	@Autowired
 	private RoleService roleService;
+
+	@Autowired
+	private UserValidator userValidator;
+
+	@InitBinder
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(userValidator);
+
+	}
 
 	/**
 	 * 分页列表 支持 查询 分页 及 排序

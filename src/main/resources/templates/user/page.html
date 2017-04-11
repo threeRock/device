@@ -15,7 +15,7 @@
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button sec:authorize="hasAnyAuthority('ALL','USER_CREATE')"
+		<button sec:authorize="hasAnyAuthority('ALL','USERCREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="user-form-new" data-url="business/user/create">新增用户</button>
 		<button sec:authorize="hasAnyAuthority('ALL','USER_RESETPASSWORD')"
@@ -39,12 +39,12 @@
 				<td th:text="${e.username}">登录名</td>
 				<td th:text="${e.displayName}">显示名称</td>
 				<td>角色信息</td>
-				<td><a sec:authorize="hasAnyAuthority('ALL','USERMODIFY')"
-					th:href="@{/business/user/modify/{id}(id=${e.id})}" href="#"
+				<td><a sec:authorize="hasAnyAuthority('USERMODIFY')"
+					th:href="@{/user/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
 					data-id="user-modify-form" data-title="修改用户">修改</a> <a
-					sec:authorize="hasAnyAuthority('ALL','USERREMOVE')"
-					th:href="@{/business/user/remove/{id}(id=${e.id})}" href="#"
+					sec:authorize="hasAnyAuthority('USERREMOVE')"
+					th:href="@{/user/remove/{id}(id=${e.id})}" href="#"
 					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>

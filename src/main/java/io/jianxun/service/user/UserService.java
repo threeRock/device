@@ -105,12 +105,27 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 				messageSourceService.getMessage("user.isRegistered", new Object[] { user.getUsername() }));
 	}
 
+	/**
+	 * 通过登录名加载用户
+	 */
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
 		User loginUser = this.repository.findActiveOne(UserPredicates.usernamePredicate(username));
 		if (loginUser == null)
 			throw new BusinessException(messageSourceService.getMessage("user.notfound"));
 		return loginUser;
+
+	}
+
+	/**
+	 * 验证用户名是否重复
+	 * 
+	 * @param username
+	 * @param id
+	 * @return
+	 */
+	public boolean validateUsernameUnique(String username, Long id) {
+		return (countActiveAll(UserPredicates.usernameAndIdNotPredicate(username, id)) != 0);
 
 	}
 
