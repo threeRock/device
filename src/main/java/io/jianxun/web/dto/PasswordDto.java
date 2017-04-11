@@ -3,6 +3,7 @@ package io.jianxun.web.dto;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 密码修改dto

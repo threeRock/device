@@ -112,7 +112,7 @@ public class UserController {
 	@ResponseBody
 	ReturnDto changePasswordSave(@Valid PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
 		userService.changePassword(password);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("user.resetpassword.success"));
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.resetpassword.successed"));
 	}
 
 	/**

@@ -47,8 +47,9 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 			throw new BusinessException(messageSourceService.getMessage("loginUser.IsNull"));
 		logger.info("操作人:{},操作内容:修改登录用户{}密码", new Object[] { current, current });
 		if (validateOldePassword(password.getOldPassword(), currentLoginInfo.currentLoginUser().getPassword())) {
-			current.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
-			super.save(current);
+			User u = this.findActiveOne(current.getId());
+			u.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
+			super.save(u);
 			return;
 		}
 		throw new BusinessException(messageSourceService.getMessage("user.passwordValidateError"));
