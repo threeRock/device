@@ -49,7 +49,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 		if (validateOldePassword(password.getOldPassword(), currentLoginInfo.currentLoginUser().getPassword())) {
 			User u = this.findActiveOne(current.getId());
 			u.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
-			super.save(u);
+			save(u);
 			return;
 		}
 		throw new BusinessException(messageSourceService.getMessage("user.passwordValidateError"));
@@ -100,7 +100,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 		if (user.isNew()) {
 			// 密码加密
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			return super.save(user);
+			return save(user);
 		}
 		logger.debug("注册操作失败，用户 {} 已经注册", user);
 		throw new BusinessException(
@@ -130,6 +130,25 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 		Long count = countActiveAll(UserPredicates.usernameAndIdNotPredicate(username, id));
 		return count == 0;
 
+	}
+
+	/**
+	 * 验证用户是否是超级管理员
+	 * 
+	 * @param id
+	 * @param model
+	 */
+	public boolean validateIsSuperAdmin(User user) {
+		if (user != null && user.getId() != null)
+			return 1L == user.getId();
+		return false;
+	}
+
+	@Override
+	public <S extends User> S save(S user) {
+		if (validateIsSuperAdmin(user))
+			throw new BusinessException(messageSourceService.getMessage("cannot.modify.superadmin"));
+		return super.save(user);
 	}
 
 	@Transactional(readOnly = false)
