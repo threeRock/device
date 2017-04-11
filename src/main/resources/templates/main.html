@@ -263,6 +263,10 @@
 
 			
 
+						
+
+			
+
 		}
 		/*<![CDATA[*/
 		if (treeNode.target && treeNode.target == 'dialog')
@@ -303,11 +307,11 @@
 							<span id="bjui-date"></span> <span id="bjui-clock"></span>
 						</div></li>
 					<li><a href="#">当前用户:<span
-							sec:authentication="principal.name">未知用户</span></a></li>
+							sec:authentication="principal.displayName"></span></a></li>
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">我的账户 <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="#" th:href="@{/user/changepassword}"
+							<li><a href="#" th:href="@{/user/changepassword/current}"
 								data-toggle="dialog" data-id="changepwd_page" data-mask="true"
 								data-width="480" data-height="260">&nbsp;<span
 									class="glyphicon glyphicon-lock"></span> 修改密码&nbsp;
@@ -332,13 +336,10 @@
 							data-toggle="slidebar"><i class="fa fa-check-square-o"></i>
 								设备信息管理</a>
 							<div class="items hide" data-noinit="true">
-								<ul
-									class="menu-items" data-tit="系统设置" data-faicon="cog">
-									<li><a
-										href="#" th:href="@{/user/page/}"
+								<ul class="menu-items" data-tit="系统设置" data-faicon="cog">
+									<li><a href="#" th:href="@{/user/page/}"
 										data-options="{id:'user-page', faicon:'caret-right'}">用户管理</a></li>
-									<li><a
-										href="#" th:href="@{/role/page/}"
+									<li><a href="#" th:href="@{/role/page/}"
 										data-options="{id:'role-page', faicon:'caret-right'}">角色管理</a></li>
 								</ul>
 
