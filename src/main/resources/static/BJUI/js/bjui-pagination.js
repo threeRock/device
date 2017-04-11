@@ -59,7 +59,7 @@
                 return {start: start + 1, end:end + 1}
             },
             getCurrentPage: function() {
-                var pageCurrent = parseInt(options.pageCurrent)
+                var pageCurrent = parseInt(options.pageCurrent)+1
                 
                 return (isNaN(pageCurrent)) ? 1 : pageCurrent
             },
@@ -134,6 +134,7 @@
                 
                 if (pageCurrent && pageCurrent.isPositiveInteger()) {
                     that.setClientPaging(pagingInfo)
+                    pagingInfo["pageCurrent"] = pagingInfo["pageCurrent"] - 1;
                     $(this).bjuiajax('pageCallback', pagingInfo, that.$element.closest('.bjui-layout'))
                 }
             })
@@ -147,7 +148,12 @@
             $target.on('click', function(e) {
                 var pagingInfo = {pageCurrent:pageCurrent, pageSize:that.options.pageSize}
                 
-                that.setClientPaging(pagingInfo)
+                that.setClientPaging(pagingInfo);
+                var p = pagingInfo["pageCurrent"];
+                if(p -1 <=0)
+                	pagingInfo.pageCurrent = 0;
+                else
+                	pagingInfo.pageCurrent = p -1;
                 $(this).bjuiajax('pageCallback', pagingInfo, that.$element.closest('.bjui-layout'))
                 
                 e.preventDefault()
@@ -198,7 +204,6 @@
     Pagination.prototype.setClientPaging = function(clientPaging) {
         if (BJUI.ui.clientPaging) {
             var $target = this.getTarget()
-            
             $target.data('bjui.clientPaging', $.extend({}, $target.data('bjui.clientPaging') || {}, clientPaging))
         }
     }

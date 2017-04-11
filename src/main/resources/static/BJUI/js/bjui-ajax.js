@@ -288,7 +288,7 @@
     }
     
     Bjuiajax.prototype.doSearch = function(options) {
-        var that = this, $element = that.$element, form = null, op = {pageCurrent:1}, $target = $element.closest('.bjui-layout'), isValid = options.isValid
+        var that = this, $element = that.$element, form = null, op = {pageCurrent:0}, $target = $element.closest('.bjui-layout'), isValid = options.isValid
         
         options = $.extend({}, Bjuiajax.DEFAULTS, typeof options == 'object' && options)
         if (!options.url) options.url = $element.attr('action')
