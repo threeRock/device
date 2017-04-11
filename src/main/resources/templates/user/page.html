@@ -17,11 +17,11 @@
 	<div class="pull-left">
 		<button sec:authorize="hasAnyAuthority('ALL','USERCREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
-			data-id="user-form-new" data-url="business/user/create">新增用户</button>
+			data-id="user-form-new" data-url="user/create">新增用户</button>
 		<button sec:authorize="hasAnyAuthority('ALL','USER_RESETPASSWORD')"
 			type="button" data-toggle="navtab" class="btn-green"
 			data-id="user-form-restpassword"
-			data-url="business/user/resetpassword/{#bjui-selected}">修改密码</button>
+			data-url="user/resetpassword/{#bjui-selected}">修改密码</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">

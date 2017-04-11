@@ -40,19 +40,6 @@ public class UserController {
 		super();
 	}
 
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private LocaleMessageSourceService localeMessageSourceService;
-
-	@Autowired
-	private Utils util;
-	@Autowired
-	private RoleService roleService;
-
-	@Autowired
-	private UserValidator userValidator;
-
 	@InitBinder
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(userValidator);
@@ -161,12 +148,33 @@ public class UserController {
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.successd"));
 	}
 
-	@GetMapping("remove/{id}")
+	/**
+	 * 删除用户
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("/remove/{id}")
 	@PreAuthorize("hasAuthority('USERREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
 		userService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.remove.successd"));
+	}
+
+	/**
+	 * 验证用户名称是否重复
+	 * 
+	 * @param username
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("check/usernameunique")
+	@ResponseBody
+	public String checkUsernameIsUnique(@RequestParam("username") String username, @RequestParam("id") Long id) {
+		if (!this.userService.validateUsernameUnique(username, id))
+			return localeMessageSourceService.getMessage("user.username.isUsed", new Object[] { username });
+		return "";
 	}
 
 	private void addRoleList(Model model) {
@@ -185,5 +193,18 @@ public class UserController {
 	private String templatePrefix() {
 		return "user/";
 	}
+
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private LocaleMessageSourceService localeMessageSourceService;
+
+	@Autowired
+	private Utils util;
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private UserValidator userValidator;
 
 }

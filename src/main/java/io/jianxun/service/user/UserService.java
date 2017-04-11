@@ -125,7 +125,8 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 * @return
 	 */
 	public boolean validateUsernameUnique(String username, Long id) {
-		return (countActiveAll(UserPredicates.usernameAndIdNotPredicate(username, id)) != 0);
+		Long count = countActiveAll(UserPredicates.usernameAndIdNotPredicate(username, id));
+		return count == 0;
 
 	}
 
