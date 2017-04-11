@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.google.common.collect.Lists;
+
+import io.jianxun.domain.business.role.Role;
 import io.jianxun.domain.business.user.User;
 import io.jianxun.service.AbstractBaseService;
 import io.jianxun.service.BusinessException;
+import io.jianxun.service.role.RoleService;
 import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 
@@ -26,6 +30,9 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 
 	@Autowired
 	private CurrentLoginInfo currentLoginInfo;
+
+	@Autowired
+	private RoleService roleService;
 
 	/**
 	 * 修改当前登录用户密码
@@ -100,7 +107,30 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 
 	@Override
 	public User loadUserByUsername(String username) throws UsernameNotFoundException {
-		return this.repository.findActiveOne(UserPredicates.usernamePredicate(username));
+		User loginUser = this.repository.findActiveOne(UserPredicates.usernamePredicate(username));
+		if (loginUser == null)
+			throw new BusinessException(messageSourceService.getMessage("user.notfound"));
+		return loginUser;
+
 	}
 
+	@Transactional(readOnly = false)
+	public void createAdminIfInit() {
+		if (this.repository.findAll().isEmpty())
+			initAdminUser();
+
+	}
+
+	private User initAdminUser() {
+		logger.debug("创建超级管理员用户");
+		Role role = roleService.createSuperRole();
+		if (role == null)
+			throw new BusinessException(messageSourceService.getMessage("user.admininit.error"));
+		User user = new User();
+		user.setUsername(User.SUPER_ADMIN_USERNAME);
+		user.setDisplayName(User.SUPER_ADMIN_DISPLAYNAME);
+		user.setPassword(User.SUPER_ADMIN_PASSWORD);
+		user.setRoles(Lists.newArrayList(role));
+		return this.register(user);
+	}
 }

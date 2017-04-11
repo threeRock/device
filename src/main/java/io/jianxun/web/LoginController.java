@@ -3,17 +3,24 @@ package io.jianxun.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import io.jianxun.service.user.UserService;
+
 @Controller
 public class LoginController {
 
+	@Autowired
+	private UserService userService;
+
 	@GetMapping(value = "login")
 	public String loginForm() {
+		userService.createAdminIfInit();
 		return "login";
 	}
 

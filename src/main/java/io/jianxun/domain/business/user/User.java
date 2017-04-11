@@ -37,6 +37,10 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 
 	private static final long serialVersionUID = 585375273427805552L;
 
+	public static final String SUPER_ADMIN_USERNAME = "admin";
+	public static final String SUPER_ADMIN_DISPLAYNAME = "系统管理员";
+	public static final String SUPER_ADMIN_PASSWORD = "qtgs!Sbgl-";
+
 	// 登录名称
 	@NotBlank(message = "{user.username.notnull}")
 	private String username;
@@ -44,8 +48,6 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 	private String password;
 	// 显示名称
 	private String displayName;
-	// 账户锁定
-	private boolean accountNonLocked;
 
 	// 角色信息
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -105,26 +107,17 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return this.accountNonLocked;
-	}
-
-	public void setAccountNonLocked(boolean accountNonLocked) {
-		this.accountNonLocked = accountNonLocked;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 
 	/**
@@ -150,6 +143,11 @@ public class User extends AbstractBusinessEntity implements UserDetails {
 	@Override
 	public String toString() {
 		return String.format("[用户id:%d,用户名称%s]", this.getId(), this.getUsername());
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
 	}
 
 }

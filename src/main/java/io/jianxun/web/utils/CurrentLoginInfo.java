@@ -20,7 +20,12 @@ public class CurrentLoginInfo {
 		if (authentication == null || !authentication.isAuthenticated()) {
 			return null;
 		}
-		return ((User) authentication.getPrincipal());
+		try {
+			return ((User) authentication.getPrincipal());
+		} catch (Exception e) {
+			return null;
+		}
+
 	}
 
 }
