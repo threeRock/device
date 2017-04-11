@@ -41,7 +41,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 * @param newPassword
 	 */
 	@Transactional(readOnly = false)
-	public void changePassword(PasswordDto password) {
+	public void resetPassword(PasswordDto password) {
 		User current = currentLoginInfo.currentLoginUser();
 		if (current == null)
 			throw new BusinessException(messageSourceService.getMessage("loginUser.IsNull"));

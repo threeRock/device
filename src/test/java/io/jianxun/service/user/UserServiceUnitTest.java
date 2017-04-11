@@ -2,6 +2,7 @@ package io.jianxun.service.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
@@ -94,7 +95,7 @@ public class UserServiceUnitTest {
 		when(messageSourceService.getMessage("loginUser.IsNull")).thenReturn("loginUserisnull");
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("loginUserisnull");
-		userService.changePassword(new PasswordDto());
+		userService.resetPassword(new PasswordDto());
 
 	}
 
@@ -106,7 +107,7 @@ public class UserServiceUnitTest {
 		loginUser.setPassword(null);
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("encodedPasswordIsNull");
-		userService.changePassword(password);
+		userService.resetPassword(password);
 	}
 
 	@Test
@@ -118,18 +119,19 @@ public class UserServiceUnitTest {
 		password.setNewPassword("xxx");
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("validateError");
-		userService.changePassword(password);
+		userService.resetPassword(password);
 	}
 
 	@Test
 	public void changeCurrentLoginUserPassword_success() {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(loginUser);
-		when(bCryptPasswordEncoder.matches("yyy", CURRENT_USER_ENCODE_PASSWOED)).thenReturn(true);
+		when(bCryptPasswordEncoder.matches("yyyyyyyy", CURRENT_USER_ENCODE_PASSWOED)).thenReturn(true);
+		when(userRepository.findActiveOne(anyLong())).thenReturn(loginUser);
 		PasswordDto password = new PasswordDto();
-		password.setOldPassword("yyy");
-		password.setNewPassword("xxx");
-		userService.changePassword(password);
-		verify(bCryptPasswordEncoder, times(1)).encode("xxx");
+		password.setOldPassword("yyyyyyyy");
+		password.setNewPassword("xxxxxxyy");
+		userService.resetPassword(password);
+		verify(bCryptPasswordEncoder, times(1)).encode("xxxxxxyy");
 		verify(userRepository).save(loginUser);
 	}
 
