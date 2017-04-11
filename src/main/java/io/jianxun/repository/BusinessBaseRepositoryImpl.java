@@ -44,29 +44,27 @@ public class BusinessBaseRepositoryImpl<T extends AbstractBusinessEntity> extend
 
 	@Override
 	public List<T> findActiveAll() {
-		return findAll(getActivePredicate());
+		return findAll(getActivePredicate(null));
 	}
 
 	@Override
 	public List<T> findActiveAll(Sort sort) {
-		return findAll(getActivePredicate(), sort);
+		return findAll(getActivePredicate(null), sort);
 	}
-	
-	
 
 	@Override
 	public List<T> findActiveAll(Predicate predicate, Sort sort) {
-		return findAll(getActivePredicate().and(predicate), sort);
+		return findAll(getActivePredicate(predicate), sort);
 	}
 
 	@Override
 	public Page<T> findActiveAll(Predicate predicat, Pageable pageable) {
-		return findAll(getActivePredicate().and(predicat), pageable);
+		return findAll(getActivePredicate(predicat), pageable);
 	}
 
 	@Override
 	public Page<T> findActiveAll(Pageable pageable) {
-		return findAll(getActivePredicate(), pageable);
+		return findAll(getActivePredicate(null), pageable);
 	}
 
 	@Override
@@ -79,27 +77,30 @@ public class BusinessBaseRepositoryImpl<T extends AbstractBusinessEntity> extend
 
 	@Override
 	public T findActiveOne(Predicate predicate) {
-		return findOne(getActivePredicate().and(predicate));
+		return findOne(getActivePredicate(predicate));
 	}
 
 	@Override
 	public long countActive() {
-		return count(getActivePredicate());
+		return count(getActivePredicate(null));
 	}
 
 	@Override
 	public long countActive(Predicate predicate) {
-		return count(getActivePredicate().and(predicate));
+		return count(getActivePredicate(predicate));
 	}
 
 	@Override
 	public boolean existsActive(Predicate predicate) {
-		return exists(getActivePredicate().and(predicate));
+		return exists(getActivePredicate(predicate));
 	}
 
-	private BooleanExpression getActivePredicate() {
+	private Predicate getActivePredicate(Predicate predicate) {
 		BooleanPath activePath = builder.getBoolean(AbstractBusinessEntity.ACTIVE);
-		return activePath.eq(true);
+		BooleanExpression activeExpression = activePath.eq(true);
+		if (predicate != null)
+			activeExpression = activeExpression.and(predicate);
+		return activeExpression;
 	}
 
 }

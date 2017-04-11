@@ -28,7 +28,7 @@ public class UserValidator implements Validator {
 		final User user = (User) target;
 		final String username = user.getUsername();
 		final Long id = user.getId();
-		if (userService.validateUsernameUnique(username, id))
+		if (!userService.validateUsernameUnique(username, id))
 			errors.rejectValue("username", "username.unique",
 					localeMessageSourceService.getMessage("user.username.isUsed", new Object[] { username }));
 

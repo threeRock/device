@@ -14,7 +14,7 @@ public enum PermissionDef {
 	USER_PAGE("USERLIST", "列表", ModuleDef.SYS, DomainDef.SYS_USER), USER_CREATE("USERCREATE", "新增", ModuleDef.SYS,
 			DomainDef.SYS_USER), USER_MODIFY("USERMODIFY", "修改", ModuleDef.SYS, DomainDef.SYS_USER), USER_REMOVE(
 					"USERREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_USER), USER_CHANGEPASSWROD("USERCHANGEPASSWROD",
-							"重置密码", ModuleDef.SYS, DomainDef.SYS_USER), USER_RESETPASSWROD("USERRESETPASSWROD", "修改密码",
+							"修改密码", ModuleDef.SYS, DomainDef.SYS_USER), USER_RESETPASSWROD("USERRESETPASSWROD", "重置密码",
 									ModuleDef.SYS, DomainDef.SYS_USER),
 	// 角色
 	ROLE_PAGE("ROLELIST", "列表", ModuleDef.SYS, DomainDef.SYS_ROLE), ROLE_CREATE("ROLECREATE", "新增", ModuleDef.SYS,

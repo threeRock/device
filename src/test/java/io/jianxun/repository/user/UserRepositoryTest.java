@@ -50,6 +50,7 @@ public class UserRepositoryTest {
 
 		logger.debug("%s", "测试");
 		assertThat(userRepository).isNotNull();
+		userRepository.deleteAll();
 		// init user
 		user = new User();
 		user.setUsername(USER_USERNAME);

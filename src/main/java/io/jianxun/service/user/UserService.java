@@ -21,6 +21,7 @@ import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService extends AbstractBaseService<User> implements UserDetailsService {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -40,7 +40,7 @@ public class UserController {
 		super();
 	}
 
-	@InitBinder
+	@InitBinder("user")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(userValidator);
 
@@ -93,11 +93,11 @@ public class UserController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("changepassword/current")
-	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	@GetMapping("resetpassword/current")
+	@PreAuthorize("hasAuthority('USERRESETPASSWROD')")
 	String changePasswordForm(Model model) {
 		model.addAttribute("pwd", new PasswordDto());
-		return templatePrefix() + "changepassword";
+		return templatePrefix() + "resetpassword";
 	}
 
 	/**
@@ -107,12 +107,12 @@ public class UserController {
 	 * @param parameters
 	 * @return
 	 */
-	@PostMapping("changepassword/current")
-	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	@PostMapping("resetpassword/current")
+	@PreAuthorize("hasAuthority('USERRESETPASSWROD')")
 	@ResponseBody
 	ReturnDto changePasswordSave(@Valid PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
 		userService.changePassword(password);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("user.changepassword.success"));
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.resetpassword.success"));
 	}
 
 	/**

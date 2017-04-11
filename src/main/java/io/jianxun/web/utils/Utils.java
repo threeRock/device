@@ -17,6 +17,7 @@ import com.google.common.collect.Maps;
 public class Utils {
 
 	private final static String PAGE = "page";
+	private final static String PAGE_PLUS_ONE = "pageplusone";
 	private final static String SIZE = "size";
 	private final static String TOTAL = "total";
 	private final static String ORDER_FIELD = " orderField";
@@ -48,6 +49,7 @@ public class Utils {
 		Map<String, Object> map = Maps.newHashMap();
 		// 分页参数设定
 		map.put(PAGE, Integer.valueOf(page.getNumber()));
+		map.put(PAGE_PLUS_ONE, Integer.valueOf(page.getNumber() + 1));
 		map.put(SIZE, Integer.valueOf(page.getSize()));
 		map.put(TOTAL, Long.valueOf(page.getTotalElements()));
 		map.put(ORDER_FIELD, page.getSort().iterator().next().getProperty());

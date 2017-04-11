@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.common.collect.Lists;
 
+import io.jianxun.domain.business.role.PermissionDef;
 import io.jianxun.domain.business.role.Role;
 import io.jianxun.domain.business.user.User;
 import io.jianxun.service.role.RoleService;
@@ -59,7 +60,9 @@ public class UserControllerITest {
 
 	@Before
 	public void setUp() {
-
+		
+		userService.deleteAll();
+		
 		userManageRoleInfo = new Role();
 		userManageRoleInfo.setName("用户管理角色");
 		userManageRoleInfo.setPermissions(
@@ -120,34 +123,32 @@ public class UserControllerITest {
 	public void chang_password_form() throws Exception {
 
 		this.mockMvc
-				.perform(get("/user/changepassword/current").with(user("testUser").password("password")
+				.perform(get("/user/resetpassword/current").with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
 				.andDo(print()).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
 				.andExpect(jsonPath("$.statusCode").value(300));
 
 		this.mockMvc
-				.perform(get("/user/changepassword/current").with(user("userUser")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERCHANGEPASSWROD"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/changepassword"));
+				.perform(get("/user/resetpassword/current").with(user("userUser").authorities(AuthorityUtils
+						.commaSeparatedStringToAuthorityList(PermissionDef.USER_RESETPASSWROD.getCode()))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/resetpassword"));
 	}
 
 	@Test
 	public void change_password_save() throws Exception {
 		this.mockMvc
-				.perform(post("/user/changepassword/current").param("oldPassword", PASSWORD)
+				.perform(post("/user/resetpassword/current").param("oldPassword", PASSWORD)
 						.param("newPassword", "ppppppp").with(csrf())
-						.with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
+						.with(securityContext(initSecurityContext("USERRESETPASSWROD"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
-		this.mockMvc
-				.perform(post("/user/changepassword/current").param("oldPassword", "errorpassword")
-						.param("newPassword", "p").with(csrf())
-						.with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
+		this.mockMvc.perform(post("/user/resetpassword/current").param("oldPassword", "errorpassword")
+				.param("newPassword", "p").with(csrf()).with(securityContext(initSecurityContext("USERRESETPASSWROD"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 
 		this.mockMvc
-				.perform(post("/user/changepassword/current").param("oldPassword", "").param("newPassword", "")
-						.with(csrf()).with(securityContext(initSecurityContext("USERCHANGEPASSWROD"))))
+				.perform(post("/user/resetpassword/current").param("oldPassword", "").param("newPassword", "")
+						.with(csrf()).with(securityContext(initSecurityContext("USERRESETPASSWROD"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 	}
 
@@ -177,6 +178,7 @@ public class UserControllerITest {
 				.perform(post("/user/create").param("username", "").param("password", "").with(csrf())
 						.with(securityContext(initSecurityContext("USERCREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
+
 		// 验证重复登录名称
 		this.mockMvc
 				.perform(post("/user/create").param("username", USERNAME).param("password", "x").with(csrf())
@@ -207,7 +209,7 @@ public class UserControllerITest {
 
 		// 登录名为空 请求失败
 		this.mockMvc
-				.perform(post("/user/create").param("username", "").with(csrf())
+				.perform(post("/user/modify").param("username", "").with(csrf())
 						.with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").exists());
 
