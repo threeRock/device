@@ -191,7 +191,7 @@ public class UserController {
 	}
 
 	private ReturnDto getOptionReturn(String messagekey) {
-		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.success"), true, "user-page");
+		return ReturnDto.ok(localeMessageSourceService.getMessage(messagekey), true, "user-page");
 	}
 
 	private String templatePrefix() {

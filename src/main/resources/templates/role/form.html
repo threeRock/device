@@ -10,6 +10,15 @@
 						type="text" th:field="*{name}" name="name"
 						data-rule="required;length[2~10]" size="15" /></td>
 				</tr>
+				<tr th:each="item : ${domains}">
+					<td><label class="control-label x95"
+						th:text="${item.name + ':'}"></label> <span
+						th:each="i : ${perMaps['__${item.code}__']}"> <input
+							type="checkbox" th:field="*{permissions}" th:value="${i.code}"
+							value="" data-toggle="icheck" th:attr="data-label=${i.name}" />
+							&nbsp;&nbsp;&nbsp;&nbsp;
+					</span></td>
+				</tr>
 			</tbody>
 		</table>
 	</form>

@@ -1,23 +1,21 @@
 <div class="bjui-pageHeader">
-	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/business/role/page}" action="#" method="POST">
-		<input type="hidden" name="size" th:value="${size}" value="30" /> <input
-			type="hidden" name="page" th:value="${page}" value="1" /><input
+	<form id="pagerForm" data-toggle="ajaxsearch" th:action="@{/role/page}"
+		action="#" method="POST">
+		<input type="hidden" name="size" th:value="${size}" value="10" /> <input
+			type="hidden" name="page" th:value="${page}" value="0" /><input
 			type="hidden" name="orderField" th:value="${orderField}" /> <input
 			type="hidden" name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>角色名称</label><input type="text"
-				th:value="${name}" value=""
-				name="name" class="form-control" size="10" />&nbsp; 
-			<button 
-				type="submit" class="btn-default" data-icon="search">查询</button>
+			<label>角色名称</label><input type="text" th:value="${name}" value=""
+				name="name" class="form-control" size="10" />&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
 		<button sec:authorize="hasAnyAuthority('ALL','ROLECREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
-			data-id="role-form-new" data-url="business/role/create">新增角色</button>
+			data-id="role-form-new" data-url="role/create">新增角色</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -25,21 +23,19 @@
 		<thead>
 			<tr>
 				<th data-order-field="name">角色名称</th>
-				<th data-order-field="code">瑙掕壊鍚嶇О</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.name}">角色名稱</td>
-				<td><a sec:authorize="hasAnyAuthority('ALL','ROLE_MODIFY')"
-					th:href="@{/business/role/modify/{id}(id=${e.id})}" href="#"
+				<td><a sec:authorize="hasAnyAuthority('ROLEMODIFY')"
+					th:href="@{/role/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
-					data-id="role-modify-form" data-title="淇敼-瑙掕壊淇℃伅">修改</a> <a
-					sec:authorize="hasAnyAuthority('ALL','ROLE_REMOVE')"
-					th:href="@{/business/role/remove/{id}(id=${e.id})}" href="#"
-					class="btn btn-red" data-toggle="doajax"
-					data-confirm-msg="是否确定删除">刪除</a></td>
+					data-id="role-modify-form" data-title="修改角色">修改</a> <a
+					sec:authorize="hasAnyAuthority('ROLEREMOVE')"
+					th:href="@{/role/remove/{id}(id=${e.id})}" href="#"
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">刪除</a></td>
 			</tr>
 		</tbody>
 	</table>

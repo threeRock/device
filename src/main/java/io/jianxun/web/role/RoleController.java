@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.querydsl.core.types.Predicate;
 
+import io.jianxun.domain.business.role.PermissionDef;
 import io.jianxun.domain.business.role.Role;
-import io.jianxun.domain.business.user.User;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.role.RoleService;
 import io.jianxun.web.utils.ReturnDto;
@@ -46,7 +46,7 @@ public class RoleController {
 	 */
 	@RequestMapping(value = { "/", "/page" })
 	@PreAuthorize("hasAuthority('ROLELIST')")
-	String page(Model model, @QuerydslPredicate(root = User.class) Predicate predicate,
+	String page(Model model, @QuerydslPredicate(root = Role.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<Role> page = roleService.findActivePage(predicate, pageable);
@@ -63,6 +63,8 @@ public class RoleController {
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
 		model.addAttribute("role", new Role());
 		util.addCreateFormAction(model);
+		model.addAttribute("domains", PermissionDef.DomainDef.getDomainDefs());
+		model.addAttribute("perMaps", PermissionDef.getPermission());
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
 	}
 
@@ -78,7 +80,7 @@ public class RoleController {
 	@ResponseBody
 	ReturnDto createSave(@Valid Role role, @RequestParam MultiValueMap<String, String> parameters) {
 		roleService.save(role);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("role.save.success"));
+		return ReturnDto.ok(localeMessageSourceService.getMessage("role.save.success"), true, "role-page");
 	}
 
 	/**
@@ -110,7 +112,7 @@ public class RoleController {
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "role") Role role, Model model) {
 		roleService.save(role);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("role.save.successd"));
+		return ReturnDto.ok(localeMessageSourceService.getMessage("role.save.successd"), true, "role-page");
 	}
 
 	@GetMapping("remove/{id}")

@@ -67,6 +67,10 @@ public class Utils {
 		getFormAction(model, "modify");
 	}
 
+	public ReturnDto getOptionReturn(String message, String tabId) {
+		return ReturnDto.ok(message, true, "role-page");
+	}
+
 	private void getFormAction(Model model, String action) {
 		model.addAttribute("action", action);
 	}
