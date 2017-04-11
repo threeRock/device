@@ -84,7 +84,7 @@ public class UserController {
 	@ResponseBody
 	ReturnDto createSave(@Valid User user, @RequestParam MultiValueMap<String, String> parameters) {
 		userService.register(user);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.success"));
+		return getOptionReturn("user.save.successd");
 	}
 
 	/**
@@ -188,6 +188,10 @@ public class UserController {
 			if (user != null)
 				model.addAttribute("user", user);
 		}
+	}
+
+	private ReturnDto getOptionReturn(String messagekey) {
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.save.success"), true, "user-page");
 	}
 
 	private String templatePrefix() {

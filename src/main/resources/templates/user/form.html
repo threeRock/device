@@ -1,6 +1,6 @@
 <div class="bjui-pageContent">
 	<form action="#" id="user_form"
-		th:action="@{/business/user/{path}(path=${action})}" method="POST"
+		th:action="@{/user/{path}(path=${action})}" method="POST"
 		th:object="${user}" data-toggle="validate" data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
