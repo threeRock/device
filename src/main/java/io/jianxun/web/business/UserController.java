@@ -155,7 +155,7 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping("/remove/{id}")
+	@PostMapping("/remove/{id}")
 	@PreAuthorize("hasAuthority('USERREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
