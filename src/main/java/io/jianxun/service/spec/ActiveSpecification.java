@@ -7,7 +7,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 public class ActiveSpecification<T extends AbstractBusinessEntity> {
 

@@ -33,11 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.role.PermissionDef;
-import io.jianxun.domain.business.role.Role;
-import io.jianxun.domain.business.user.User;
-import io.jianxun.service.role.RoleService;
-import io.jianxun.service.user.UserService;
+import io.jianxun.domain.business.PermissionDef;
+import io.jianxun.domain.business.Role;
+import io.jianxun.domain.business.User;
+import io.jianxun.service.business.RoleService;
+import io.jianxun.service.business.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)

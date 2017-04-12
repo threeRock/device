@@ -1,4 +1,4 @@
-package io.jianxun.domain.business.role;
+package io.jianxun.domain.business;
 
 import java.util.List;
 import java.util.Map;

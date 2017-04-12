@@ -1,13 +1,13 @@
-package io.jianxun.web.user;
+package io.jianxun.web.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 import io.jianxun.service.LocaleMessageSourceService;
-import io.jianxun.service.user.UserService;
+import io.jianxun.service.business.UserService;
 
 @Component
 public class UserValidator implements Validator {

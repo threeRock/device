@@ -1,8 +1,8 @@
-package io.jianxun.repository.user;
+package io.jianxun.repository.business;
 
 import java.util.Optional;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 import io.jianxun.repository.BusinessBaseRepository;
 
 public interface UserRepository extends BusinessBaseRepository<User> {

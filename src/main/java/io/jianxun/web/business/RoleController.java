@@ -1,4 +1,4 @@
-package io.jianxun.web.role;
+package io.jianxun.web.business;
 
 import javax.validation.Valid;
 
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.querydsl.core.types.Predicate;
 
-import io.jianxun.domain.business.role.PermissionDef;
-import io.jianxun.domain.business.role.Role;
+import io.jianxun.domain.business.PermissionDef;
+import io.jianxun.domain.business.Role;
 import io.jianxun.service.LocaleMessageSourceService;
-import io.jianxun.service.role.RoleService;
+import io.jianxun.service.business.RoleService;
 import io.jianxun.web.utils.ReturnDto;
 import io.jianxun.web.utils.Utils;
 

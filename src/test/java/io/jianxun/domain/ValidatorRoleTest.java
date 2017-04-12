@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import io.jianxun.domain.business.role.Role;
+import io.jianxun.domain.business.Role;
 
 public class ValidatorRoleTest {
 

@@ -19,7 +19,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.PathBuilder;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 @NoRepositoryBean
 public class BusinessBaseRepositoryImpl<T extends AbstractBusinessEntity> extends QueryDslJpaRepository<T, Long>

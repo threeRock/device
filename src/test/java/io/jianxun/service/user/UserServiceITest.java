@@ -18,9 +18,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
+import io.jianxun.service.business.UserPredicates;
+import io.jianxun.service.business.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

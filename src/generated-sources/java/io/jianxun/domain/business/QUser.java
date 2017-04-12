@@ -1,4 +1,4 @@
-package io.jianxun.domain.business.user;
+package io.jianxun.domain.business;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,13 +16,13 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = -1301291687L;
+    private static final long serialVersionUID = -498563104L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QUser user = new QUser("user");
 
-    public final io.jianxun.domain.business.QAbstractBusinessEntity _super;
+    public final io.jianxun.domain.QAbstractBusinessEntity _super;
 
     public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
 
@@ -54,7 +54,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
-    public final ListPath<io.jianxun.domain.business.role.Role, io.jianxun.domain.business.role.QRole> roles = this.<io.jianxun.domain.business.role.Role, io.jianxun.domain.business.role.QRole>createList("roles", io.jianxun.domain.business.role.Role.class, io.jianxun.domain.business.role.QRole.class, PathInits.DIRECT2);
+    public final ListPath<Role, QRole> roles = this.<Role, QRole>createList("roles", Role.class, QRole.class, PathInits.DIRECT2);
 
     public final StringPath username = createString("username");
 
@@ -79,7 +79,7 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new io.jianxun.domain.business.QAbstractBusinessEntity(type, metadata, inits);
+        this._super = new io.jianxun.domain.QAbstractBusinessEntity(type, metadata, inits);
         this.active = _super.active;
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;

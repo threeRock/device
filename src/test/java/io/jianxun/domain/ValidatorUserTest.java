@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 
 public class ValidatorUserTest {
 

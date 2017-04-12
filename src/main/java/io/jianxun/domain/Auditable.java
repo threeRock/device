@@ -2,7 +2,7 @@ package io.jianxun.domain;
 
 import java.time.LocalDateTime;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 
 public interface Auditable {
 	

@@ -22,8 +22,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.config.AuditorAwareImpl;
-import io.jianxun.domain.business.user.QUser;
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.QUser;
+import io.jianxun.domain.business.User;
+import io.jianxun.repository.business.UserRepository;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = true)

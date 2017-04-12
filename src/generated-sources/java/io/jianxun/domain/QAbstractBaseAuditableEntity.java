@@ -24,14 +24,14 @@ public class QAbstractBaseAuditableEntity extends EntityPathBase<AbstractBaseAud
 
     public final QAbstractBaseEntity _super = new QAbstractBaseEntity(this);
 
-    public final io.jianxun.domain.business.user.QUser createdBy;
+    public final io.jianxun.domain.business.QUser createdBy;
 
     public final DateTimePath<java.time.LocalDateTime> createdDate = createDateTime("createdDate", java.time.LocalDateTime.class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final io.jianxun.domain.business.user.QUser lastModifieBy;
+    public final io.jianxun.domain.business.QUser lastModifieBy;
 
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate = createDateTime("lastModifiedDate", java.time.LocalDateTime.class);
 
@@ -56,8 +56,8 @@ public class QAbstractBaseAuditableEntity extends EntityPathBase<AbstractBaseAud
 
     public QAbstractBaseAuditableEntity(Class<? extends AbstractBaseAuditableEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.createdBy = inits.isInitialized("createdBy") ? new io.jianxun.domain.business.user.QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
-        this.lastModifieBy = inits.isInitialized("lastModifieBy") ? new io.jianxun.domain.business.user.QUser(forProperty("lastModifieBy"), inits.get("lastModifieBy")) : null;
+        this.createdBy = inits.isInitialized("createdBy") ? new io.jianxun.domain.business.QUser(forProperty("createdBy"), inits.get("createdBy")) : null;
+        this.lastModifieBy = inits.isInitialized("lastModifieBy") ? new io.jianxun.domain.business.QUser(forProperty("lastModifieBy"), inits.get("lastModifieBy")) : null;
     }
 
 }

@@ -1,4 +1,4 @@
-package io.jianxun.domain.business.user;
+package io.jianxun.domain.business;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,8 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
-import io.jianxun.domain.business.role.Role;;
+import io.jianxun.domain.AbstractBusinessEntity;;
 
 /**
  * 系统用户

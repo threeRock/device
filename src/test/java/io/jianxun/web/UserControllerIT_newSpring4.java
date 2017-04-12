@@ -20,8 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import io.jianxun.config.SecurityConfig;
-import io.jianxun.service.user.UserService;
-import io.jianxun.web.user.UserController;
+import io.jianxun.service.business.UserService;
+import io.jianxun.web.business.UserController;
 import io.jianxun.web.utils.Utils;
 
 @RunWith(SpringRunner.class)

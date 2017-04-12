@@ -12,7 +12,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

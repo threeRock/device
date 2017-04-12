@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 
 import com.querydsl.core.types.Predicate;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 import io.jianxun.repository.BusinessBaseRepository;
 
 @Transactional(readOnly = true)

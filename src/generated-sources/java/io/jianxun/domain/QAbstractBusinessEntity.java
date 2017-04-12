@@ -1,4 +1,4 @@
-package io.jianxun.domain.business;
+package io.jianxun.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,18 +16,18 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.SupertypeSerializer")
 public class QAbstractBusinessEntity extends EntityPathBase<AbstractBusinessEntity> {
 
-    private static final long serialVersionUID = -864667302L;
+    private static final long serialVersionUID = -1435314690L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QAbstractBusinessEntity abstractBusinessEntity = new QAbstractBusinessEntity("abstractBusinessEntity");
 
-    public final io.jianxun.domain.QAbstractBaseAuditableEntity _super;
+    public final QAbstractBaseAuditableEntity _super;
 
     public final BooleanPath active = createBoolean("active");
 
     // inherited
-    public final io.jianxun.domain.business.user.QUser createdBy;
+    public final io.jianxun.domain.business.QUser createdBy;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate;
@@ -36,7 +36,7 @@ public class QAbstractBusinessEntity extends EntityPathBase<AbstractBusinessEnti
     public final NumberPath<Long> id;
 
     // inherited
-    public final io.jianxun.domain.business.user.QUser lastModifieBy;
+    public final io.jianxun.domain.business.QUser lastModifieBy;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
@@ -62,7 +62,7 @@ public class QAbstractBusinessEntity extends EntityPathBase<AbstractBusinessEnti
 
     public QAbstractBusinessEntity(Class<? extends AbstractBusinessEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new io.jianxun.domain.QAbstractBaseAuditableEntity(type, metadata, inits);
+        this._super = new QAbstractBaseAuditableEntity(type, metadata, inits);
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;
         this.id = _super.id;

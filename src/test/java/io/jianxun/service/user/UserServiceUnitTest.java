@@ -18,10 +18,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import io.jianxun.domain.business.user.User;
-import io.jianxun.repository.user.UserRepository;
+import io.jianxun.domain.business.User;
+import io.jianxun.repository.business.UserRepository;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
+import io.jianxun.service.business.UserService;
 import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 

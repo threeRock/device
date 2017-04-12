@@ -1,4 +1,4 @@
-package io.jianxun.domain.business.role;
+package io.jianxun.domain.business;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 /**
  * 用户权限信息集

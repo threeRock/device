@@ -1,4 +1,4 @@
-package io.jianxun.domain.business.role;
+package io.jianxun.domain.business;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,19 +16,19 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QRole extends EntityPathBase<Role> {
 
-    private static final long serialVersionUID = -1304883143L;
+    private static final long serialVersionUID = -498656117L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QRole role = new QRole("role");
 
-    public final io.jianxun.domain.business.QAbstractBusinessEntity _super;
+    public final io.jianxun.domain.QAbstractBusinessEntity _super;
 
     //inherited
     public final BooleanPath active;
 
     // inherited
-    public final io.jianxun.domain.business.user.QUser createdBy;
+    public final QUser createdBy;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate;
@@ -37,7 +37,7 @@ public class QRole extends EntityPathBase<Role> {
     public final NumberPath<Long> id;
 
     // inherited
-    public final io.jianxun.domain.business.user.QUser lastModifieBy;
+    public final QUser lastModifieBy;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
@@ -67,7 +67,7 @@ public class QRole extends EntityPathBase<Role> {
 
     public QRole(Class<? extends Role> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new io.jianxun.domain.business.QAbstractBusinessEntity(type, metadata, inits);
+        this._super = new io.jianxun.domain.QAbstractBusinessEntity(type, metadata, inits);
         this.active = _super.active;
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;

@@ -1,8 +1,8 @@
-package io.jianxun.service.user;
+package io.jianxun.service.business;
 
 import com.querydsl.core.types.Predicate;
 
-import io.jianxun.domain.business.user.QUser;
+import io.jianxun.domain.business.QUser;
 
 /**
  * 用户相关查询条件

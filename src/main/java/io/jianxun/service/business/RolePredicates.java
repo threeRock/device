@@ -1,8 +1,8 @@
-package io.jianxun.service.role;
+package io.jianxun.service.business;
 
 import com.querydsl.core.types.Predicate;
 
-import io.jianxun.domain.business.role.QRole;
+import io.jianxun.domain.business.QRole;
 
 /**
  * 角色查询

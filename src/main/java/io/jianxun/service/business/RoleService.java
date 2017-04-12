@@ -1,12 +1,12 @@
-package io.jianxun.service.role;
+package io.jianxun.service.business;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.jianxun.domain.business.role.PermissionDef;
-import io.jianxun.domain.business.role.Role;
+import io.jianxun.domain.business.PermissionDef;
+import io.jianxun.domain.business.Role;
 import io.jianxun.service.AbstractBaseService;
 
 @Service

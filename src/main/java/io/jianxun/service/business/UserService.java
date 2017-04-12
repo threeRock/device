@@ -1,4 +1,4 @@
-package io.jianxun.service.user;
+package io.jianxun.service.business;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +12,10 @@ import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.role.Role;
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.Role;
+import io.jianxun.domain.business.User;
 import io.jianxun.service.AbstractBaseService;
 import io.jianxun.service.BusinessException;
-import io.jianxun.service.role.RoleService;
 import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 

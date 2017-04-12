@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.jianxun.domain.business.role.Role;
-import io.jianxun.service.role.RolePredicates;
+import io.jianxun.domain.business.Role;
+import io.jianxun.repository.business.RoleRepository;
+import io.jianxun.service.business.RolePredicates;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest(showSql = true)

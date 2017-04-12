@@ -1,9 +1,6 @@
-package io.jianxun.domain.business;
+package io.jianxun.domain;
 
 import javax.persistence.MappedSuperclass;
-
-import io.jianxun.domain.AbstractBaseAuditableEntity;
-import io.jianxun.domain.Activeable;
 
 /**
  * 业务对象基类

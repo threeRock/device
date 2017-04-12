@@ -12,7 +12,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import com.querydsl.core.types.Predicate;
 
-import io.jianxun.domain.business.AbstractBusinessEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 /**
  * 

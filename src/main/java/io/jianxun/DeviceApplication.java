@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
 import io.jianxun.config.AuditorAwareImpl;
-import io.jianxun.domain.business.user.User;
+import io.jianxun.domain.business.User;
 import io.jianxun.repository.BusinessBaseRepositoryImpl;
 
 /*
