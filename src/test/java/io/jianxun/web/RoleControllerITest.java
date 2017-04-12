@@ -41,6 +41,7 @@ import io.jianxun.service.business.UserService;
 @AutoConfigureMockMvc
 public class RoleControllerITest {
 
+	private static final String ROLE_NAME = "测试用户";
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -56,7 +57,7 @@ public class RoleControllerITest {
 	public void setUp() {
 		// inti data
 		role = new Role();
-		role.setName("测试用户");
+		role.setName(ROLE_NAME);
 		role.setPermissions(Lists.newArrayList("USERLIST", "ROLELIST"));
 		role = roleService.save(role);
 
@@ -75,7 +76,7 @@ public class RoleControllerITest {
 	 */
 	@Test
 	public void unauthorized() throws Exception {
-		this.mockMvc.perform(get("/user/role/")).andDo(print()).andExpect(status().is3xxRedirection());
+		this.mockMvc.perform(get("/role/")).andDo(print()).andExpect(status().is3xxRedirection());
 
 	}
 
@@ -120,6 +121,13 @@ public class RoleControllerITest {
 						.with(securityContext(initSecurityContext("ROLECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
+		// 验证名称重复
+		this.mockMvc
+				.perform(post("/role/create").param("name", ROLE_NAME).with(csrf())
+						.with(securityContext(initSecurityContext("ROLECREATE"))))
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
+						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测试用户 角色名称已经存在，不能重复使用<br />"));
+
 	}
 
 	@Test
@@ -138,9 +146,10 @@ public class RoleControllerITest {
 		this.mockMvc
 				.perform(post("/role/modify").param("name", "tt").param("id", role.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("ROLEMODIFY"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200)).andExpect(jsonPath("$.message").value("角色保存成功"));
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
+				.andExpect(jsonPath("$.message").value("角色保存成功"));
 
-		// 登录名为空 请求失败
+		// 角色名称为空 请求失败
 		this.mockMvc
 				.perform(post("/role/modify").param("name", "").with(csrf())
 						.with(securityContext(initSecurityContext("ROLEMODIFY"))))
@@ -152,7 +161,7 @@ public class RoleControllerITest {
 	public void delete_save() throws Exception {
 
 		this.mockMvc
-				.perform(get("/role/remove/{id}", role.getId()).with(csrf())
+				.perform(post("/role/remove/{id}", role.getId()).with(csrf())
 						.with(securityContext(initSecurityContext("ROLEREMOVE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("角色删除成功"));

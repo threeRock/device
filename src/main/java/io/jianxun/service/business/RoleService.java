@@ -34,4 +34,8 @@ public class RoleService extends AbstractBaseService<Role> {
 
 	}
 
+	public boolean validateNameUnique(String name, Long id) {
+		return 0 == countActiveAll(RolePredicates.nameAndIdNotPredicate(name, id));
+	}
+
 }

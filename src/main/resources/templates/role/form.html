@@ -8,7 +8,7 @@
 				<tr>
 					<td><label class="control-label x95">名称：</label> <input
 						type="text" th:field="*{name}" name="name"
-						data-rule="required;length[2~10]" size="15" /></td>
+						data-rule="required;length[2~10];remote[role/check/nameunique, id]" size="15" /></td>
 				</tr>
 				<tr th:each="item : ${domains}">
 					<td><label class="control-label x95"

@@ -12,7 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import io.jianxun.domain.business.PermissionDef;
 import io.jianxun.domain.business.Role;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.RoleService;
+import io.jianxun.web.business.validator.RoleValidator;
 import io.jianxun.web.utils.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
@@ -33,13 +36,11 @@ import io.jianxun.web.utils.Utils;
 @RequestMapping("role")
 public class RoleController {
 
-	@Autowired
-	private RoleService roleService;
-	@Autowired
-	private LocaleMessageSourceService localeMessageSourceService;
+	@InitBinder("role")
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(roleValidator);
 
-	@Autowired
-	private Utils util;
+	}
 
 	/**
 	 * 分页列表 支持 查询 分页 及 排序
@@ -117,12 +118,27 @@ public class RoleController {
 		return ReturnDto.ok(localeMessageSourceService.getMessage("role.save.successd"), true, "role-page");
 	}
 
-	@GetMapping("remove/{id}")
+	@PostMapping("remove/{id}")
 	@PreAuthorize("hasAuthority('ROLEREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
 		roleService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("role.remove.successd"));
+	}
+
+	/**
+	 * 验证用户名称是否重复
+	 * 
+	 * @param username
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("check/nameunique")
+	@ResponseBody
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("id") Long id) {
+		if (!this.roleService.validateNameUnique(name, id))
+			return localeMessageSourceService.getMessage("role.name.isUsed", new Object[] { name });
+		return "";
 	}
 
 	@ModelAttribute(name = "role")
@@ -137,5 +153,16 @@ public class RoleController {
 	private String templatePrefix() {
 		return "role/";
 	}
+
+	@Autowired
+	private RoleService roleService;
+	@Autowired
+	private LocaleMessageSourceService localeMessageSourceService;
+
+	@Autowired
+	private Utils util;
+
+	@Autowired
+	private RoleValidator roleValidator;
 
 }
