@@ -80,8 +80,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 */
 	@Transactional(readOnly = false)
 	public void changePassword(User user, String newPassword) {
-		logger.debug("操作人:{},操作内容:修改用户{}密码",
-				new Object[] { currentLoginInfo.currentLoginUser(), currentLoginInfo.currentLoginUser() });
+		logger.debug("操作人:{},操作内容:修改用户{}密码", new Object[] { currentLoginInfo.currentLoginUser(), user });
 		user.setPassword(bCryptPasswordEncoder.encode(newPassword));
 		save(user);
 
