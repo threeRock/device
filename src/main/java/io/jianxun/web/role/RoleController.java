@@ -96,6 +96,8 @@ public class RoleController {
 		Role role = roleService.findActiveOne(id);
 		model.addAttribute("role", role);
 		util.addModifyFormAction(model);
+		model.addAttribute("domains", PermissionDef.DomainDef.getDomainDefs());
+		model.addAttribute("perMaps", PermissionDef.getPermission());
 		return templatePrefix() + "form";
 
 	}
