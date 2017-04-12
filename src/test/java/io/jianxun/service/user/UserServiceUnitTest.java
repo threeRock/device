@@ -23,7 +23,7 @@ import io.jianxun.repository.business.UserRepository;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.UserService;
-import io.jianxun.web.dto.PasswordDto;
+import io.jianxun.web.dto.ResetPasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 
 public class UserServiceUnitTest {
@@ -98,7 +98,7 @@ public class UserServiceUnitTest {
 		when(messageSourceService.getMessage("loginUser.IsNull")).thenReturn("loginUserisnull");
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("loginUserisnull");
-		userService.resetPassword(new PasswordDto());
+		userService.resetPassword(new ResetPasswordDto());
 
 	}
 
@@ -106,7 +106,7 @@ public class UserServiceUnitTest {
 	public void changeCurrentLoginUserPassword_encodedPasswordIsNull() {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(loginUser);
 		when(messageSourceService.getMessage("user.encodedPasswordIsNull")).thenReturn("encodedPasswordIsNull");
-		PasswordDto password = new PasswordDto();
+		ResetPasswordDto password = new ResetPasswordDto();
 		loginUser.setPassword(null);
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage("encodedPasswordIsNull");
@@ -117,7 +117,7 @@ public class UserServiceUnitTest {
 	public void changeCurrentLoginUserPassword_validateError() {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(loginUser);
 		when(messageSourceService.getMessage("user.passwordValidateError")).thenReturn("validateError");
-		PasswordDto password = new PasswordDto();
+		ResetPasswordDto password = new ResetPasswordDto();
 		password.setOldPassword("yyy");
 		password.setNewPassword("xxx");
 		thrown.expect(BusinessException.class);
@@ -130,7 +130,7 @@ public class UserServiceUnitTest {
 		when(currentLoginInfo.currentLoginUser()).thenReturn(loginUser);
 		when(bCryptPasswordEncoder.matches("yyyyyyyy", CURRENT_USER_ENCODE_PASSWOED)).thenReturn(true);
 		when(userRepository.findActiveOne(anyLong())).thenReturn(loginUser);
-		PasswordDto password = new PasswordDto();
+		ResetPasswordDto password = new ResetPasswordDto();
 		password.setOldPassword("yyyyyyyy");
 		password.setNewPassword("xxxxxxyy");
 		userService.resetPassword(password);

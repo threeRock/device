@@ -16,7 +16,8 @@ import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.User;
 import io.jianxun.service.AbstractBaseService;
 import io.jianxun.service.BusinessException;
-import io.jianxun.web.dto.PasswordDto;
+import io.jianxun.web.dto.ChangePasswordDto;
+import io.jianxun.web.dto.ResetPasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 
 @Service
@@ -40,7 +41,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	 * @param newPassword
 	 */
 	@Transactional(readOnly = false)
-	public void resetPassword(PasswordDto password) {
+	public void resetPassword(ResetPasswordDto password) {
 		User current = currentLoginInfo.currentLoginUser();
 		if (current == null)
 			throw new BusinessException(messageSourceService.getMessage("loginUser.IsNull"));
@@ -52,6 +53,18 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 			return;
 		}
 		throw new BusinessException(messageSourceService.getMessage("user.passwordValidateError"));
+
+	}
+
+	@Transactional(readOnly = false)
+	public void changePassword(ChangePasswordDto password) {
+		User selected = this.findActiveOne(password.getUserId());
+		if (selected == null)
+			throw new BusinessException(messageSourceService.getMessage("user.notfound"));
+		logger.info("操作人:{},操作内容:修改登录用户{}密码", new Object[] { currentLoginInfo.currentLoginUser(), selected });
+		selected.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
+		save(selected);
+		return;
 
 	}
 

@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
  *
  *         createDate: 2016-08-16
  */
-public class PasswordDto {
+public class ResetPasswordDto {
 	@NotNull(message = "{oldPassword.notNull}")
 	@Length(min = 6, message = "{password.minlength}")
 	private String oldPassword;

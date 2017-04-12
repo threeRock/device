@@ -25,11 +25,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.User;
+import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.RoleService;
 import io.jianxun.service.business.UserService;
 import io.jianxun.web.business.validator.UserValidator;
-import io.jianxun.web.dto.PasswordDto;
+import io.jianxun.web.dto.ChangePasswordDto;
+import io.jianxun.web.dto.ResetPasswordDto;
 import io.jianxun.web.utils.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
@@ -89,20 +91,20 @@ public class UserController {
 	}
 
 	/**
-	 * 修改登录密碼表单
+	 * 重置登录密碼表单
 	 * 
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("resetpassword/current")
 	@PreAuthorize("hasAuthority('USERRESETPASSWROD')")
-	String changePasswordForm(Model model) {
-		model.addAttribute("pwd", new PasswordDto());
+	String resetPasswordForm(Model model) {
+		model.addAttribute("pwd", new ResetPasswordDto());
 		return templatePrefix() + "resetpassword";
 	}
 
 	/**
-	 * 修改登录密码保存
+	 * 重置登录密码保存
 	 * 
 	 * @param password
 	 * @param parameters
@@ -111,8 +113,32 @@ public class UserController {
 	@PostMapping("resetpassword/current")
 	@PreAuthorize("hasAuthority('USERRESETPASSWROD')")
 	@ResponseBody
-	ReturnDto changePasswordSave(@Valid PasswordDto password, @RequestParam MultiValueMap<String, String> parameters) {
+	ReturnDto resetPasswordSave(@Valid ResetPasswordDto password,
+			@RequestParam MultiValueMap<String, String> parameters) {
 		userService.resetPassword(password);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("user.resetpassword.successed"));
+	}
+
+	@GetMapping("changepassword/{id}")
+	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	String changePasswordForm(@PathVariable("id") Long userId, Model model,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		User selectedUser = this.userService.findActiveOne(userId);
+		if (selectedUser == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("user.notfound"));
+		ChangePasswordDto pwd = new ChangePasswordDto();
+		pwd.setUserId(userId);
+		pwd.setUserInfo(selectedUser.toString());
+		model.addAttribute("pwd", pwd);
+		return templatePrefix() + "changepassword";
+	}
+
+	@PostMapping("changepassword")
+	@PreAuthorize("hasAuthority('USERCHANGEPASSWROD')")
+	@ResponseBody
+	ReturnDto changePasswordSave(@Valid ChangePasswordDto password,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		userService.changePassword(password);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("user.resetpassword.successed"));
 	}
 
@@ -178,10 +204,6 @@ public class UserController {
 		return "";
 	}
 
-	private void addRoleList(Model model) {
-		model.addAttribute("roleList", roleService.findActiveAll(new Sort("name")));
-	}
-
 	@ModelAttribute(name = "user")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
@@ -193,6 +215,10 @@ public class UserController {
 
 	private ReturnDto getOptionReturn(String messagekey) {
 		return ReturnDto.ok(localeMessageSourceService.getMessage(messagekey), true, "user-page");
+	}
+
+	private void addRoleList(Model model) {
+		model.addAttribute("roleList", roleService.findActiveAll(new Sort("name")));
 	}
 
 	private String templatePrefix() {

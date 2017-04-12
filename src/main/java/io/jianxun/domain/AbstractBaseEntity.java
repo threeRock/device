@@ -21,6 +21,8 @@ public abstract class AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1641451795636666403L;
 
+	public static final String ID_NAME = "id";
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -71,7 +73,5 @@ public abstract class AbstractBaseEntity implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
 
 }

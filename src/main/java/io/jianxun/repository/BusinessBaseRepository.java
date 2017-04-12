@@ -28,8 +28,8 @@ public interface BusinessBaseRepository<T extends AbstractBusinessEntity>
 	List<T> findActiveAll();
 
 	List<T> findActiveAll(Sort sort);
-	
-	List<T> findActiveAll(Predicate predicate,Sort sort);
+
+	List<T> findActiveAll(Predicate predicate, Sort sort);
 
 	Page<T> findActiveAll(Predicate predicat, Pageable pageable);
 
@@ -38,11 +38,13 @@ public interface BusinessBaseRepository<T extends AbstractBusinessEntity>
 	T findActiveOne(Long id);
 
 	T findActiveOne(Predicate predicate);
-	
+
 	long countActive();
 
 	long countActive(Predicate predicate);
 
 	boolean existsActive(Predicate predicate);
+
+	boolean existsActive(Long id);
 
 }

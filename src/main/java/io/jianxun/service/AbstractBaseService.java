@@ -36,7 +36,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 		return entity;
 	}
 
-	public T findOne(Long id){
+	public T findOne(Long id) {
 		Assert.notNull("id", messageSourceService.getMessage("id.notnull"));
 		return this.repository.findOne(id);
 	}
@@ -57,6 +57,10 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 
 	public boolean exists(Predicate predicate) {
 		return this.repository.existsActive(predicate);
+	}
+
+	public boolean exists(Long id) {
+		return this.repository.exists(id);
 	}
 
 	/**
@@ -100,6 +104,7 @@ public abstract class AbstractBaseService<T extends AbstractBusinessEntity> {
 
 	/**
 	 * 不验证是否可用直接保存
+	 * 
 	 * @param entity
 	 * @return
 	 */

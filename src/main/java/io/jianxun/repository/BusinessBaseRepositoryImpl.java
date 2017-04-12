@@ -18,6 +18,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.SimplePath;
 
 import io.jianxun.domain.AbstractBusinessEntity;
 
@@ -95,12 +96,22 @@ public class BusinessBaseRepositoryImpl<T extends AbstractBusinessEntity> extend
 		return exists(getActivePredicate(predicate));
 	}
 
+	@Override
+	public boolean existsActive(Long id) {
+		return existsActive(getIdPredicate(id));
+	}
+
 	private Predicate getActivePredicate(Predicate predicate) {
 		BooleanPath activePath = builder.getBoolean(AbstractBusinessEntity.ACTIVE);
 		BooleanExpression activeExpression = activePath.eq(true);
 		if (predicate != null)
 			activeExpression = activeExpression.and(predicate);
 		return activeExpression;
+	}
+
+	private Predicate getIdPredicate(long id) {
+		SimplePath<Long> idPath = builder.getSimple(AbstractBusinessEntity.ID_NAME, Long.class);
+		return idPath.eq(id);
 	}
 
 }

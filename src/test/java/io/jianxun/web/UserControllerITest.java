@@ -60,13 +60,13 @@ public class UserControllerITest {
 
 	@Before
 	public void setUp() {
-		
+
 		userService.deleteAll();
-		
+
 		userManageRoleInfo = new Role();
 		userManageRoleInfo.setName("用户管理角色");
-		userManageRoleInfo.setPermissions(
-				Lists.newArrayList("USERLIST", "USERCREATE", "USERMODIFY", "USERREMOVE", "USERCHANGEPASSWROD"));
+		userManageRoleInfo.setPermissions(Lists.newArrayList("USERLIST", "USERCREATE", "USERMODIFY", "USERREMOVE",
+				"USERCHANGEPASSWROD", "USERRESETPASSWROD"));
 		roleManageRoleInfo = new Role();
 		roleManageRoleInfo.setName("角色管理角色");
 		roleManageRoleInfo.setPermissions(Lists.newArrayList("ROLELIST", "ROLECREATE", "ROLEMODIFY", "ROLEREMOVE"));
@@ -240,6 +240,22 @@ public class UserControllerITest {
 	}
 
 	// 管理员修改密码
+	@Test
+	public void changpassword_form() throws Exception {
+		this.mockMvc.perform(get("/user/changepassword/{id}", other.getId()).with(csrf()).with(user(user)))
+				.andDo(print()).andExpect(status().isOk()).andExpect(model().attributeExists("pwd"))
+				.andExpect(view().name("user/changepassword"))
+				.andExpect(content().string(containsString(other.toString())));
+	}
+
+	@Test
+	public void changepassword_save() throws Exception {
+		this.mockMvc
+				.perform(post("/user/changepassword").param("userId", other.getId().toString())
+						.param("newPassword", PASSWORD).with(csrf()).with(user(user)))
+				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
+				.andExpect(jsonPath("$.message").value("重置密码成功"));
+	}
 
 	private SecurityContext initSecurityContext(String permission) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
