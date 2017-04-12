@@ -44,6 +44,8 @@ public class UserServiceUnitTest {
 
 	@Mock
 	private CurrentLoginInfo currentLoginInfo;
+	@Mock
+	private User admin;
 
 	@InjectMocks
 	private UserService userService;
@@ -134,6 +136,17 @@ public class UserServiceUnitTest {
 		userService.resetPassword(password);
 		verify(bCryptPasswordEncoder, times(1)).encode("xxxxxxyy");
 		verify(userRepository).save(loginUser);
+	}
+
+	@Test
+	public void updateAdminUser() {
+		when(admin.getId()).thenReturn(1L);
+		thrown.expect(BusinessException.class);
+		userService.save(admin);
+
+		when(admin.getId()).thenReturn(2L);
+		userService.save(admin);
+		verify(userRepository).save(admin);
 	}
 
 }

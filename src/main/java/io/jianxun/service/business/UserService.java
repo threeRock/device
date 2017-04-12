@@ -143,6 +143,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	}
 
 	@Override
+	@Transactional(readOnly = false)
 	public <S extends User> S save(S user) {
 		if (validateIsSuperAdmin(user))
 			throw new BusinessException(messageSourceService.getMessage("cannot.modify.superadmin"));
