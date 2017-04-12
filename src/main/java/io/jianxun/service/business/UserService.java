@@ -150,6 +150,14 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 		return super.save(user);
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public User delete(User user) {
+		if (validateIsSuperAdmin(user))
+			throw new BusinessException(messageSourceService.getMessage("cannot.modify.superadmin"));
+		return super.delete(user);
+	}
+
 	@Transactional(readOnly = false)
 	public void createAdminIfInit() {
 		if (this.repository.findAll().isEmpty())

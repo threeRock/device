@@ -149,4 +149,17 @@ public class UserServiceUnitTest {
 		verify(userRepository).save(admin);
 	}
 
+	@Test
+	public void deleteAdminUser() {
+		when(admin.getId()).thenReturn(1L);
+		when(admin.isActive()).thenReturn(true);
+		thrown.expect(BusinessException.class);
+		userService.delete(admin);
+		
+		when(admin.getId()).thenReturn(2L);
+		when(admin.isActive()).thenReturn(true);
+		userService.delete(admin);
+		verify(userRepository).save(admin);
+	}
+
 }
