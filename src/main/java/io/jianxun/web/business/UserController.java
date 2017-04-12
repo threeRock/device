@@ -28,6 +28,7 @@ import io.jianxun.domain.business.User;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.RoleService;
 import io.jianxun.service.business.UserService;
+import io.jianxun.web.business.validator.UserValidator;
 import io.jianxun.web.dto.PasswordDto;
 import io.jianxun.web.utils.ReturnDto;
 import io.jianxun.web.utils.Utils;
