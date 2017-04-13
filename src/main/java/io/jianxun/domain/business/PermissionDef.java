@@ -19,7 +19,11 @@ public enum PermissionDef {
 	// 角色
 	ROLE_PAGE("ROLELIST", "列表", ModuleDef.SYS, DomainDef.SYS_ROLE), ROLE_CREATE("ROLECREATE", "新增", ModuleDef.SYS,
 			DomainDef.SYS_ROLE), ROLE_MODIFY("ROLEMODIFY", "修改", ModuleDef.SYS,
-					DomainDef.SYS_ROLE), ROLE_REMOVE("ROLEREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_ROLE);
+					DomainDef.SYS_ROLE), ROLE_REMOVE("ROLEREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_ROLE),
+	// 机构
+	DEPART_PAGE("DEPARTLIST", "列表", ModuleDef.SYS, DomainDef.SYS_DEPART), DEPART_CREATE("DEPARTCREATE", "新增",
+			ModuleDef.SYS, DomainDef.SYS_DEPART), DEPART_MODIFY("DEPARTMODIFY", "修改", ModuleDef.SYS,
+					DomainDef.SYS_DEPART), DEPART_REMOVE("DEPARTREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_DEPART);
 	// 操作代码
 	private String code;
 	// 描述
@@ -180,7 +184,7 @@ public enum PermissionDef {
 	// 模型定义
 	public enum DomainDef {
 		// 系统配置
-		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10);
+		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), SYS_DEPART("sys_depart", "机构管理", 10);
 		private String code;
 		private String name;
 		private Integer sortNum = 99;

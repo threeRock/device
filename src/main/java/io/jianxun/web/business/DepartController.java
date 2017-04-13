@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -41,6 +43,19 @@ public class DepartController {
 	@InitBinder("depart")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(departValidator);
+
+	}
+
+	@GetMapping(value = "tree")
+	@PreAuthorize("hasAuthority('DEPARTLIST')")
+	public String tree(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		try {
+			model.addAttribute("tree", mapper.writeValueAsString(departService.getDepartTree()));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.tree.error"));
+		}
+		return templatePrefix() + "/tree";
 
 	}
 
@@ -77,11 +92,8 @@ public class DepartController {
 	@PreAuthorize("hasAuthority('DEPARTCREATE')")
 	String createForm(@PathVariable("parentId") Long parentId, Model model,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		Depart depart = new Depart();
-		Depart parent = new Depart();
-		parent.setId(parentId);
-		depart.setParent(parent);
-		model.addAttribute("depart", depart);
+		model.addAttribute("depart", new Depart());
+		model.addAttribute("parentId", parentId);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
 	}
@@ -98,7 +110,8 @@ public class DepartController {
 	@ResponseBody
 	ReturnDto createSave(@Valid Depart depart, @RequestParam MultiValueMap<String, String> parameters) {
 		departService.save(depart);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("depart.save.success"), true, "depart-page");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("depart.save.success"), true, "depart-page",
+				"depart-page-layout");
 	}
 
 	/**
@@ -113,6 +126,7 @@ public class DepartController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		Depart depart = departService.findActiveOne(id);
 		model.addAttribute("depart", depart);
+		model.addAttribute("parentId", depart.getParent() != null ? depart.getParent().getId() : null);
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -130,7 +144,8 @@ public class DepartController {
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "depart") Depart depart, Model model) {
 		departService.save(depart);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("depart.save.successd"), true, "depart-page");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("depart.save.success"), true, "depart-page",
+				"depart-page-layout");
 	}
 
 	@PostMapping("remove/{id}")
@@ -168,6 +183,8 @@ public class DepartController {
 	private String templatePrefix() {
 		return "depart/";
 	}
+
+	ObjectMapper mapper = new ObjectMapper();
 
 	@Autowired
 	private DepartService departService;

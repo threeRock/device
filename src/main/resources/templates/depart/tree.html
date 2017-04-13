@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	function do_open_layout(event, treeId, treeNode) {
+		$(event.target).bjuiajax('doLoad', {
+			url : treeNode.url,
+			target : treeNode.divid
+		})
+		event.preventDefault()
+	}
+</script>
+
+<div class="bjui-pageContent">
+	<!-- tree -->
+	<div style="float: left; width: 230px;">
+		<ul id="depart-layout-tree" class="ztree" data-toggle="ztree"
+			selectId="1" data-expand-all="true" data-on-click="do_open_layout"
+			th:attr="data-nodes=${tree}">
+		</ul>
+	</div>
+	<!-- page -->
+	<div style="margin-left: 240px; height: 99.9%; overflow: hidden;">
+		<fieldset style="height: 100%;">
+			<div id="depart-page-layout" style="height: 100%; overflow: hidden;">
+			</div>
+		</fieldset>
+	</div>
+</div>

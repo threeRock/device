@@ -1,0 +1,54 @@
+<div class="bjui-pageHeader">
+	<form id="pagerForm" data-toggle="ajaxsearch"
+		th:action="@{/depart/page/{path}(path=${parent.id})}" action="#" method="POST">
+		<input id="departParent" type="hidden"  th:value="${parent.id}" value="10" />
+		<input type="hidden" name="size" th:value="${size}" value="10" /> <input
+			type="hidden" name="page" th:value="${page}" value="0" /><input
+			type="hidden" name="orderField" th:value="${orderField}" /> <input
+			type="hidden" name="orderDirection" th:value="${orderDirection}" />
+		<div class="bjui-searchBar">
+			<label>机构名称</label><input type="text" th:value="${name}" value=""
+				name="name" class="form-control" size="10" />&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
+		</div>
+	</form>
+	<hr style="margin: 5px 0" />
+	<div class="pull-left">
+		<button sec:authorize="hasAnyAuthority('DEPARTCREATE')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="user-form-new"
+			data-url="depart/create/{#departParent}">新增机构</button>
+	</div>
+</div>
+<div class="bjui-pageContent tableContent">
+	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+		<thead>
+			<tr>
+				<th data-order-field="name">机构名称</th>
+				<th data-order-field="parent.name">隶属上级</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
+				<td th:text="${e.name}">机构名称</td>
+				<td th:text="${e.parent.name}">隶属上级</td>
+				<td><a sec:authorize="hasAnyAuthority('DEPARTMODIFY')"
+					th:href="@{/depart/modify/{id}(id=${e.id})}" href="#"
+					class="btn btn-green" data-toggle="navtab"
+					data-id="user-modify-form" data-title="修改机构">修改</a> <a
+					sec:authorize="hasAnyAuthority('DEPARTREMOVE')"
+					th:href="@{/depart/remove/{id}(id=${e.id})}" href="#"
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="bjui-pageFooter">
+	<div class="pages">
+		<span th:text="'每页 '+${size}+' 条 '">每页 0 条</span> &nbsp; <span
+			th:text="',共 '+${total}+' 条 '">共 0 条</span>
+	</div>
+	<div class="pagination-box" data-toggle="pagination"
+		th:attrappend="data-total=${total},data-page-size=${size},data-page-current=${page}">
+	</div>
+</div>

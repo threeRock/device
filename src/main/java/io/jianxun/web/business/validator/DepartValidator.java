@@ -7,7 +7,6 @@ import org.springframework.validation.Validator;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.service.LocaleMessageSourceService;
-import io.jianxun.service.business.DepartPredicates;
 import io.jianxun.service.business.DepartService;
 
 @Component
@@ -33,11 +32,11 @@ public class DepartValidator implements Validator {
 			errors.rejectValue("name", "name.unique",
 					localeMessageSourceService.getMessage("depart.name.isUsed", new Object[] { name }));
 		if (depart.getParent() == null || depart.getParent().getId() == null)
-			errors.rejectValue("parent", "name.notfound", localeMessageSourceService.getMessage("depart.notfound"));
+			errors.rejectValue("parent", "depart.parent.notfound", localeMessageSourceService.getMessage("depart.notfound"));
 		final Depart parent = departService.findActiveOne(depart.getParent().getId());
 
-		if (parent == null || !departService.exists(DepartPredicates.parentPredicate(parent)))
-			errors.rejectValue("parent", "name.notfound", localeMessageSourceService.getMessage("depart.notfound"));
+		if (parent == null || !departService.exists(parent.getId()))
+			errors.rejectValue("parent", "depart.parent.notfound", localeMessageSourceService.getMessage("depart.notfound"));
 
 	}
 

@@ -168,8 +168,8 @@
             var url  = null, type = null
             
             if (form) {
-                url  = form.attr('action')
-                type = form.attr('method') || 'GET'
+                url  = $(form).attr('action')
+                type = $(form).attr('method') || 'GET'
             } else {
                 url  = $target.data('url')
                 type = $target.data('type') || 'GET'

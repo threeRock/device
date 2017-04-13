@@ -1,0 +1,24 @@
+<div class="bjui-pageContent">
+	<form action="#" id="depart_form"
+		th:action="@{/depart/{path}(path=${action})}" method="POST"
+		th:object="${depart}" data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" /> <input
+			type="hidden" name="parent.id" th:value="${parentId}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td><label class="control-label x95">机构名称：</label> <input
+						type="text" th:field="*{name}" name="name"
+						data-rule="required;remote[depart/check/nameunique, id]"
+						size="15" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>
