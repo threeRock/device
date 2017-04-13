@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -21,6 +22,7 @@ import com.google.common.collect.Lists;
 import io.jianxun.domain.business.User;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
+import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.UserPredicates;
 import io.jianxun.service.business.UserService;
 
@@ -34,6 +36,8 @@ public class UserServiceITest {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private DepartService departService;
 
 	@Autowired
 	private LocaleMessageSourceService localeMessageSourceService;
@@ -43,13 +47,16 @@ public class UserServiceITest {
 
 	@Before
 	public void setUp() {
-		userService.deleteAll();
+		userService.createAdminIfInit(departService.initRoot());
+		initData();
 	}
 
 	@Test
+	@Rollback
 	public void should_save_success() {
-		testUser1 = new User();
+		User testUser1 = new User();
 		testUser1.setUsername("TT");
+		testUser1.setDepart(departService.initRoot());
 		userService.save(testUser1);
 		assertThat(testUser1).isNotNull();
 		assertThat(testUser1.getCreatedDate()).isNotNull();
@@ -58,17 +65,19 @@ public class UserServiceITest {
 
 	@Test(expected = BusinessException.class)
 	public void should_activefalse_save_failure() {
-		testUser1 = new User();
+		User testUser1 = new User();
 		testUser1.setUsername("TT");
+		testUser1.setDepart(departService.initRoot());
 		testUser1.setActive(false);
 		userService.save(testUser1);
 	}
 
 	@Test
 	public void should_activefalse_save_failure1() {
-		testUser1 = new User();
+		User testUser1 = new User();
 		testUser1.setUsername("TT");
 		testUser1.setActive(false);
+		testUser1.setDepart(departService.initRoot());
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage(localeMessageSourceService.getMessage("entity.notactive", new Object[] { testUser1 }));
 		userService.save(testUser1);
@@ -77,13 +86,15 @@ public class UserServiceITest {
 	@Test
 	public void should_activefalse_batchsave_failure() {
 		List<User> users = Lists.newArrayList();
-		testUser1 = new User();
+		User testUser1 = new User();
 		testUser1.setUsername("TT");
+		testUser1.setDepart(departService.initRoot());
 		testUser1.setActive(false);
 		users.add(testUser1);
 		User testUser2 = new User();
 		testUser2.setUsername("TTT");
 		testUser2.setActive(true);
+		testUser2.setDepart(departService.initRoot());
 		users.add(testUser2);
 		thrown.expect(BusinessException.class);
 		thrown.expectMessage(localeMessageSourceService.getMessage("entity.notactive", new Object[] { testUser1 }));
@@ -92,10 +103,8 @@ public class UserServiceITest {
 
 	@Test
 	public void find_active() {
-		initData();
 		List<User> user_db = userService.findActiveAll();
 		assertThat(user_db).isNotNull();
-		assertThat(user_db.size()).isEqualTo(1);
 		assertThat(user_db).contains(testUser2);
 
 		thrown.expect(BusinessException.class);
@@ -131,10 +140,7 @@ public class UserServiceITest {
 
 	@Test
 	public void count_active() {
-		initData();
-		long count = userService.countActiveAll();
-		assertThat(count).isEqualTo(1);
-		count = userService.countActiveAll(UserPredicates.usernamePredicate(testUser1.getUsername()));
+		long count = userService.countActiveAll(UserPredicates.usernamePredicate(testUser1.getUsername()));
 		assertThat(count).isEqualTo(0);
 		count = userService.countActiveAll(UserPredicates.usernamePredicate(testUser2.getUsername()));
 		assertThat(count).isEqualTo(1);
@@ -142,7 +148,6 @@ public class UserServiceITest {
 
 	@Test
 	public void exists_active() {
-		initData();
 		boolean exist = userService.exists(UserPredicates.usernamePredicate(testUser1.getUsername()));
 		assertThat(exist).isFalse();
 		exist = userService.exists(UserPredicates.usernamePredicate(testUser2.getUsername()));
@@ -151,8 +156,9 @@ public class UserServiceITest {
 	}
 
 	@Test
+	@Rollback
 	public void delete() {
-		initData();
+
 		User u = userService.findActiveOne(UserPredicates.usernamePredicate(testUser2.getUsername()));
 		assertThat(u).isNotNull();
 		userService.delete(u.getId());
@@ -175,9 +181,10 @@ public class UserServiceITest {
 
 	@Test
 	public void register() {
-		testUser1 = new User();
+		User testUser1 = new User();
 		testUser1.setUsername("test");
 		testUser1.setPassword("xxxxxxxx");
+		testUser1.setDepart(departService.initRoot());
 		userService.register(testUser1);
 		User searchUser = userService.findActiveOne(UserPredicates.usernamePredicate("test"));
 		assertThat(searchUser.getUsername()).isEqualTo("test");
@@ -190,14 +197,23 @@ public class UserServiceITest {
 	}
 
 	private void initData() {
+		List<User> users = userService.findActiveAll();
+		for (User user : users) {
+			if (userService.validateIsSuperAdmin(user))
+				continue;
+			userService.delete(user);
+		}
 		testUser1 = new User();
-		testUser1.setUsername("TT");
+		testUser1.setUsername("TT004");
 		testUser1.setActive(false);
-		userService.directSave(testUser1);
+		testUser1.setDepart(departService.initRoot());
+		testUser1 = userService.directSave(testUser1);
+
 		testUser2 = new User();
-		testUser2.setUsername("TTT");
+		testUser2.setUsername("TTT887");
 		testUser2.setActive(true);
-		userService.save(testUser2);
+		testUser2.setDepart(departService.initRoot());
+		testUser2 = userService.save(testUser2);
 	}
 
 }

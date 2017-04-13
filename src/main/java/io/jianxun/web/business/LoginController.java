@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.UserService;
 
 @Controller
@@ -17,10 +18,12 @@ public class LoginController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private DepartService departService;
 
 	@GetMapping(value = "login")
 	public String loginForm() {
-		userService.createAdminIfInit();
+		userService.createAdminIfInit(departService.initRoot());
 		return "login";
 	}
 

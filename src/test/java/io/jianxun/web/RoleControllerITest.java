@@ -33,6 +33,7 @@ import com.google.common.collect.Lists;
 
 import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.User;
+import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.RoleService;
 import io.jianxun.service.business.UserService;
 
@@ -49,6 +50,8 @@ public class RoleControllerITest {
 	private RoleService roleService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private DepartService departService;
 
 	private Role role;
 	private User loginUser;
@@ -65,6 +68,7 @@ public class RoleControllerITest {
 		loginUser.setUsername("loginUser");
 		loginUser.setDisplayName("loginUser");
 		loginUser.setPassword("tt");
+		loginUser.setDepart(departService.initRoot());
 		loginUser.setRoles(Lists.newArrayList(role));
 		loginUser = userService.register(loginUser);
 	}
@@ -117,7 +121,7 @@ public class RoleControllerITest {
 	public void create_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/role/create").param("name", "tt").with(csrf())
+				.perform(post("/role/create").param("name", "tt001").with(csrf())
 						.with(securityContext(initSecurityContext("ROLECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 

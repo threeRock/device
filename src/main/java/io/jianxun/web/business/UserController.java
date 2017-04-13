@@ -22,12 +22,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
+import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.User;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
+import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.RoleService;
+import io.jianxun.service.business.UserPredicates;
 import io.jianxun.service.business.UserService;
 import io.jianxun.web.business.validator.UserValidator;
 import io.jianxun.web.dto.ChangePasswordDto;
@@ -49,27 +55,50 @@ public class UserController {
 
 	}
 
+	@GetMapping(value = "tree")
+	public String tree(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		try {
+			model.addAttribute("tree", mapper.writeValueAsString(departService.getUserDepartTree()));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.tree.error"));
+		}
+		return templatePrefix() + "/tree";
+
+	}
+
 	/**
 	 * 分页列表 支持 查询 分页 及 排序
 	 */
-	@RequestMapping(value = { "/", "/page" })
+	@RequestMapping(value = { "/page/{depart}" })
 	@PreAuthorize("hasAuthority('USERLIST')")
-	String page(Model model, @QuerydslPredicate(root = User.class) Predicate predicate,
+	String page(@PathVariable("depart") long departId, Model model,
+			@QuerydslPredicate(root = User.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		Page<User> page = userService.findActivePage(predicate, pageable);
+		Depart parent = this.departService.findActiveOne(departId);
+		if (parent == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		Predicate departPredicate = UserPredicates.parentPredicate(parent);
+		if (predicate != null)
+			departPredicate = ExpressionUtils.and(departPredicate, predicate);
+		Page<User> page = userService.findActivePage(departPredicate, pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
+		model.addAttribute("departId", departId);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	/**
 	 * 新增表单页面
 	 */
-	@GetMapping("create")
+	@GetMapping("create/{depart}")
 	@PreAuthorize("hasAuthority('USERCREATE')")
-	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
-		model.addAttribute("user", new User());
+	String createForm(@PathVariable("depart") Long departId, Model model,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		User user = new User();
+		model.addAttribute("user", user);
+		model.addAttribute("departId", departId);
 		addRoleList(model);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
@@ -155,6 +184,7 @@ public class UserController {
 		User user = userService.findActiveOne(id);
 		model.addAttribute("user", user);
 		addRoleList(model);
+		model.addAttribute("departId", user.getDepart().getId());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -214,7 +244,7 @@ public class UserController {
 	}
 
 	private ReturnDto getOptionReturn(String messagekey) {
-		return ReturnDto.ok(localeMessageSourceService.getMessage(messagekey), true, "user-page");
+		return ReturnDto.ok(localeMessageSourceService.getMessage(messagekey), true, "", "user-page-layout");
 	}
 
 	private void addRoleList(Model model) {
@@ -225,6 +255,8 @@ public class UserController {
 		return "user/";
 	}
 
+	ObjectMapper mapper = new ObjectMapper();
+
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -234,6 +266,8 @@ public class UserController {
 	private Utils util;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private DepartService departService;
 
 	@Autowired
 	private UserValidator userValidator;

@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
+import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.User;
 import io.jianxun.service.AbstractBaseService;
@@ -172,13 +173,13 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	}
 
 	@Transactional(readOnly = false)
-	public void createAdminIfInit() {
+	public void createAdminIfInit(Depart depart) {
 		if (this.repository.findAll().isEmpty())
-			initAdminUser();
+			initAdminUser(depart);
 
 	}
 
-	private User initAdminUser() {
+	private User initAdminUser(Depart root) {
 		logger.debug("创建超级管理员用户");
 		Role role = roleService.createSuperRole();
 		if (role == null)
@@ -187,6 +188,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 		user.setUsername(User.SUPER_ADMIN_USERNAME);
 		user.setDisplayName(User.SUPER_ADMIN_DISPLAYNAME);
 		user.setPassword(User.SUPER_ADMIN_PASSWORD);
+		user.setDepart(root);
 		user.setRoles(Lists.newArrayList(role));
 		return this.register(user);
 	}

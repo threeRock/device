@@ -33,9 +33,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.common.collect.Lists;
 
+import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.PermissionDef;
 import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.User;
+import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.RoleService;
 import io.jianxun.service.business.UserService;
 
@@ -54,14 +56,17 @@ public class UserControllerITest {
 	private UserService userService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private DepartService departService;
 
-	private User user, loginUser, other;
+	private User user, other;
 	private Role userManageRoleInfo, roleManageRoleInfo;
+	private Depart root;
 
 	@Before
 	public void setUp() {
-
-		userService.deleteAll();
+		root = departService.initRoot();
+		userService.createAdminIfInit(root);
 
 		userManageRoleInfo = new Role();
 		userManageRoleInfo.setName("用户管理角色");
@@ -76,14 +81,15 @@ public class UserControllerITest {
 		user.setUsername(USERNAME);
 		user.setDisplayName(USERNAME);
 		user.setPassword(PASSWORD);
+		user.setDepart(root);
 		user.setRoles(roles);
 		user = userService.register(user);
-		loginUser = user;
 
 		other = new User();
 		other.setUsername(USERNAME + 1);
 		other.setDisplayName(USERNAME + 1);
 		other.setPassword(PASSWORD);
+		other.setDepart(root);
 		other.setRoles(roles);
 		other = userService.register(other);
 
@@ -96,14 +102,15 @@ public class UserControllerITest {
 	 */
 	@Test
 	public void unauthorized() throws Exception {
-		this.mockMvc.perform(get("/user/page/")).andDo(print()).andExpect(status().is3xxRedirection());
+		this.mockMvc.perform(get("/user/page/{id}", root.getId())).andDo(print())
+				.andExpect(status().is3xxRedirection());
 
 	}
 
 	@Test
 	public void accessDenied() throws Exception {
 		this.mockMvc
-				.perform(get("/user/page/").with(user("testUser").password("password")
+				.perform(get("/user/page/{id}", root.getId()).with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
 				.andDo(print()).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
 				.andExpect(jsonPath("$.statusCode").value(300));
@@ -111,9 +118,17 @@ public class UserControllerITest {
 	}
 
 	@Test
+	public void tree() throws Exception {
+		this.mockMvc
+				.perform(get("/user/tree/").with(user("testUser").password("password")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
+				.andDo(print()).andExpect(status().isOk());
+	}
+
+	@Test
 	public void page_success() throws Exception {
 		this.mockMvc
-				.perform(get("/user/page/").with(user("testUser").password("password")
+				.perform(get("/user/page/{id}", root.getId()).with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
 				.andDo(print()).andExpect(status().isOk());
 	}
@@ -156,12 +171,12 @@ public class UserControllerITest {
 	public void create_form() throws Exception {
 
 		this.mockMvc
-				.perform(get("/user/create").with(user("testUser").password("password")
+				.perform(get("/user/create/{id}", root.getId()).with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
 
 		this.mockMvc
-				.perform(get("/user/create").with(
+				.perform(get("/user/create/{id}", root.getId()).with(
 						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERCREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("user/form"))
 				.andExpect(content().string(containsString("密码")));
@@ -171,7 +186,8 @@ public class UserControllerITest {
 	public void create_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/user/create").param("username", "tt").param("password", "x").with(csrf())
+				.perform(post("/user/create").param("username", "tt888").param("password", "x")
+						.param("depart.id", root.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("USERCREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 		this.mockMvc
@@ -183,8 +199,7 @@ public class UserControllerITest {
 		this.mockMvc
 				.perform(post("/user/create").param("username", USERNAME).param("password", "x").with(csrf())
 						.with(securityContext(initSecurityContext("USERCREATE"))))
-				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
-						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TT 用户名已存在，不能重复使用  <br />"));
+				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message").isNotEmpty());
 
 	}
 
@@ -202,8 +217,8 @@ public class UserControllerITest {
 	public void modify_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/user/modify").param("username", "tt").param("id", user.getId().toString()).with(csrf())
-						.with(securityContext(initSecurityContext("USERMODIFY"))))
+				.perform(post("/user/modify").param("username", "tt001").param("id", user.getId().toString())
+						.with(csrf()).with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("用户保存成功"));
 
@@ -215,7 +230,7 @@ public class UserControllerITest {
 
 		// 验证ID和登录名称相同也可以保存
 		this.mockMvc
-				.perform(post("/user/modify").param("username", USERNAME).param("id", user.getId().toString())
+				.perform(post("/user/modify").param("username", "xxx004").param("id", user.getId().toString())
 						.with(csrf()).with(securityContext(initSecurityContext("USERMODIFY"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("用户保存成功"));
@@ -259,7 +274,7 @@ public class UserControllerITest {
 
 	private SecurityContext initSecurityContext(String permission) {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
+		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(other, "x",
 				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
 		return securityContext;
 	}

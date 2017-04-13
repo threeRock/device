@@ -46,9 +46,10 @@ public class Utils {
 
 	// 分页相关参数设定
 	public void addPageInfo(Model model, MultiValueMap<String, String> parameters, Page<?> page) {
+		List<?> contents = page.getContent();
 		Map<String, Object> map = Maps.newHashMap();
 		// 分页参数设定
-		map.put(PAGE, Integer.valueOf(page.getNumber()));
+		map.put(PAGE, contents.size() == 0 ? 0 : Integer.valueOf(page.getNumber()));
 		map.put(PAGE_PLUS_ONE, Integer.valueOf(page.getNumber() + 1));
 		map.put(SIZE, Integer.valueOf(page.getSize()));
 		map.put(TOTAL, Long.valueOf(page.getTotalElements()));

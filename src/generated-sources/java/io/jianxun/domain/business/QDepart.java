@@ -22,17 +22,32 @@ public class QDepart extends EntityPathBase<Depart> {
 
     public static final QDepart depart = new QDepart("depart");
 
-    public final io.jianxun.domain.QAbstractBaseEntity _super = new io.jianxun.domain.QAbstractBaseEntity(this);
+    public final io.jianxun.domain.QAbstractBusinessEntity _super;
 
     //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final BooleanPath active;
+
+    // inherited
+    public final QUser createdBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate;
+
+    //inherited
+    public final NumberPath<Long> id;
+
+    // inherited
+    public final QUser lastModifieBy;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
     public final StringPath name = createString("name");
 
     public final QDepart parent;
 
     //inherited
-    public final NumberPath<Long> version = _super.version;
+    public final NumberPath<Long> version;
 
     public QDepart(String variable) {
         this(Depart.class, forVariable(variable), INITS);
@@ -52,7 +67,15 @@ public class QDepart extends EntityPathBase<Depart> {
 
     public QDepart(Class<? extends Depart> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this._super = new io.jianxun.domain.QAbstractBusinessEntity(type, metadata, inits);
+        this.active = _super.active;
+        this.createdBy = _super.createdBy;
+        this.createdDate = _super.createdDate;
+        this.id = _super.id;
+        this.lastModifieBy = _super.lastModifieBy;
+        this.lastModifiedDate = _super.lastModifiedDate;
         this.parent = inits.isInitialized("parent") ? new QDepart(forProperty("parent"), inits.get("parent")) : null;
+        this.version = _super.version;
     }
 
 }

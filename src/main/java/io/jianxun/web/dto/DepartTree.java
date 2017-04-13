@@ -2,7 +2,7 @@ package io.jianxun.web.dto;
 
 public class DepartTree extends BaseTree {
 
-	private String url = "business/department/page";
+	private String url = "depart/page";
 	private String divid = "#depart-page-layout";
 
 	/**

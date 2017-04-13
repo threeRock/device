@@ -2,6 +2,7 @@ package io.jianxun.service.business;
 
 import com.querydsl.core.types.Predicate;
 
+import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.QUser;
 
 /**
@@ -26,6 +27,11 @@ public class UserPredicates {
 		if (id == null)
 			return user.username.eq(username);
 		return user.id.ne(id).and(usernamePredicate(username));
+	}
+
+	public static Predicate parentPredicate(Depart parent) {
+		QUser user = QUser.user;
+		return user.depart.eq(parent);
 	}
 
 }

@@ -7,11 +7,11 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import io.jianxun.domain.AbstractBaseEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 @Entity
 @Table(name = "jx_sys_depart")
-public class Depart extends AbstractBaseEntity {
+public class Depart extends AbstractBusinessEntity {
 
 	/**
 	 * 
