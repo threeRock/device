@@ -22,7 +22,7 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final io.jianxun.domain.QAbstractBusinessEntity _super;
+    public final io.jianxun.domain.QAbstractBusinessDepartEntity _super;
 
     public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
 
@@ -38,6 +38,9 @@ public class QUser extends EntityPathBase<User> {
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
     public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
+
+    // inherited
+    public final QDepart depart;
 
     public final StringPath displayName = createString("displayName");
 
@@ -79,10 +82,11 @@ public class QUser extends EntityPathBase<User> {
 
     public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new io.jianxun.domain.QAbstractBusinessEntity(type, metadata, inits);
+        this._super = new io.jianxun.domain.QAbstractBusinessDepartEntity(type, metadata, inits);
         this.active = _super.active;
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;
+        this.depart = _super.depart;
         this.id = _super.id;
         this.lastModifieBy = _super.lastModifieBy;
         this.lastModifiedDate = _super.lastModifiedDate;

@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.AbstractBusinessEntity;;
+import io.jianxun.domain.AbstractBusinessDepartEntity;;
 
 /**
  * 系统用户
@@ -32,7 +32,7 @@ import io.jianxun.domain.AbstractBusinessEntity;;
  */
 @Entity
 @Table(name = "jx_sys_user")
-public class User extends AbstractBusinessEntity implements UserDetails {
+public class User extends AbstractBusinessDepartEntity implements UserDetails {
 
 	private static final long serialVersionUID = 585375273427805552L;
 
