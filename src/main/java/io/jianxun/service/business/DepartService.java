@@ -56,10 +56,10 @@ public class DepartService extends AbstractBaseService<Depart> {
 		if (root == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
 		List<Depart> departs = Lists.newArrayList(root);
-		departs.addAll(getSubDeparts(root));
+		getSubDeparts(Lists.newArrayList(), root);
 		return convertEntityToUserDepartTree(departs);
 	}
-	
+
 	/**
 	 * 返回机构树形结构
 	 * 
@@ -70,7 +70,7 @@ public class DepartService extends AbstractBaseService<Depart> {
 		if (root == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
 		List<Depart> departs = Lists.newArrayList(root);
-		departs.addAll(getSubDeparts(root));
+		getSubDeparts(departs,root);
 		return convertEntityToDepartTree(departs);
 	}
 
@@ -80,13 +80,14 @@ public class DepartService extends AbstractBaseService<Depart> {
 	 * @param root
 	 * @return
 	 */
-	public List<Depart> getSubDeparts(Depart root) {
+	public void getSubDeparts(List<Depart> container, Depart root) {
 		List<Depart> ds = this.repository.findActiveAll(DepartPredicates.parentPredicate(root),
 				new Sort(Depart.ID_NAME));
+		if (!ds.isEmpty())
+			container.addAll(ds);
 		for (Depart depart : ds) {
-			ds.addAll(getSubDeparts(depart));
+			getSubDeparts(container, depart);
 		}
-		return ds;
 	}
 
 	private List<DepartTree> convertEntityToUserDepartTree(List<Depart> list) {
@@ -103,7 +104,7 @@ public class DepartService extends AbstractBaseService<Depart> {
 		}
 		return tree;
 	}
-	
+
 	private List<DepartTree> convertEntityToDepartTree(List<Depart> list) {
 		List<DepartTree> tree = Lists.newArrayList();
 		for (Depart depart : list) {
@@ -121,7 +122,5 @@ public class DepartService extends AbstractBaseService<Depart> {
 	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
 	private LocaleMessageSourceService localeMessageSourceService;
-
-	
 
 }
