@@ -24,7 +24,7 @@ public class SparePartMainTypePredicates {
 		QSparePartMainType maintype = QSparePartMainType.sparePartMainType;
 		if (id == null)
 			return maintype.name.eq(name);
-		return maintype.id.ne(id).and(namePredicate(name));
+		return maintype.id.ne(id).and(maintype.name.eq(name));
 	}
 
 }

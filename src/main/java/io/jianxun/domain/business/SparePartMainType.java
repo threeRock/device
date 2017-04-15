@@ -14,7 +14,7 @@ import io.jianxun.domain.AbstractBusinessEntity;
  *
  */
 @Entity
-@Table(name = "jx_sys_sp_maintype")
+@Table(name = "jx_device_sp_maintype")
 public class SparePartMainType extends AbstractBusinessEntity {
 
 	/**

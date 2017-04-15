@@ -1,0 +1,31 @@
+<div class="bjui-pageContent">
+	<form action="#" id="subtype_form"
+		th:action="@{/device/subtype/{path}(path=${action})}" method="POST"
+		th:object="${subtype}" data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td><label class="control-label x95">名称：</label> <input
+						type="text" th:field="*{name}" name="name"
+						data-rule="required;length[2~10];remote[device/subtype/check/nameunique, id, mainType]"
+						size="15" /></td>
+				</tr>
+				<tr>
+					<td colspan="4"><label class="control-label x95">所属大类：</label>
+						<select id="subtype_form_maintype" data-toggle="selectpicker"
+						data-width="150" th:field="*{mainType}">
+							<option th:each="item : ${maintypes}" th:value="${item.id}"
+								th:text="${item.name}">所属大类</option>
+					</select></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

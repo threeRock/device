@@ -24,7 +24,7 @@ public class RolePredicates {
 		QRole role = QRole.role;
 		if (id == null)
 			return role.name.eq(name);
-		return role.id.ne(id).and(namePredicate(name));
+		return role.id.ne(id).and(role.name.eq(name));
 	}
 
 }

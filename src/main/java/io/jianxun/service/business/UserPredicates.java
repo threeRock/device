@@ -26,7 +26,7 @@ public class UserPredicates {
 		QUser user = QUser.user;
 		if (id == null)
 			return user.username.eq(username);
-		return user.id.ne(id).and(usernamePredicate(username));
+		return user.id.ne(id).and(user.username.eq(username));
 	}
 
 	public static Predicate parentPredicate(Depart parent) {

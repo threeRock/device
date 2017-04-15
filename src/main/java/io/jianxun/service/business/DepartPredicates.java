@@ -25,7 +25,7 @@ public class DepartPredicates {
 		QDepart depart = QDepart.depart;
 		if (id == null)
 			return depart.name.eq(name);
-		return depart.id.ne(id).and(namePredicate(name));
+		return depart.id.ne(id).and(depart.name.eq(name));
 	}
 
 	//根据上级机构查询
