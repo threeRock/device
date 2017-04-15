@@ -173,9 +173,10 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	}
 
 	@Transactional(readOnly = false)
-	public void createAdminIfInit(Depart depart) {
+	public User createAdminIfInit(Depart depart) {
 		if (this.repository.findAll().isEmpty())
-			initAdminUser(depart);
+			return initAdminUser(depart);
+		return this.findActiveOne(UserPredicates.usernamePredicate(User.SUPER_ADMIN_USERNAME));
 
 	}
 

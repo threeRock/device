@@ -21,9 +21,15 @@ public enum PermissionDef {
 			DomainDef.SYS_ROLE), ROLE_MODIFY("ROLEMODIFY", "修改", ModuleDef.SYS,
 					DomainDef.SYS_ROLE), ROLE_REMOVE("ROLEREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_ROLE),
 	// 机构
-	DEPART_PAGE("DEPARTLIST", "列表", ModuleDef.SYS, DomainDef.SYS_DEPART), DEPART_CREATE("DEPARTCREATE", "新增",
-			ModuleDef.SYS, DomainDef.SYS_DEPART), DEPART_MODIFY("DEPARTMODIFY", "修改", ModuleDef.SYS,
-					DomainDef.SYS_DEPART), DEPART_REMOVE("DEPARTREMOVE", "删除", ModuleDef.SYS, DomainDef.SYS_DEPART);
+	DEPART_PAGE("DEPARTLIST", "列表", ModuleDef.ORGANIZATION, DomainDef.SYS_DEPART), DEPART_CREATE("DEPARTCREATE", "新增",
+			ModuleDef.ORGANIZATION, DomainDef.SYS_DEPART), DEPART_MODIFY("DEPARTMODIFY", "修改", ModuleDef.ORGANIZATION,
+					DomainDef.SYS_DEPART), DEPART_REMOVE("DEPARTREMOVE", "删除", ModuleDef.ORGANIZATION,
+							DomainDef.SYS_DEPART),
+	// 备件大类
+	MAINTYPE_PAGE("MAINTYPELIST", "列表", ModuleDef.SYS, DomainDef.SYS_MAINTYPE), MAINTYPE_CREATE("MAINTYPECREATE", "新增",
+			ModuleDef.SYS, DomainDef.SYS_MAINTYPE), MAINTYPE_MODIFY("MAINTYPEMODIFY", "修改", ModuleDef.SYS,
+					DomainDef.SYS_MAINTYPE), MAINTYPE_REMOVE("MAINTYPEREMOVE", "删除", ModuleDef.SYS,
+							DomainDef.SYS_MAINTYPE);
 	// 操作代码
 	private String code;
 	// 描述
@@ -132,7 +138,7 @@ public enum PermissionDef {
 
 	// 模块定义
 	public enum ModuleDef {
-		SYS("sys", "系统设置", 99), ORGANIZATION("org", "组织管理", 7);
+		SYS("sys", "系统设置", 99), ORGANIZATION("org", "机构管理", 7), DEVICE("device", "设备管理", 5);
 		private String code;
 		private String name;
 		private Integer sortNum = 99;
@@ -184,7 +190,8 @@ public enum PermissionDef {
 	// 模型定义
 	public enum DomainDef {
 		// 系统配置
-		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), SYS_DEPART("sys_depart", "机构管理", 10);
+		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), SYS_DEPART("org_depart", "机构管理",
+				20), SYS_MAINTYPE("device_maintype", "备件大类", 30);
 		private String code;
 		private String name;
 		private Integer sortNum = 99;
