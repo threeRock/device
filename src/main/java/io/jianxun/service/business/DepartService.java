@@ -52,12 +52,22 @@ public class DepartService extends AbstractBaseService<Depart> {
 	 * @return
 	 */
 	public List<DepartTree> getUserDepartTree() {
+		List<Depart> departs = getUserDepart();
+		return convertEntityToUserDepartTree(departs);
+	}
+
+	/**
+	 * 返回用户机构树形列表
+	 * 
+	 * @return
+	 */
+	public List<Depart> getUserDepart() {
 		Depart root = currentLoginInfo.currentLoginUser().getDepart();
 		if (root == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
 		List<Depart> departs = Lists.newArrayList(root);
 		getSubDeparts(Lists.newArrayList(), root);
-		return convertEntityToUserDepartTree(departs);
+		return departs;
 	}
 
 	/**
@@ -65,12 +75,12 @@ public class DepartService extends AbstractBaseService<Depart> {
 	 * 
 	 * @return
 	 */
-	public Object getDepartTree() {
+	public List<DepartTree> getDepartTree() {
 		Depart root = currentLoginInfo.currentLoginUser().getDepart();
 		if (root == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
 		List<Depart> departs = Lists.newArrayList(root);
-		getSubDeparts(departs,root);
+		getSubDeparts(departs, root);
 		return convertEntityToDepartTree(departs);
 	}
 

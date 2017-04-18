@@ -76,10 +76,10 @@ public class UserController {
 			@QuerydslPredicate(root = User.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		Depart parent = this.departService.findActiveOne(departId);
-		if (parent == null)
+		Depart depart = this.departService.findActiveOne(departId);
+		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		Predicate departPredicate = UserPredicates.parentPredicate(parent);
+		Predicate departPredicate = UserPredicates.departPredicate(depart);
 		if (predicate != null)
 			departPredicate = ExpressionUtils.and(departPredicate, predicate);
 		Page<User> page = userService.findActivePage(departPredicate, pageable);

@@ -23,51 +23,36 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.PermissionDef;
 import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.User;
-import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.RoleService;
-import io.jianxun.service.business.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class UserControllerITest {
+public class UserControllerITest extends AbstractIT {
 
 	private static final String USERNAME = "TT";
 	private static final String PASSWORD = "tttttt";
 
 	@Autowired
 	private MockMvc mockMvc;
-
-	@Autowired
-	private UserService userService;
 	@Autowired
 	private RoleService roleService;
-	@Autowired
-	private DepartService departService;
 
 	private User user, other;
 	private Role userManageRoleInfo, roleManageRoleInfo;
-	private Depart root;
 
 	@Before
 	public void setUp() {
-		root = departService.initRoot();
-		userService.createAdminIfInit(root);
-
+		super.setUp();
 		userManageRoleInfo = new Role();
 		userManageRoleInfo.setName("用户管理角色");
 		userManageRoleInfo.setPermissions(Lists.newArrayList("USERLIST", "USERCREATE", "USERMODIFY", "USERREMOVE",
@@ -119,10 +104,7 @@ public class UserControllerITest {
 
 	@Test
 	public void tree() throws Exception {
-		this.mockMvc
-				.perform(get("/user/tree/").with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
-				.andDo(print()).andExpect(status().isOk());
+		this.mockMvc.perform(get("/user/tree/").with(user(user))).andDo(print()).andExpect(status().isOk());
 	}
 
 	@Test
@@ -154,7 +136,7 @@ public class UserControllerITest {
 		this.mockMvc
 				.perform(post("/user/resetpassword/current").param("oldPassword", PASSWORD)
 						.param("newPassword", "ppppppp").with(csrf())
-						.with(securityContext(initSecurityContext("USERRESETPASSWROD"))))
+						.with(securityContext(initSecurityContext(other, "USERRESETPASSWROD"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
 		this.mockMvc.perform(post("/user/resetpassword/current").param("oldPassword", "errorpassword")
@@ -270,13 +252,6 @@ public class UserControllerITest {
 						.param("newPassword", PASSWORD).with(csrf()).with(user(user)))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("重置密码成功"));
-	}
-
-	private SecurityContext initSecurityContext(String permission) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(other, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
-		return securityContext;
 	}
 
 }

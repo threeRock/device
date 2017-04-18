@@ -8,22 +8,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.junit.Test;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import io.jianxun.domain.business.Role;
 
-public class ValidatorRoleTest {
-
-	private Validator createValidator() {
-		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("messages/messages");
-		messageSource.setDefaultEncoding("UTF-8");
-		localValidatorFactoryBean.setValidationMessageSource(messageSource);
-		localValidatorFactoryBean.afterPropertiesSet();
-		return localValidatorFactoryBean;
-	}
+public class ValidatorRoleTest extends AbstractValidator {
 
 	@Test
 	public void shouldNotValidateWhenNameBlank() {

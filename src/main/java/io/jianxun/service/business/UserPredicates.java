@@ -29,9 +29,9 @@ public class UserPredicates {
 		return user.id.ne(id).and(user.username.eq(username));
 	}
 
-	public static Predicate parentPredicate(Depart parent) {
+	public static Predicate departPredicate(Depart depart) {
 		QUser user = QUser.user;
-		return user.depart.eq(parent);
+		return user.depart.eq(depart);
 	}
 
 }

@@ -8,23 +8,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.junit.Test;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.User;
 
-public class ValidatorUserTest {
-
-	private Validator createValidator() {
-		LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
-		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-		messageSource.setBasename("messages/messages");
-		messageSource.setDefaultEncoding("UTF-8");
-		localValidatorFactoryBean.setValidationMessageSource(messageSource);
-		localValidatorFactoryBean.afterPropertiesSet();
-		return localValidatorFactoryBean;
-	}
+public class ValidatorUserTest extends AbstractValidator {
 
 	@Test
 	public void shouldNotValidateWhenUserNameEmpty() {
@@ -37,8 +25,8 @@ public class ValidatorUserTest {
 
 		assertThat(constraintViolations.size()).isEqualTo(2);
 		ConstraintViolation<User> violation = constraintViolations.iterator().next();
-		assertThat(violation.getPropertyPath().toString()).isIn("depart","username");
-		assertThat(violation.getMessage()).isIn("用户名不能为空","所属机构不能为空");
+		assertThat(violation.getPropertyPath().toString()).isIn("depart", "username");
+		assertThat(violation.getMessage()).isIn("用户名不能为空", "所属机构不能为空");
 	}
 
 	@Test

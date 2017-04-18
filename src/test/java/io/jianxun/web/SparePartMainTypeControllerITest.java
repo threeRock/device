@@ -21,26 +21,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.google.common.collect.Lists;
-
 import io.jianxun.domain.business.SparePartMainType;
-import io.jianxun.domain.business.User;
-import io.jianxun.service.business.DepartService;
+import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.SparePartMainTypeService;
-import io.jianxun.service.business.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class SparePartMainTypeControllerITest {
+public class SparePartMainTypeControllerITest extends AbstractIT {
 
 	private static final String MAINTYPE_NAME = "测试名称";
 
@@ -51,18 +43,14 @@ public class SparePartMainTypeControllerITest {
 	private SparePartMainTypeService sparePartMainTypeService;
 
 	@Autowired
-	private UserService userService;
-	@Autowired
-	private DepartService departService;
-
-	private User loginUser;
+	private LocaleMessageSourceService localeMessageSourceService;
 
 	private SparePartMainType sparePartMainType;
 
 	@Before
 	public void setUp() {
 		// inti data
-		loginUser = userService.createAdminIfInit(departService.initRoot());
+		super.setUp();
 		sparePartMainType = new SparePartMainType();
 		sparePartMainType.setName(MAINTYPE_NAME);
 		sparePartMainTypeService.save(sparePartMainType);
@@ -107,8 +95,8 @@ public class SparePartMainTypeControllerITest {
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
 
 		this.mockMvc
-				.perform(get("/device/maintype/create").with(
-						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("MAINTYPECREATE"))))
+				.perform(get("/device/maintype/create").with(user("userUser")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("MAINTYPECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("maintype/form"));
 	}
 
@@ -124,8 +112,9 @@ public class SparePartMainTypeControllerITest {
 		this.mockMvc
 				.perform(post("/device/maintype/create").param("name", MAINTYPE_NAME).with(csrf())
 						.with(securityContext(initSecurityContext("MAINTYPECREATE"))))
-				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
-						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测试名称 备件大类名称已经存在,不能重复使用<br />"));
+				.andDo(print()).andExpect(status().is4xxClientError())
+				.andExpect(jsonPath("$.message").value(containsString(localeMessageSourceService
+						.getMessage("maintype.name.isUsed", new Object[] { MAINTYPE_NAME }))));
 
 	}
 
@@ -168,11 +157,5 @@ public class SparePartMainTypeControllerITest {
 
 	}
 
-	private SecurityContext initSecurityContext(String permission) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
-		return securityContext;
-	}
 
 }

@@ -34,7 +34,12 @@ public enum PermissionDef {
 	SUBTYPE_PAGE("SUBTYPELIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_SUBTYPE), SUBTYPE_CREATE("SUBTYPECREATE", "新增",
 			ModuleDef.DEVICE, DomainDef.DEVICE_SUBTYPE), SUBTYPE_MODIFY("SUBTYPEMODIFY", "修改", ModuleDef.DEVICE,
 					DomainDef.DEVICE_SUBTYPE), SUBTYPE_REMOVE("SUBTYPEREMOVE", "删除", ModuleDef.DEVICE,
-							DomainDef.DEVICE_SUBTYPE);
+							DomainDef.DEVICE_SUBTYPE),
+	// 仓库
+	STOREHOUSE_PAGE("STOREHOUSELIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE), STOREHOUSE_CREATE(
+			"STOREHOUSECREATE", "新增", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE), STOREHOUSE_MODIFY(
+					"STOREHOUSEMODIFY", "修改", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE), STOREHOUSE_REMOVE(
+							"STOREHOUSEREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE);
 	// 操作代码
 	private String code;
 	// 描述
@@ -196,7 +201,8 @@ public enum PermissionDef {
 	public enum DomainDef {
 		// 系统配置
 		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), ORG_DEPART("org_depart", "机构管理",
-				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_maintype", "备件子类", 40);
+				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_maintype", "备件子类",
+						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50);
 		private String code;
 		private String name;
 		private Integer sortNum = 99;
