@@ -50,7 +50,6 @@ public class SparePartMainTypeControllerITest extends AbstractIT {
 	@Before
 	public void setUp() {
 		// inti data
-		super.setUp();
 		sparePartMainType = new SparePartMainType();
 		sparePartMainType.setName(MAINTYPE_NAME);
 		sparePartMainTypeService.save(sparePartMainType);

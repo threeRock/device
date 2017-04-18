@@ -15,32 +15,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.common.collect.Lists;
 
 import io.jianxun.domain.business.Role;
-import io.jianxun.domain.business.User;
-import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.RoleService;
-import io.jianxun.service.business.UserService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-public class RoleControllerITest {
+public class RoleControllerITest extends AbstractIT {
 
 	private static final String ROLE_NAME = "测试用户";
 	@Autowired
@@ -48,13 +33,8 @@ public class RoleControllerITest {
 
 	@Autowired
 	private RoleService roleService;
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private DepartService departService;
 
 	private Role role;
-	private User loginUser;
 
 	@Before
 	public void setUp() {
@@ -63,14 +43,6 @@ public class RoleControllerITest {
 		role.setName(ROLE_NAME);
 		role.setPermissions(Lists.newArrayList("USERLIST", "ROLELIST"));
 		role = roleService.save(role);
-
-		loginUser = new User();
-		loginUser.setUsername("loginUser");
-		loginUser.setDisplayName("loginUser");
-		loginUser.setPassword("tt");
-		loginUser.setDepart(departService.initRoot());
-		loginUser.setRoles(Lists.newArrayList(role));
-		loginUser = userService.register(loginUser);
 	}
 
 	/**
@@ -170,13 +142,6 @@ public class RoleControllerITest {
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("角色删除成功"));
 
-	}
-
-	private SecurityContext initSecurityContext(String permission) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
-		return securityContext;
 	}
 
 }

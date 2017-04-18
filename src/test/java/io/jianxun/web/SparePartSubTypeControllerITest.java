@@ -15,35 +15,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.google.common.collect.Lists;
 
 import io.jianxun.domain.business.SparePartMainType;
 import io.jianxun.domain.business.SparePartSubType;
-import io.jianxun.domain.business.User;
 import io.jianxun.service.LocaleMessageSourceService;
-import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.service.business.SparePartSubTypeService;
-import io.jianxun.service.business.UserService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-public class SparePartSubTypeControllerITest {
+public class SparePartSubTypeControllerITest extends AbstractIT {
 
 	private static final String SUBTYPE_NAME = "测试名称";
 
@@ -58,13 +41,6 @@ public class SparePartSubTypeControllerITest {
 	@Autowired
 	private LocaleMessageSourceService localeMessageSourceService;
 
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private DepartService departService;
-
-	private User loginUser;
-
 	private SparePartSubType sparePartSubType;
 
 	private SparePartMainType sparePartMainType;
@@ -72,8 +48,6 @@ public class SparePartSubTypeControllerITest {
 	@Before
 	public void setUp() {
 		// inti data
-		loginUser = userService.createAdminIfInit(departService.initRoot());
-
 		sparePartMainType = new SparePartMainType();
 		sparePartMainType.setName("备件主类");
 		sparePartMainTypeService.save(sparePartMainType);
@@ -188,13 +162,6 @@ public class SparePartSubTypeControllerITest {
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message").value("备件子类删除成功"));
 
-	}
-
-	private SecurityContext initSecurityContext(String permission) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
-		return securityContext;
 	}
 
 }

@@ -176,7 +176,7 @@ public class UserService extends AbstractBaseService<User> implements UserDetail
 	public User createAdminIfInit(Depart depart) {
 		if (this.repository.findAll().isEmpty())
 			return initAdminUser(depart);
-		return this.repository.findActiveOne(UserPredicates.usernamePredicate(User.SUPER_ADMIN_USERNAME));
+		return this.repository.findActiveOne(1L);
 
 	}
 

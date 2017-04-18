@@ -38,7 +38,7 @@ public class DepartService extends AbstractBaseService<Depart> {
 			depart.setName(ROOT_DEPART_NAME);
 			return this.save(depart);
 		}
-		return findActiveOne(DepartPredicates.namePredicate(ROOT_DEPART_NAME));
+		return this.repository.findActiveOne(1L);
 
 	}
 

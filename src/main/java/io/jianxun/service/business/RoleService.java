@@ -30,7 +30,7 @@ public class RoleService extends AbstractBaseService<Role> {
 			role.setPermissions(PermissionDef.getPermissionCodeList());
 			return this.save(role);
 		}
-		return null;
+		return this.repository.findActiveOne(1L);
 
 	}
 

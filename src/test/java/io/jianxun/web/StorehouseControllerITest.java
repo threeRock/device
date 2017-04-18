@@ -15,34 +15,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.google.common.collect.Lists;
-
-import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Storehouse;
-import io.jianxun.domain.business.User;
 import io.jianxun.service.LocaleMessageSourceService;
-import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.StorehouseService;
-import io.jianxun.service.business.UserService;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-public class StorehouseControllerITest {
+public class StorehouseControllerITest extends AbstractIT {
 
 	private static final String NAME = "测试名称";
 
@@ -51,25 +33,15 @@ public class StorehouseControllerITest {
 
 	@Autowired
 	private StorehouseService storehouseService;
-
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private DepartService departService;
 	@Autowired
 	private LocaleMessageSourceService localeMessageSourceService;
 
-	private User loginUser;
-
 	private Storehouse storehouse;
-
-	private Depart root;
 
 	@Before
 	public void setUp() {
 		// inti data
-		root = departService.initRoot();
-		loginUser = userService.createAdminIfInit(root);
+		super.setUp();
 		storehouse = new Storehouse();
 		storehouse.setName(NAME);
 		storehouse.setDepart(root);
@@ -179,13 +151,6 @@ public class StorehouseControllerITest {
 				.andExpect(jsonPath("$.message")
 						.value(containsString(localeMessageSourceService.getMessage("storehouse.remove.successd"))));
 
-	}
-
-	private SecurityContext initSecurityContext(String permission) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		securityContext.setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, "x",
-				Lists.newArrayList(new SimpleGrantedAuthority(permission))));
-		return securityContext;
 	}
 
 }
