@@ -32,9 +32,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.common.collect.Lists;
 
 import io.jianxun.domain.business.SparePartMainType;
+import io.jianxun.domain.business.SparePartSubType;
 import io.jianxun.domain.business.User;
+import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.SparePartMainTypeService;
+import io.jianxun.service.business.SparePartSubTypeService;
 import io.jianxun.service.business.UserService;
 
 @RunWith(SpringRunner.class)
@@ -42,13 +45,18 @@ import io.jianxun.service.business.UserService;
 @AutoConfigureMockMvc
 public class SparePartSubTypeControllerITest {
 
-	private static final String MAINTYPE_NAME = "测试名称";
+	private static final String SUBTYPE_NAME = "测试名称";
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
+	private SparePartSubTypeService sparePartSubTypeService;
+	@Autowired
 	private SparePartMainTypeService sparePartMainTypeService;
+
+	@Autowired
+	private LocaleMessageSourceService localeMessageSourceService;
 
 	@Autowired
 	private UserService userService;
@@ -57,15 +65,22 @@ public class SparePartSubTypeControllerITest {
 
 	private User loginUser;
 
+	private SparePartSubType sparePartSubType;
+
 	private SparePartMainType sparePartMainType;
 
 	@Before
 	public void setUp() {
 		// inti data
 		loginUser = userService.createAdminIfInit(departService.initRoot());
+
 		sparePartMainType = new SparePartMainType();
-		sparePartMainType.setName(MAINTYPE_NAME);
+		sparePartMainType.setName("备件主类");
 		sparePartMainTypeService.save(sparePartMainType);
+		sparePartSubType = new SparePartSubType();
+		sparePartSubType.setName(SUBTYPE_NAME);
+		sparePartSubType.setMainType(sparePartMainType);
+		sparePartSubTypeService.save(sparePartSubType);
 	}
 
 	/**
@@ -75,14 +90,14 @@ public class SparePartSubTypeControllerITest {
 	 */
 	@Test
 	public void unauthorized() throws Exception {
-		this.mockMvc.perform(get("/device/maintype/")).andDo(print()).andExpect(status().is3xxRedirection());
+		this.mockMvc.perform(get("/device/subtype/")).andDo(print()).andExpect(status().is3xxRedirection());
 
 	}
 
 	@Test
 	public void accessDenied() throws Exception {
 		this.mockMvc
-				.perform(get("/device/maintype/").with(user("testUser").password("password")
+				.perform(get("/device/subtype/").with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
 				.andDo(print()).andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
 				.andExpect(jsonPath("$.statusCode").value(300));
@@ -93,66 +108,73 @@ public class SparePartSubTypeControllerITest {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/maintype/").with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("MAINTYPELIST"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(MAINTYPE_NAME)));
+				.perform(get("/device/subtype/").with(user("testUser").password("password")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("SUBTYPELIST"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(SUBTYPE_NAME)));
 	}
 
 	@Test
 	public void create_form() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/maintype/create").with(user("testUser").password("password")
+				.perform(get("/device/subtype/create").with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
 
 		this.mockMvc
-				.perform(get("/device/maintype/create").with(
-						user("userUser").authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("MAINTYPECREATE"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("maintype/form"));
+				.perform(get("/device/subtype/create").with(user("userUser")
+						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("SUBTYPECREATE"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(view().name("subtype/form"));
 	}
 
 	@Test
 	public void create_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/device/maintype/create").param("name", "tt001").with(csrf())
-						.with(securityContext(initSecurityContext("MAINTYPECREATE"))))
+				.perform(post("/device/subtype/create").param("name", "tt001")
+						.param("mainType.id", sparePartMainType.getId().toString()).with(csrf())
+						.with(securityContext(initSecurityContext("SUBTYPECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
+	}
+
+	@Test
+	public void create_save_not_unique() throws Exception {
 		// 验证名称重复
 		this.mockMvc
-				.perform(post("/device/maintype/create").param("name", MAINTYPE_NAME).with(csrf())
-						.with(securityContext(initSecurityContext("MAINTYPECREATE"))))
-				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.message")
-						.value("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测试名称 备件大类名称已经存在,不能重复使用<br />"));
-
+				.perform(post("/device/subtype/create").param("name", SUBTYPE_NAME)
+						.param("mainType.id", sparePartMainType.getId().toString()).with(csrf())
+						.with(securityContext(initSecurityContext("SUBTYPECREATE"))))
+				.andDo(print()).andExpect(status().is4xxClientError())
+				.andExpect(jsonPath("$.message")
+						.value(containsString((localeMessageSourceService.getMessage("subtype.name.isUsed",
+								new Object[] { sparePartMainType.getName(), SUBTYPE_NAME })))));
 	}
 
 	@Test
 	public void modify_form() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/maintype/modify/{id}", sparePartMainType.getId())
-						.with(securityContext(initSecurityContext("MAINTYPEMODIFY"))))
-				.andDo(print()).andExpect(status().isOk()).andExpect(model().attributeExists("maintype"))
-				.andExpect(view().name("maintype/form"));
+				.perform(get("/device/subtype/modify/{id}", sparePartSubType.getId())
+						.with(securityContext(initSecurityContext("SUBTYPEMODIFY"))))
+				.andDo(print()).andExpect(status().isOk()).andExpect(model().attributeExists("subtype"))
+				.andExpect(view().name("subtype/form"));
 	}
 
 	@Test
 	public void modify_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/device/maintype/modify").param("name", "tt")
-						.param("id", sparePartMainType.getId().toString()).with(csrf())
-						.with(securityContext(initSecurityContext("MAINTYPEMODIFY"))))
+				.perform(post("/device/subtype/modify").param("name", "tt")
+						.param("id", sparePartSubType.getId().toString()).with(csrf())
+						.with(securityContext(initSecurityContext("SUBTYPEMODIFY"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
-				.andExpect(jsonPath("$.message").value("备件大类保存成功"));
+				.andExpect(jsonPath("$.message").value("备件子类保存成功"));
 
 		// 角色名称为空 请求失败
 		this.mockMvc
-				.perform(post("/device/maintype/modify").param("name", "").with(csrf())
-						.with(securityContext(initSecurityContext("MAINTYPEMODIFY"))))
+				.perform(post("/device/subtype/modify").param("name", "").with(csrf())
+						.with(securityContext(initSecurityContext("SUBTYPEMODIFY"))))
 				.andDo(print()).andExpect(status().is4xxClientError());
 
 	}
@@ -161,10 +183,10 @@ public class SparePartSubTypeControllerITest {
 	public void delete_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/device/maintype/remove/{id}", sparePartMainType.getId().toString()).with(csrf())
-						.with(securityContext(initSecurityContext("MAINTYPEREMOVE"))))
+				.perform(post("/device/subtype/remove/{id}", sparePartSubType.getId().toString()).with(csrf())
+						.with(securityContext(initSecurityContext("SUBTYPEREMOVE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
-				.andExpect(jsonPath("$.message").value("备件大类删除成功"));
+				.andExpect(jsonPath("$.message").value("备件子类删除成功"));
 
 	}
 

@@ -54,6 +54,7 @@ public class SparePartSubTypeController {
 		Page<SparePartSubType> page = subtypeService.findActivePage(predicate, pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
+		addMaitypes(model);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 

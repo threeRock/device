@@ -6,8 +6,13 @@
 			type="hidden" name="orderField" th:value="${orderField}" /> <input
 			type="hidden" name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>备件子类名称</label><input type="text" th:value="${name}" value=""
-				name="name" class="form-control" size="10" />&nbsp;
+			<label>所属大类: </label><select id="subtype_form_maintype"
+				data-toggle="selectpicker" data-width="150" name="mainType">
+				<option value="">请选择所属大类</option>
+				<option th:each="item : ${maintypes}" th:value="${item.id}" th:text="${item.name}"
+					 th:selected="${item.id.toString() == mainType}">所属大类</option>
+			</select>&nbsp;<label>备件子类名称: </label><input type="text" th:value="${name}"
+				value="" name="name" class="form-control" size="10" />&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
 	</form>
