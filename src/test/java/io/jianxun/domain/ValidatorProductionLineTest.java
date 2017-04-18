@@ -26,7 +26,7 @@ public class ValidatorProductionLineTest extends AbstractValidator {
 		assertThat(constraintViolations.size()).isEqualTo(2);
 		ConstraintViolation<ProductionLine> violation = constraintViolations.iterator().next();
 		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name");
-		assertThat(violation.getMessage()).contains("生产线名称不能为空");
+		assertThat(violation.getMessage()).isIn("所属机构不能为空","生产线名称不能为空");
 	}
 
 	@Test
