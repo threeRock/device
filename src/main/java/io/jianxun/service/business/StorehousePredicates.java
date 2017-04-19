@@ -33,4 +33,11 @@ public class StorehousePredicates {
 		return storehouse.depart.eq(depart);
 	}
 
+	public static Predicate codeAndIdNotPredicate(String code, Long id) {
+		QStorehouse storehouse = QStorehouse.storehouse;
+		if (id == null)
+			return storehouse.code.eq(code);
+		return storehouse.id.ne(id).and(storehouse.code.eq(code));
+	}
+
 }

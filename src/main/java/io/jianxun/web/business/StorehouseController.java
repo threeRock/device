@@ -113,7 +113,7 @@ public class StorehouseController {
 	@ResponseBody
 	ReturnDto createSave(@Valid Storehouse storehouse, @RequestParam MultiValueMap<String, String> parameters) {
 		storehouseService.save(storehouse);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "storehouse-page",
+		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "",
 				"storehouse-page-layout");
 	}
 
@@ -147,7 +147,7 @@ public class StorehouseController {
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "storehouse") Storehouse storehouse, Model model) {
 		storehouseService.save(storehouse);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "storehouse-page",
+		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "",
 				"storehouse-page-layout");
 	}
 
@@ -160,7 +160,7 @@ public class StorehouseController {
 	}
 
 	/**
-	 * 验证机构名称是否重复
+	 * 验证名称是否重复
 	 * 
 	 * @param username
 	 * @param id
@@ -175,6 +175,18 @@ public class StorehouseController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		if (!this.storehouseService.validateNameUnique(name, depart, id))
 			return localeMessageSourceService.getMessage("storehouse.name.isUsed", new Object[] { name });
+		return "";
+	}
+	
+	@RequestMapping("check/codeunique")
+	@ResponseBody
+	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
+			@RequestParam("id") Long id) {
+		Depart depart = this.departService.findActiveOne(departId);
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!this.storehouseService.validateCodeUnique(code, depart, id))
+			return localeMessageSourceService.getMessage("storehouse.code.isUsed", new Object[] { code });
 		return "";
 	}
 

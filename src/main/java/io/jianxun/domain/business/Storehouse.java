@@ -15,6 +15,8 @@ public class Storehouse extends AbstractBusinessDepartEntity {
 
 	@NotBlank(message = "{storehouse.name.notblank}")
 	private String name;
+	@NotBlank(message = "{storehouse.code.notblank}")
+	private String code;
 
 	public String getName() {
 		return name;
@@ -22,6 +24,14 @@ public class Storehouse extends AbstractBusinessDepartEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

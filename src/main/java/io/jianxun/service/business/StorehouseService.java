@@ -24,6 +24,11 @@ public class StorehouseService extends AbstractBaseService<Storehouse> {
 		return 0 == countActiveAll(ExpressionUtils.and(StorehousePredicates.departPredicate(depart),
 				StorehousePredicates.nameAndIdNotPredicate(name, id)));
 	}
+	
+	public boolean validateCodeUnique(String code, Depart depart, Long id) {
+		return 0 == countActiveAll(ExpressionUtils.and(StorehousePredicates.departPredicate(depart),
+				StorehousePredicates.codeAndIdNotPredicate(code, id)));
+	}
 
 	public List<DepartTree> getStorehouseTree() {
 		return convertEntityToDepartTree(departService.getUserDepart());

@@ -24,6 +24,7 @@ public class StorehouseValidator implements Validator {
 		final Storehouse storeshouese = (Storehouse) target;
 		final String name = storeshouese.getName();
 		final Depart depart = storeshouese.getDepart();
+		final String code = storeshouese.getCode();
 		final Long id = storeshouese.getId();
 
 		if (depart == null || depart.getId() == null || !departService.exists(depart.getId()))
@@ -33,6 +34,9 @@ public class StorehouseValidator implements Validator {
 		if (!storehouseService.validateNameUnique(name, depart, id))
 			errors.rejectValue("name", "name.unique",
 					localeMessageSourceService.getMessage("storehouse.name.isUsed", new Object[] { name }));
+		if (!storehouseService.validateCodeUnique(code, depart, id))
+			errors.rejectValue("code", "code.unique",
+					localeMessageSourceService.getMessage("storehouse.code.isUsed", new Object[] { code }));
 
 	}
 

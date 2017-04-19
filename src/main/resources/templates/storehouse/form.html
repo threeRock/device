@@ -7,6 +7,12 @@
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
+					<td><label class="control-label x95">仓库编码：</label>  <input
+						type="text" th:field="*{code}" name="code"
+						data-rule="required;remote[device/storehouse/check/codeunique, id, depart.id]"
+						size="15" /></td>
+				</tr>
+				<tr>
 					<td><label class="control-label x95">仓库名称：</label>  <input
 						type="text" th:field="*{name}" name="name"
 						data-rule="required;remote[device/storehouse/check/nameunique, id, depart.id]"

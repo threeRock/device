@@ -27,6 +27,8 @@ public class QStorehouse extends EntityPathBase<Storehouse> {
     //inherited
     public final BooleanPath active;
 
+    public final StringPath code = createString("code");
+
     // inherited
     public final QUser createdBy;
 

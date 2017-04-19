@@ -44,6 +44,7 @@ public class StorehouseControllerITest extends AbstractIT {
 		super.setUp();
 		storehouse = new Storehouse();
 		storehouse.setName(NAME);
+		storehouse.setCode(NAME);
 		storehouse.setDepart(root);
 		storehouseService.save(storehouse);
 	}
@@ -96,14 +97,14 @@ public class StorehouseControllerITest extends AbstractIT {
 	public void create_save() throws Exception {
 
 		this.mockMvc
-				.perform(post("/device/storehouse/create").param("name", "tt001")
+				.perform(post("/device/storehouse/create").param("name", "tt001").param("code", "tt001")
 						.param("depart.id", root.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("STOREHOUSECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
 		// 验证名称重复
 		this.mockMvc
-				.perform(post("/device/storehouse/create").param("name", NAME)
+				.perform(post("/device/storehouse/create").param("name", NAME).param("code", NAME)
 						.param("depart.id", root.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("STOREHOUSECREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError())

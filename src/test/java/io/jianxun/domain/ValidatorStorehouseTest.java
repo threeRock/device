@@ -23,10 +23,10 @@ public class ValidatorStorehouseTest extends AbstractValidator {
 		Validator validator = createValidator();
 		Set<ConstraintViolation<Storehouse>> constraintViolations = validator.validate(storehouse);
 
-		assertThat(constraintViolations.size()).isEqualTo(2);
+		assertThat(constraintViolations.size()).isEqualTo(3);
 		ConstraintViolation<Storehouse> violation = constraintViolations.iterator().next();
-		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name");
-		assertThat(violation.getMessage()).isIn("所属机构不能为空","仓库名称不能为空");
+		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name","code");
+		assertThat(violation.getMessage()).isIn("所属机构不能为空","仓库名称不能为空","仓库编码不能为空");
 	}
 
 	@Test
@@ -34,6 +34,7 @@ public class ValidatorStorehouseTest extends AbstractValidator {
 		Storehouse storehouse = new Storehouse();
 		storehouse.setDepart(new Depart());
 		storehouse.setName("tt");
+		storehouse.setCode("xx");
 		Validator validator = createValidator();
 		Set<ConstraintViolation<Storehouse>> constraintViolations = validator.validate(storehouse);
 
