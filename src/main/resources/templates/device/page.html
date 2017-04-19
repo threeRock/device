@@ -1,0 +1,58 @@
+<div class="bjui-pageHeader">
+	<form id="pagerForm" data-toggle="ajaxsearch"
+		th:action="@{/device/page/{path}(path=${depart.id})}" action="#" method="POST">
+		<input id="devicedepart" type="hidden"  th:value="${depart.id}" value="10" />
+		<input type="hidden" name="size" th:value="${size}" value="10" /> <input
+			type="hidden" name="page" th:value="${page}" value="0" /><input
+			type="hidden" name="orderField" th:value="${orderField}" /> <input
+			type="hidden" name="orderDirection" th:value="${orderDirection}" />
+		<div class="bjui-searchBar">
+			<label>设备名称</label><input type="text" th:value="${name}" value=""
+				name="name" class="form-control" size="10" />&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
+		</div>
+	</form>
+	<hr style="margin: 5px 0" />
+	<div class="pull-left">
+		<button sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="storehouse-form-new"
+			data-url="device/create/{#devicedepart}">新增设备</button>
+	</div>
+</div>
+<div class="bjui-pageContent tableContent">
+	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+		<thead>
+			<tr>
+				<th data-order-field="e.depart.name">所属机构</th>
+				<th data-order-field="productionLine.name">生产线</th>
+				<th data-order-field="name">名称</th>
+				<th data-order-field="typeInfo">型号</th>
+				<th data-order-field="code">设备编号</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
+				<td th:text="${e.depart.name}">所属机构</td>
+				<td th:text="${e.code}">仓库编码</td>
+				<td th:text="${e.name}">仓库名称</td>
+				<td><a sec:authorize="hasAnyAuthority('DEVICEMODIFY')"
+					th:href="@{/device/modify/{id}(id=${e.id})}" href="#"
+					class="btn btn-green" data-toggle="navtab"
+					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
+					sec:authorize="hasAnyAuthority('DEVICEREMOVE')"
+					th:href="@{/device/remove/{id}(id=${e.id})}" href="#"
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="bjui-pageFooter">
+	<div class="pages">
+		<span th:text="'每页 '+${size}+' 条 '">每页 0 条</span> &nbsp; <span
+			th:text="',共 '+${total}+' 条 '">共 0 条</span>
+	</div>
+	<div class="pagination-box" data-toggle="pagination"
+		th:attrappend="data-total=${total},data-page-size=${size},data-page-current=${page}">
+	</div>
+</div>

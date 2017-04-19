@@ -41,10 +41,17 @@ public enum PermissionDef {
 					"STOREHOUSEMODIFY", "修改", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE), STOREHOUSE_REMOVE(
 							"STOREHOUSEREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_STOREHOUSE),
 	// 生产线
-		PRODUCTIONLINE_PAGE("PRODUCTIONLINELIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_CREATE(
-				"PRODUCTIONLINECREATE", "新增", ModuleDef.DEVICE, DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_MODIFY(
-						"PRODUCTIONLINEMODIFY", "修改", ModuleDef.DEVICE, DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_REMOVE(
-								"PRODUCTIONLINEREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_PRODUCTIONLINE);
+	PRODUCTIONLINE_PAGE("PRODUCTIONLINELIST", "列表", ModuleDef.DEVICE,
+			DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_CREATE("PRODUCTIONLINECREATE", "新增", ModuleDef.DEVICE,
+					DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_MODIFY("PRODUCTIONLINEMODIFY", "修改",
+							ModuleDef.DEVICE,
+							DomainDef.DEVICE_PRODUCTIONLINE), PRODUCTIONLINE_REMOVE("PRODUCTIONLINEREMOVE", "删除",
+									ModuleDef.DEVICE, DomainDef.DEVICE_PRODUCTIONLINE), DEVICE_PAGE("DEVICELIST", "列表",
+											ModuleDef.DEVICE, DomainDef.DEVICE_DEVICE), DEVICE_CREATE("DEVICECREATE",
+													"新增", ModuleDef.DEVICE, DomainDef.DEVICE_DEVICE), DEVICE_MODIFY(
+															"DEVICEMODIFY", "修改", ModuleDef.DEVICE,
+															DomainDef.DEVICE_DEVICE), DEVICE_REMOVE("DEVICEREMOVE",
+																	"删除", ModuleDef.DEVICE, DomainDef.DEVICE_DEVICE);
 	// 操作代码
 	private String code;
 	// 描述
@@ -207,8 +214,9 @@ public enum PermissionDef {
 		// 系统配置
 		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), ORG_DEPART("org_depart", "机构管理",
 				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_maintype", "备件子类",
-						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50), DEVICE_PRODUCTIONLINE("device_productionline", "生产线管理", 60);
-		
+						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50), DEVICE_PRODUCTIONLINE(
+								"device_productionline", "生产线管理", 60), DEVICE_DEVICE("device_device", "设备管理", 70);
+
 		private String code;
 		private String name;
 		private Integer sortNum = 99;

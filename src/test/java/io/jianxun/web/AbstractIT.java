@@ -32,9 +32,20 @@ public abstract class AbstractIT {
 
 	@Before
 	public void setUp() {
-
-		root = departService.initRoot();
-		admin = userService.createAdminIfInit(root);
+		try {
+			root = departService.findActiveOne(1L);
+		} catch (Exception e) {
+			root = null;
+		}
+		if (root == null)
+			root = departService.initRoot();
+		try {
+			admin = userService.findActiveOne(1L);
+		} catch (Exception e) {
+			admin = null;
+		}
+		if (admin == null)
+			admin = userService.createAdminIfInit(root);
 
 		testUser = new User();
 		testUser.setUsername("测试用户");
