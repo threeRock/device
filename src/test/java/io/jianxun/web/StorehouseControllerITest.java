@@ -83,7 +83,7 @@ public class StorehouseControllerITest extends AbstractIT {
 	public void create_form() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/storehouse/create").with(user("testUser").password("password")
+				.perform(get("/device/storehouse/create/{id}", root.getId()).with(user("testUser").password("password")
 						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(""))))
 				.andDo(print()).andExpect(status().is4xxClientError()).andExpect(jsonPath("$.statusCode").value(300));
 
@@ -104,7 +104,7 @@ public class StorehouseControllerITest extends AbstractIT {
 
 		// 验证名称重复
 		this.mockMvc
-				.perform(post("/device/storehouse/create").param("name", NAME).param("code", NAME)
+				.perform(post("/device/storehouse/create").param("name", NAME).param("code", NAME+"code")
 						.param("depart.id", root.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("STOREHOUSECREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError())
@@ -128,7 +128,7 @@ public class StorehouseControllerITest extends AbstractIT {
 
 		this.mockMvc
 				.perform(
-						post("/device/storehouse/modify").param("name", "tt").param("id", storehouse.getId().toString())
+						post("/device/storehouse/modify").param("name", "tt").param("code", "xx").param("id", storehouse.getId().toString())
 								.with(csrf()).with(securityContext(initSecurityContext("STOREHOUSEMODIFY"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200))
 				.andExpect(jsonPath("$.message")
