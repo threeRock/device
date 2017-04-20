@@ -1,0 +1,80 @@
+<script type="text/javascript">
+	function spartpart_pic_upload_success(file, data) {
+		var json = $.parseJSON(data)
+
+		$(this).bjuiajax('ajaxDone', json)
+		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
+			$('#sparePart_pic').val(json.filename).trigger('validate')
+			$('#sparePart_pic_showspan').remove();
+			$('#sparePart_pic_span')
+					.html(
+							'<img src="device/sparepart/pic/'+ json.filename +'" width="300"/>')
+		}
+	}
+</script>
+<div class="bjui-pageContent">
+	<form action="#" id="sparePart_form"
+		th:action="@{/device/sparepart/{path}(path=${action})}" method="POST"
+		th:object="${sparePart}" data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" /> <input
+			type="hidden" name="depart.id" th:value="${departId}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="3"><label class="control-label x105">仓库：</label>
+						<select id="sparePart_form_productionLine"
+						data-toggle="selectpicker" data-width="150"
+						th:field="*{storehouse}">
+							<option th:each="item : ${storehouses}" th:value="${item.id}"
+								th:text="${item.name}">仓库</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">备件照片：</label>
+						<div style="display: inline-block; vertical-align: middle;">
+							<div id="sparePart_pic_up" data-toggle="upload"
+								data-uploader="device/sparepart/pic/up"
+								data-file-size-limit="1024000000" data-auto="true"
+								data-file-type-exts="*.jpg;*.png;*.gif;*.mpg"
+								data-on-upload-success="spartpart_pic_upload_success"
+								data-icon="cloud-upload"></div>
+
+						</div></td>
+					<td colspan="2"><input type="hidden" th:field="*{mainPic}"
+						value="" id="sparePart_pic" /> <span id="sparePart_pic_span"></span><span
+						id="sparePart_pic_showspan" th:if="${sparePart.mainPic!=null}"><img
+							th:src="@{/device/sparepart/pic/{path}(path=${sparePart.mainPic})}"
+							width="300" /></span></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">备件名称：</label> <input
+						type="text" th:field="*{name}" name="name"
+						data-rule="required;remote[device/sparepart/check/nameunique, id, depart.id]"
+						size="15" /></td>
+					<td><label class="control-label x105">设备编号：</label> <input
+						type="text" th:field="*{code}" name="code"
+						data-rule="required;remote[device/sparepart/check/codeunique, id, depart.id]"
+						size="15" /></td>
+						<td>
+					<label class="control-label x105">备件类别：</label>
+					<select id="sparePart_form_subType"
+						data-toggle="selectpicker" data-width="150" th:field="*{subType}">
+						<option th:each="item : ${types}" th:value="${item.id}"
+							th:text="${item.name}">备件类别</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="3"><label class="control-label x105">主要技术参数：</label>
+						<textarea th:field="*{description}" name="description"
+							data-toggle="autoheight" cols="80" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

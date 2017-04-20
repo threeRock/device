@@ -76,4 +76,19 @@ public class SparePart extends AbstractBusinessDepartEntity {
 		this.description = description;
 	}
 
+	/**
+	 * @return the subType
+	 */
+	public SparePartSubType getSubType() {
+		return subType;
+	}
+
+	/**
+	 * @param subType
+	 *            the subType to set
+	 */
+	public void setSubType(SparePartSubType subType) {
+		this.subType = subType;
+	}
+
 }

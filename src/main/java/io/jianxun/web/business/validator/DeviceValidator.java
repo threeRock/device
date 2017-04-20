@@ -28,13 +28,13 @@ public class DeviceValidator implements Validator {
 		final Long id = device.getId();
 
 		if (depart == null || depart.getId() == null || !departService.exists(depart.getId()))
-			errors.rejectValue("device", "device.depart.notfound",
+			errors.rejectValue("depart", "depart.notfound",
 					localeMessageSourceService.getMessage("depart.notfound"));
 		if (device.getMainType() == null || device.getMainType().getId() == null)
-			errors.rejectValue("device", "device.mainType.notnull",
+			errors.rejectValue("mainType", "mainType.notnull",
 					localeMessageSourceService.getMessage("device.mainType.notnull"));
 		if (device.getProductionLine() == null || device.getProductionLine().getId() == null)
-			errors.rejectValue("device", "device.productionLine.notnull",
+			errors.rejectValue("productionLine", "productionLine.notnull",
 					localeMessageSourceService.getMessage("device.productionLine.notnull"));
 		if (!deviceService.validateNameUnique(name, depart, id))
 			errors.rejectValue("name", "name.unique",
