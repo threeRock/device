@@ -67,7 +67,7 @@ public class DeviceControllerITest extends AbstractIT {
 		if (mainType == null) {
 			mainType = new SparePartMainType();
 			mainType.setName(MAIN_TYPE_NAME);
-			sparePartMainTypeService.save(mainType);
+			mainType = sparePartMainTypeService.save(mainType);
 		}
 		try {
 			productionLine = productionLineService
@@ -80,7 +80,7 @@ public class DeviceControllerITest extends AbstractIT {
 			productionLine = new ProductionLine();
 			productionLine.setName(PRODUCTION_LINE_NAME);
 			productionLine.setDepart(root);
-			productionLineService.save(productionLine);
+			productionLine = productionLineService.save(productionLine);
 		}
 
 		try {
@@ -96,7 +96,7 @@ public class DeviceControllerITest extends AbstractIT {
 			device.setDepart(root);
 			device.setProductionLine(productionLine);
 			device.setMainType(mainType);
-			deviceService.save(device);
+			device = deviceService.save(device);
 		}
 	}
 

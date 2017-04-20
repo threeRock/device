@@ -28,14 +28,18 @@
 				<th data-order-field="name">名称</th>
 				<th data-order-field="typeInfo">型号</th>
 				<th data-order-field="code">设备编号</th>
+				<th data-order-field="mainType.name">装备类别</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td th:text="${e.code}">仓库编码</td>
-				<td th:text="${e.name}">仓库名称</td>
+				<td th:text="${e.productionLine.name}">生产线</td>
+				<td th:text="${e.name}">装备名称</td>
+				<td th:text="${e.typeInfo}">型号</td>
+				<td th:text="${e.code}">设备编号</td>
+				<td th:text="${e.mainType.name}">装备类别</td>
 				<td><a sec:authorize="hasAnyAuthority('DEVICEMODIFY')"
 					th:href="@{/device/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"

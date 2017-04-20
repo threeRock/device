@@ -28,7 +28,7 @@ import io.jianxun.domain.business.SparePartMainType;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.web.business.validator.SparePartMainTypeValidator;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller

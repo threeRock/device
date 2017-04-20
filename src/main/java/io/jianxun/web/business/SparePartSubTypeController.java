@@ -30,7 +30,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.service.business.SparePartSubTypeService;
 import io.jianxun.web.business.validator.SparePartSubTypeValidator;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller

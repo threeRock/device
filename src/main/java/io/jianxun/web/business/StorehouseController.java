@@ -35,7 +35,7 @@ import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.StorehousePredicates;
 import io.jianxun.service.business.StorehouseService;
 import io.jianxun.web.business.validator.StorehouseValidator;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller

@@ -38,7 +38,7 @@ import io.jianxun.service.business.UserService;
 import io.jianxun.web.business.validator.UserValidator;
 import io.jianxun.web.dto.ChangePasswordDto;
 import io.jianxun.web.dto.ResetPasswordDto;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller

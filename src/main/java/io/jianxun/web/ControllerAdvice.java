@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import io.jianxun.service.BusinessException;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 
 @org.springframework.web.bind.annotation.ControllerAdvice
 public class ControllerAdvice {

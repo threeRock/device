@@ -29,7 +29,7 @@ import io.jianxun.domain.business.Role;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.RoleService;
 import io.jianxun.web.business.validator.RoleValidator;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller

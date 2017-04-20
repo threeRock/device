@@ -1,4 +1,4 @@
-package io.jianxun.web.utils;
+package io.jianxun.web.dto;
 
 /**
  * 

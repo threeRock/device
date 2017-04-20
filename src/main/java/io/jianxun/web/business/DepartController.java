@@ -33,7 +33,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartPredicates;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.web.business.validator.DepartValidator;
-import io.jianxun.web.utils.ReturnDto;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller
