@@ -149,14 +149,18 @@ public class DeviceControllerITest extends AbstractIT {
 
 		this.mockMvc
 				.perform(post("/device/create").param("name", "tt001").param("code", "tt001")
-						.param("depart.id", root.getId().toString()).with(csrf())
+						.param("depart.id", root.getId().toString())
+						.param("productionLine.id", productionLine.getId().toString())
+						.param("mainType.id", mainType.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("DEVICECREATE"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.statusCode").value(200));
 
 		// 验证名称重复
 		this.mockMvc
 				.perform(post("/device/create").param("name", NAME).param("code", NAME + "code")
-						.param("depart.id", root.getId().toString()).with(csrf())
+						.param("depart.id", root.getId().toString())
+						.param("productionLine.id", productionLine.getId().toString())
+						.param("mainType.id", mainType.getId().toString()).with(csrf())
 						.with(securityContext(initSecurityContext("DEVICECREATE"))))
 				.andDo(print()).andExpect(status().is4xxClientError())
 				.andExpect(jsonPath("$.message").value(containsString(
