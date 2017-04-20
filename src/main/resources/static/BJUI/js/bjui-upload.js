@@ -282,6 +282,10 @@
                         fd.append(key, formdata[key])
                     }
                 }
+                //add csrf
+                var csrfToken = $("meta[name='_csrf']").attr("content");
+                var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                xhr.setRequestHeader(csrfHeader, csrfToken);
                 xhr.send(fd)
             }
         }
