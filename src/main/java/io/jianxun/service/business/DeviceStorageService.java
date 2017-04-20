@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -32,11 +33,17 @@ public class DeviceStorageService {
 			if (file.isEmpty()) {
 				throw new BusinessException("Failed to store empty file " + file.getOriginalFilename());
 			}
-			Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()),
+			if (!Files.exists(this.rootLocation))
+				Files.createDirectory(rootLocation);
+			Files.copy(file.getInputStream(), this.rootLocation.resolve(getFilePathString(file)),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new BusinessException("Failed to store file " + file.getOriginalFilename(), e);
 		}
+	}
+
+	public String getFilePathString(MultipartFile file) {
+		return  UUID.randomUUID() + file.getOriginalFilename();
 	}
 
 	public Path load(String filename) {

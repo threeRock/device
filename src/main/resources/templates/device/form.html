@@ -5,8 +5,9 @@
 		$(this).bjuiajax('ajaxDone', json)
 		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
 			$('#device_pic').val(json.filename).trigger('validate')
+			$('#device_pic_showspan').remove();
 			$('#device_pic_span').html(
-					'<img src="device/pic/'+ json.filename +'" width="100" />')
+					'<img src="device/pic/'+ json.filename +'" width="300" />')
 		}
 	}
 </script>
@@ -22,35 +23,37 @@
 					<td colspan="2"><label class="control-label x105">生产线：</label>
 						<select id="device_form_productionLine" data-toggle="selectpicker"
 						data-width="150" th:field="*{productionLine}">
-							<option th:each="item : ${liness}" th:value="${item.id}"
+							<option th:each="item : ${lines}" th:value="${item.id}"
 								th:text="${item.name}">生产线</option>
 					</select></td>
 				</tr>
 				<tr>
-					<td colspan="2"><label class="control-label x105">设备照片：</label>
+					<td><label class="control-label x105">设备照片：</label>
 						<div style="display: inline-block; vertical-align: middle;">
 							<div id="device_pic_up" data-toggle="upload"
-								data-uploader="device/pic/up"
-								data-file-size-limit="1024000000" data-auto="true"
-								data-file-type-exts="*.jpg;*.png;*.gif;*.mpg"
+								data-uploader="device/pic/up" data-file-size-limit="1024000000"
+								data-auto="true" data-file-type-exts="*.jpg;*.png;*.gif;*.mpg"
 								data-on-upload-success="pic_upload_success"
 								data-icon="cloud-upload"></div>
-							<input type="hidden" th:field="*{mainPic}" value=""
-								id="device_pic" /> <span id="device_pic_span"></span>
+
 						</div></td>
+					<td><input type="hidden" th:field="*{mainPic}" value=""
+						id="device_pic" /> <span id="device_pic_span"></span><span id="device_pic_showspan"
+						th:if="${device.mainPic!=null}"><img
+							th:src="@{/device/pic/{path}(path=${device.mainPic})}" width="300" /></span></td>
 				</tr>
 				<tr>
 					<td><label class="control-label x105">设备名称：</label> <input
 						type="text" th:field="*{name}" name="name"
-						data-rule="required;remote[device/check/codeunique, id, depart.id]"
+						data-rule="required;remote[device/check/nameunique, id, depart.id]"
 						size="15" /></td>
 					<td><label class="control-label x105">规格型号：</label> <input
 						type="text" th:field="*{typeInfo}" name="typeInfo" size="15" /></td>
 				</tr>
 				<tr>
-					<td><label class="control-label x105">仓库编号：</label> <input
+					<td><label class="control-label x105">设备编号：</label> <input
 						type="text" th:field="*{code}" name="code"
-						data-rule="required;remote[device/check/nameunique, id, depart.id]"
+						data-rule="required;remote[device/check/codeunique, id, depart.id]"
 						size="15" /></td>
 					<td><label class="control-label x105">设备类别：</label> <select
 						id="device_form_productionLine" data-toggle="selectpicker"

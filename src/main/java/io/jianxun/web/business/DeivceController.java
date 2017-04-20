@@ -39,6 +39,9 @@ import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.DevicePredicates;
 import io.jianxun.service.business.DeviceService;
 import io.jianxun.service.business.DeviceStorageService;
+import io.jianxun.service.business.ProductionLinePredicates;
+import io.jianxun.service.business.ProductionLineService;
+import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
@@ -87,6 +90,7 @@ public class DeivceController {
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
+		addLineAndTypeInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
@@ -101,10 +105,20 @@ public class DeivceController {
 	@PreAuthorize("hasAuthority('DEVICECREATE')")
 	String createForm(@PathVariable("departId") Long departId, Model model,
 			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = departService.findActiveOne(departId);
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		model.addAttribute("device", new Device());
 		model.addAttribute("departId", departId);
+		addLineAndTypeInfo(model, depart);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	private void addLineAndTypeInfo(Model model, Depart depart) {
+		model.addAttribute("lines", productionLineService
+				.findActiveAll(ProductionLinePredicates.departPredicate(depart), new Sort("name")));
+		model.addAttribute("types", sparePartMainTypeService.findActiveAll(new Sort("name")));
 	}
 
 	/**
@@ -137,6 +151,7 @@ public class DeivceController {
 		model.addAttribute("device", device);
 		model.addAttribute("departId", device.getDepart() != null ? device.getDepart().getId() : null);
 		util.addModifyFormAction(model);
+		addLineAndTypeInfo(model, device.getDepart());
 		return templatePrefix() + "form";
 
 	}
@@ -200,7 +215,7 @@ public class DeivceController {
 	@ResponseBody
 	public UploadPicReturnDto uploadPic(@RequestParam("file") MultipartFile file) {
 		deviceStorageService.store(file);
-		return new UploadPicReturnDto(200, "", file.getOriginalFilename());
+		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(file));
 	}
 
 	@GetMapping("/pic/{filename:.+}")
@@ -236,6 +251,10 @@ public class DeivceController {
 	private LocaleMessageSourceService localeMessageSourceService;
 	@Autowired
 	private DeviceStorageService deviceStorageService;
+	@Autowired
+	private ProductionLineService productionLineService;
+	@Autowired
+	private SparePartMainTypeService sparePartMainTypeService;
 
 	@Autowired
 	private Utils util;
