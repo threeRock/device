@@ -18,6 +18,9 @@ public class Storehouse extends AbstractBusinessDepartEntity {
 	@NotBlank(message = "{storehouse.code.notblank}")
 	private String code;
 
+	// 首要图片地址
+	private String mainPic;
+
 	public String getName() {
 		return name;
 	}
@@ -32,6 +35,14 @@ public class Storehouse extends AbstractBusinessDepartEntity {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getMainPic() {
+		return mainPic;
+	}
+
+	public void setMainPic(String mainPic) {
+		this.mainPic = mainPic;
 	}
 
 }

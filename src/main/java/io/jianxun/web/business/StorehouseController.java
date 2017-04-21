@@ -3,11 +3,14 @@ package io.jianxun.web.business;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,10 +36,12 @@ import io.jianxun.domain.business.Storehouse;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
+import io.jianxun.service.business.DeviceStorageService;
 import io.jianxun.service.business.StorehousePredicates;
 import io.jianxun.service.business.StorehouseService;
 import io.jianxun.web.business.validator.StorehouseValidator;
 import io.jianxun.web.dto.ReturnDto;
+import io.jianxun.web.dto.UploadPicReturnDto;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -189,6 +195,23 @@ public class StorehouseController {
 			return localeMessageSourceService.getMessage("storehouse.code.isUsed", new Object[] { code });
 		return "";
 	}
+	
+	@PostMapping("pic/up")
+	@ResponseBody
+	public UploadPicReturnDto uploadPic(@RequestParam("file") MultipartFile file) {
+		deviceStorageService.store(UPLOAD_FOLDER_NAME,file);
+		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(UPLOAD_FOLDER_NAME,file));
+	}
+
+	@GetMapping("/pic/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+
+		Resource file = deviceStorageService.loadAsResource(filename);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+				.body(file);
+	}
 
 	@ModelAttribute(name = "storehouse")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
@@ -217,5 +240,9 @@ public class StorehouseController {
 
 	@Autowired
 	private StorehouseValidator storehouseValidator;
+	
+	@Autowired
+	private DeviceStorageService deviceStorageService;
+	private static final String UPLOAD_FOLDER_NAME = "cangku";
 
 }

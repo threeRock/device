@@ -47,6 +47,8 @@ public class QStorehouse extends EntityPathBase<Storehouse> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
+    public final StringPath mainPic = createString("mainPic");
+
     public final StringPath name = createString("name");
 
     //inherited

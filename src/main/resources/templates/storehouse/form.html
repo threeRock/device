@@ -1,3 +1,16 @@
+<script type="text/javascript">
+	function pic_upload_success(file, data) {
+		var json = $.parseJSON(data)
+
+		$(this).bjuiajax('ajaxDone', json)
+		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
+			$('#storehouse_pic').val(json.filename).trigger('validate')
+			$('#storehouse_pic_showspan').remove();
+			$('#storehouse_pic_span').html(
+					'<img src="device/storehouse/pic/'+ json.filename +'" width="300" />')
+		}
+	}
+</script>
 <div class="bjui-pageContent">
 	<form action="#" id="storehouse_form"
 		th:action="@{/device/storehouse/{path}(path=${action})}" method="POST"
@@ -17,6 +30,21 @@
 						type="text" th:field="*{name}" name="name"
 						data-rule="required;remote[device/storehouse/check/nameunique, id, depart.id]"
 						size="15" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">仓库照片：</label>
+						<div style="display: inline-block; vertical-align: middle;">
+							<div id="storehouse_pic_up" data-toggle="upload"
+								data-uploader="device/storehouse/pic/up" data-file-size-limit="1024000000"
+								data-auto="true" data-file-type-exts="*.jpg;*.png;*.gif;*.mpg"
+								data-on-upload-success="pic_upload_success"
+								data-icon="cloud-upload"></div>
+
+						</div></td>
+					<td><input type="hidden" th:field="*{mainPic}" value=""
+						id="storehouse_pic" /> <span id="storehouse_pic_span"></span><span id="storehouse_pic_showspan"
+						th:if="${storehouse.mainPic!=null}"><img
+							th:src="@{/storehouse/pic/{path}(path=${storehouse.mainPic})}" width="300" /></span></td>
 				</tr>
 			</tbody>
 		</table>

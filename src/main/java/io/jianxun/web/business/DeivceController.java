@@ -214,8 +214,8 @@ public class DeivceController {
 	@PostMapping("pic/up")
 	@ResponseBody
 	public UploadPicReturnDto uploadPic(@RequestParam("file") MultipartFile file) {
-		deviceStorageService.store(file);
-		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(file));
+		deviceStorageService.store(UPLOAD_FOLDER_NAME, file);
+		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(UPLOAD_FOLDER_NAME, file));
 	}
 
 	@GetMapping("/pic/{filename:.+}")
@@ -261,5 +261,6 @@ public class DeivceController {
 
 	@Autowired
 	private DeviceValidator deviceValidator;
+	private static final String UPLOAD_FOLDER_NAME = "shebei";
 
 }

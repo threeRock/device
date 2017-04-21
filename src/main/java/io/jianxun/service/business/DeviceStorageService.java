@@ -28,22 +28,22 @@ public class DeviceStorageService {
 		return rootLocation;
 	}
 
-	public void store(MultipartFile file) {
+	public void store(String prefix, MultipartFile file) {
 		try {
 			if (file.isEmpty()) {
 				throw new BusinessException("Failed to store empty file " + file.getOriginalFilename());
 			}
 			if (!Files.exists(this.rootLocation))
 				Files.createDirectory(rootLocation);
-			Files.copy(file.getInputStream(), this.rootLocation.resolve(getFilePathString(file)),
+			Files.copy(file.getInputStream(), this.rootLocation.resolve(getFilePathString(prefix, file)),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			throw new BusinessException("Failed to store file " + file.getOriginalFilename(), e);
 		}
 	}
 
-	public String getFilePathString(MultipartFile file) {
-		return LocalDate.now() + file.getOriginalFilename();
+	public String getFilePathString(String prefix, MultipartFile file) {
+		return prefix + LocalDate.now() + file.getOriginalFilename();
 	}
 
 	public Path load(String filename) {
