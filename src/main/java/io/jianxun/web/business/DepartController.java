@@ -55,7 +55,7 @@ public class DepartController {
 			e.printStackTrace();
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.tree.error"));
 		}
-		return templatePrefix() + "/tree";
+		return templatePrefix() + "tree";
 
 	}
 
