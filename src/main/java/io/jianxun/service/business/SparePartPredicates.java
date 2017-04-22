@@ -1,5 +1,7 @@
 package io.jianxun.service.business;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
@@ -42,6 +44,8 @@ public class SparePartPredicates {
 
 	public static Predicate departSubPredicate(Depart depart) {
 		QSparePart sparePart = QSparePart.sparePart;
+		if (StringUtils.isBlank(depart.getLevelCode()))
+			return null;
 		return sparePart.depart.levelCode.startsWith(depart.getLevelCode());
 	}
 

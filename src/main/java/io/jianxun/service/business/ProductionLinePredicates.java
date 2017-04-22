@@ -1,5 +1,7 @@
 package io.jianxun.service.business;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
@@ -35,6 +37,8 @@ public class ProductionLinePredicates {
 
 	public static Predicate departSubPredicate(Depart depart) {
 		QProductionLine productionLine = QProductionLine.productionLine;
+		if (StringUtils.isBlank(depart.getLevelCode()))
+			return null;
 		return productionLine.depart.levelCode.startsWith(depart.getLevelCode());
 	}
 
