@@ -42,6 +42,8 @@ public class QDepart extends EntityPathBase<Depart> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
+    public final StringPath levelCode = createString("levelCode");
+
     public final StringPath name = createString("name");
 
     public final QDepart parent;

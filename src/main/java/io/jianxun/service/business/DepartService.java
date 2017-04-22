@@ -66,7 +66,7 @@ public class DepartService extends AbstractBaseService<Depart> {
 		if (root == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
 		List<Depart> departs = Lists.newArrayList(root);
-		getSubDeparts(Lists.newArrayList(), root);
+		getSubDeparts(departs, root);
 		return departs;
 	}
 

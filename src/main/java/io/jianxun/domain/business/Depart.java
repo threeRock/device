@@ -1,10 +1,13 @@
 package io.jianxun.domain.business;
 
+import java.beans.Transient;
+
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 
 import io.jianxun.domain.AbstractBusinessEntity;
@@ -12,6 +15,8 @@ import io.jianxun.domain.AbstractBusinessEntity;
 @Entity
 @Table(name = "jx_sys_depart")
 public class Depart extends AbstractBusinessEntity {
+
+	public static final String LEVEL_CODE_SEPARATOR = "-";
 
 	/**
 	 * 
@@ -24,6 +29,9 @@ public class Depart extends AbstractBusinessEntity {
 	@ManyToOne
 	@JoinColumn(name = "parent_id")
 	private Depart parent;
+
+	// 层级代码 由所有上级id+"-"组成
+	private String levelCode;
 
 	/**
 	 * @return the name
@@ -53,6 +61,26 @@ public class Depart extends AbstractBusinessEntity {
 	 */
 	public void setParent(Depart parent) {
 		this.parent = parent;
+	}
+
+	/**
+	 * @return the levelCode
+	 */
+	public String getLevelCode() {
+		return levelCode;
+	}
+
+	/**
+	 * @param levelCode
+	 *            the levelCode to set
+	 */
+	public void setLevelCode(String levelCode) {
+		this.levelCode = levelCode;
+	}
+
+	@Transient
+	public boolean isRoot() {
+		return this.parent == null;
 	}
 
 }

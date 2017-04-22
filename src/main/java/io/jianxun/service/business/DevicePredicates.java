@@ -28,9 +28,9 @@ public class DevicePredicates {
 		return device.id.ne(id).and(device.name.eq(name));
 	}
 
-	public static Predicate departPredicate(Depart depart) {
+	public static Predicate departSubPredicate(Depart depart) {
 		QDevice device = QDevice.device;
-		return device.depart.eq(depart);
+		return device.depart.levelCode.startsWith(depart.getLevelCode());
 	}
 
 	public static Predicate codeAndIdNotPredicate(String code, Long id) {
@@ -38,6 +38,11 @@ public class DevicePredicates {
 		if (id == null)
 			return device.code.eq(code);
 		return device.id.ne(id).and(device.code.eq(code));
+	}
+
+	public static Predicate departPredicate(Depart depart) {
+		QDevice device = QDevice.device;
+		return device.depart.eq(depart);
 	}
 
 }

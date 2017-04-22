@@ -2,6 +2,7 @@ package io.jianxun.web.business;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -109,6 +110,15 @@ public class DepartController {
 	@PreAuthorize("hasAuthority('DEPARTCREATE')")
 	@ResponseBody
 	ReturnDto createSave(@Valid Depart depart, @RequestParam MultiValueMap<String, String> parameters) {
+		Long parentId = depart.getParent().getId();
+		Depart parent = departService.findActiveOne(parentId);
+		StringBuilder levelCodeSB = new StringBuilder();
+		if (parent != null) {
+			if (StringUtils.isNotBlank(parent.getLevelCode()))
+				levelCodeSB.append(parent.getLevelCode());
+			levelCodeSB.append(parent.getId() + Depart.LEVEL_CODE_SEPARATOR);
+			depart.setLevelCode(levelCodeSB.toString());
+		}
 		departService.save(depart);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("depart.save.success"), true, "depart-page",
 				"depart-page-layout");

@@ -45,6 +45,7 @@ import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -82,11 +83,17 @@ public class DeivceController {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		// TODO 是否有查看仓库权限
-		Predicate devicePredicate = DevicePredicates.departPredicate(depart);
-		if (predicate != null)
-			devicePredicate = ExpressionUtils.and(devicePredicate, predicate);
-		Page<Device> page = deviceService.findActivePage(devicePredicate, pageable);
+		// 查看仓库查询权限
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		Page<Device> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = deviceService.findActivePage(pageable);
+		} else {
+			searchPredicate = ExpressionUtils.and(DevicePredicates.departSubPredicate(depart), predicate);
+			page = deviceService.findActivePage(searchPredicate, pageable);
+		}
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
@@ -258,7 +265,8 @@ public class DeivceController {
 
 	@Autowired
 	private Utils util;
-
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
 	private DeviceValidator deviceValidator;
 	private static final String UPLOAD_FOLDER_NAME = "shebei";

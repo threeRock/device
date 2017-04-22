@@ -36,7 +36,7 @@
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="120%" data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
@@ -52,7 +52,7 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td><img th:src="@{/device/pic/{path}(path=${e.mainPic})}"
+				<td width="300"><img th:src="@{/device/pic/{path}(path=${e.mainPic})}"
 					width="300" /></td>
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>
