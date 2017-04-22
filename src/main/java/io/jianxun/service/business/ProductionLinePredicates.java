@@ -33,4 +33,9 @@ public class ProductionLinePredicates {
 		return productionLine.depart.eq(depart);
 	}
 
+	public static Predicate departSubPredicate(Depart depart) {
+		QProductionLine productionLine = QProductionLine.productionLine;
+		return productionLine.depart.levelCode.startsWith(depart.getLevelCode());
+	}
+
 }

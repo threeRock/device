@@ -36,6 +36,7 @@ import io.jianxun.service.business.ProductionLinePredicates;
 import io.jianxun.service.business.ProductionLineService;
 import io.jianxun.web.business.validator.ProductionLineValidator;
 import io.jianxun.web.dto.ReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -73,11 +74,17 @@ public class ProductionLineController {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		//TODO 是否有查看仓库权限
-		Predicate productionlinePredicate = ProductionLinePredicates.departPredicate(depart);
-		if (predicate != null)
-			productionlinePredicate = ExpressionUtils.and(productionlinePredicate, predicate);
-		Page<ProductionLine> page = productionlineService.findActivePage(productionlinePredicate, pageable);
+		
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		Page<ProductionLine> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = productionlineService.findActivePage(pageable);
+		} else {
+			searchPredicate = ExpressionUtils.and(ProductionLinePredicates.departSubPredicate(depart), predicate);
+			page = productionlineService.findActivePage(searchPredicate, pageable);
+		}
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentProductionLineInfo(model, depart);
@@ -202,6 +209,8 @@ public class ProductionLineController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 
 	@Autowired
 	private ProductionLineValidator productionlineValidator;

@@ -39,6 +39,7 @@ import io.jianxun.web.business.validator.UserValidator;
 import io.jianxun.web.dto.ChangePasswordDto;
 import io.jianxun.web.dto.ResetPasswordDto;
 import io.jianxun.web.dto.ReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -79,10 +80,18 @@ public class UserController {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		Predicate departPredicate = UserPredicates.departPredicate(depart);
-		if (predicate != null)
-			departPredicate = ExpressionUtils.and(departPredicate, predicate);
-		Page<User> page = userService.findActivePage(departPredicate, pageable);
+
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		Page<User> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = userService.findActivePage(pageable);
+		} else {
+			searchPredicate = ExpressionUtils.and(UserPredicates.departSubPredicate(depart), predicate);
+			page = userService.findActivePage(searchPredicate, pageable);
+		}
+
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		model.addAttribute("departId", departId);
@@ -264,6 +273,8 @@ public class UserController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
 	private RoleService roleService;
 	@Autowired

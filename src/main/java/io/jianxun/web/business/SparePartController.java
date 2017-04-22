@@ -45,6 +45,7 @@ import io.jianxun.service.business.StorehouseService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -82,11 +83,16 @@ public class SparePartController {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		// TODO 是否有查看仓库权限
-		Predicate sparePartPredicate = SparePartPredicates.departPredicate(depart);
-		if (predicate != null)
-			sparePartPredicate = ExpressionUtils.and(sparePartPredicate, predicate);
-		Page<SparePart> page = sparePartService.findActivePage(sparePartPredicate, pageable);
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		Page<SparePart> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = sparePartService.findActivePage(pageable);
+		} else {
+			searchPredicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
+			page = sparePartService.findActivePage(searchPredicate, pageable);
+		}
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentSparePartInfo(model, depart);
@@ -258,6 +264,8 @@ public class SparePartController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 
 	@Autowired
 	private DeviceValidator deviceValidator;

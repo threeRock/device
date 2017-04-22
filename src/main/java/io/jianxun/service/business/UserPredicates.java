@@ -34,4 +34,9 @@ public class UserPredicates {
 		return user.depart.eq(depart);
 	}
 
+	public static Predicate departSubPredicate(Depart depart) {
+		QUser user = QUser.user;
+		return user.depart.levelCode.startsWith(depart.getLevelCode());
+	}
+
 }

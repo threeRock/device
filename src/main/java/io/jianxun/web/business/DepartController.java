@@ -35,6 +35,7 @@ import io.jianxun.service.business.DepartPredicates;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.web.business.validator.DepartValidator;
 import io.jianxun.web.dto.ReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -72,6 +73,9 @@ public class DepartController {
 		Depart parent = this.departService.findActiveOne(departId);
 		if (parent == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		// 查看仓库查询权限
+		if (!currentLoginInfo.validateCurrentUserDepart(parent))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
 		Predicate departPredicate = DepartPredicates.parentPredicate(parent);
 		if (predicate != null)
 			departPredicate = ExpressionUtils.and(departPredicate, predicate);
@@ -203,6 +207,8 @@ public class DepartController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 
 	@Autowired
 	private DepartValidator departValidator;

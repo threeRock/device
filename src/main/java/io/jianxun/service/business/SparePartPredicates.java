@@ -40,4 +40,9 @@ public class SparePartPredicates {
 		return sparePart.id.ne(id).and(sparePart.code.eq(code));
 	}
 
+	public static Predicate departSubPredicate(Depart depart) {
+		QSparePart sparePart = QSparePart.sparePart;
+		return sparePart.depart.levelCode.startsWith(depart.getLevelCode());
+	}
+
 }

@@ -40,4 +40,9 @@ public class StorehousePredicates {
 		return storehouse.id.ne(id).and(storehouse.code.eq(code));
 	}
 
+	public static Predicate departSubPredicate(Depart depart) {
+		QStorehouse storehouse = QStorehouse.storehouse;
+		return storehouse.depart.levelCode.startsWith(depart.getLevelCode());
+	}
+
 }

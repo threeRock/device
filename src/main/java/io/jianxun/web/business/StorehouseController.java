@@ -42,6 +42,7 @@ import io.jianxun.service.business.StorehouseService;
 import io.jianxun.web.business.validator.StorehouseValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
+import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
@@ -79,11 +80,17 @@ public class StorehouseController {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		//TODO 是否有查看仓库权限
-		Predicate storehousePredicate = StorehousePredicates.departPredicate(depart);
-		if (predicate != null)
-			storehousePredicate = ExpressionUtils.and(storehousePredicate, predicate);
-		Page<Storehouse> page = storehouseService.findActivePage(storehousePredicate, pageable);
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		Page<Storehouse> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = storehouseService.findActivePage(pageable);
+		} else {
+			searchPredicate = ExpressionUtils.and(StorehousePredicates.departSubPredicate(depart), predicate);
+			page = storehouseService.findActivePage(searchPredicate, pageable);
+		}
+
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentStorehouseInfo(model, depart);
@@ -183,7 +190,7 @@ public class StorehouseController {
 			return localeMessageSourceService.getMessage("storehouse.name.isUsed", new Object[] { name });
 		return "";
 	}
-	
+
 	@RequestMapping("check/codeunique")
 	@ResponseBody
 	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
@@ -195,12 +202,12 @@ public class StorehouseController {
 			return localeMessageSourceService.getMessage("storehouse.code.isUsed", new Object[] { code });
 		return "";
 	}
-	
+
 	@PostMapping("pic/up")
 	@ResponseBody
 	public UploadPicReturnDto uploadPic(@RequestParam("file") MultipartFile file) {
-		deviceStorageService.store(UPLOAD_FOLDER_NAME,file);
-		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(UPLOAD_FOLDER_NAME,file));
+		deviceStorageService.store(UPLOAD_FOLDER_NAME, file);
+		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(UPLOAD_FOLDER_NAME, file));
 	}
 
 	@GetMapping("/pic/{filename:.+}")
@@ -237,10 +244,12 @@ public class StorehouseController {
 
 	@Autowired
 	private Utils util;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 
 	@Autowired
 	private StorehouseValidator storehouseValidator;
-	
+
 	@Autowired
 	private DeviceStorageService deviceStorageService;
 	private static final String UPLOAD_FOLDER_NAME = "cangku";
