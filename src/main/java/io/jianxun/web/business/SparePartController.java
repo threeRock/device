@@ -1,7 +1,13 @@
 package io.jianxun.web.business;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.jeecgframework.poi.excel.ExcelExportUtil;
+import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -122,7 +128,7 @@ public class SparePartController {
 	}
 
 	private void addStorehouseAndTypeInfo(Model model, Depart depart) {
-		model.addAttribute("lines",
+		model.addAttribute("storehouses",
 				storehouseService.findActiveAll(StorehousePredicates.departPredicate(depart), new Sort("name")));
 		model.addAttribute("types", sparePartMainTypeService.findActiveAll(new Sort("name")));
 	}
@@ -232,6 +238,32 @@ public class SparePartController {
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
+	}
+
+	@RequestMapping("export")
+	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
+	public void export(@RequestParam("depart.id") Long departId, Model model,
+			@QuerydslPredicate(root = SparePart.class) Predicate predicate, HttpServletResponse response)
+			throws Exception {
+		// 告诉浏览器用什么软件可以打开此文件
+		response.setHeader("content-Type", "application/vnd.ms-excel");
+		// 下载文件的默认名称
+		response.setHeader("Content-Disposition", "attachment;filename=备件导出.xls");
+		Depart depart = this.departService.findActiveOne(departId);
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		List<SparePart> list = null;
+		if (predicate == null && depart.isRoot()) {
+			list = sparePartService.findActiveAll(new Sort("name", "id"));
+		} else {
+			searchPredicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
+			list = this.sparePartService.findActiveAll(searchPredicate, new Sort("name", "id"));
+		}
+		Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), SparePart.class, list);
+		workbook.write(response.getOutputStream());
 	}
 
 	@ModelAttribute(name = "sparePart")

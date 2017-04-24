@@ -23,6 +23,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<guava.version>21.0</guava.version>
+		<easypoi.version>2.3.1</easypoi.version>
 	</properties>
 
 	<dependencies>
@@ -120,6 +121,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jeecg</groupId>
+			<artifactId>easypoi-base</artifactId>
+			<version>${easypoi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

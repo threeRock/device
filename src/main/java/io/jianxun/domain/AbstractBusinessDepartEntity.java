@@ -3,7 +3,10 @@ package io.jianxun.domain;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import org.jeecgframework.poi.excel.annotation.Excel;
 
 import io.jianxun.domain.business.Depart;
 
@@ -22,6 +25,9 @@ public abstract class AbstractBusinessDepartEntity extends AbstractBusinessEntit
 	@JoinColumn(name = "depart_id")
 	@NotNull(message = "{depart.notnull}")
 	private Depart depart;
+	@Transient
+	@Excel(name = "所属机构", orderNum = "0", mergeVertical = true)
+	private String departName;
 
 	/**
 	 * @return the depart
@@ -36,6 +42,16 @@ public abstract class AbstractBusinessDepartEntity extends AbstractBusinessEntit
 	 */
 	public void setDepart(Depart depart) {
 		this.depart = depart;
+	}
+
+	public String getDepartName() {
+		if (this.depart != null)
+			return this.depart.getName();
+		return departName;
+	}
+
+	public void setDepartName(String departName) {
+		this.departName = departName;
 	}
 
 }

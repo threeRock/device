@@ -45,4 +45,9 @@ public class Storehouse extends AbstractBusinessDepartEntity {
 		this.mainPic = mainPic;
 	}
 
+	@Override
+	public String toString() {
+		return "仓库 [代码=" + code + ", 名称=" + name + "]";
+	}
+
 }

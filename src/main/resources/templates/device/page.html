@@ -2,7 +2,7 @@
 	<form id="pagerForm" data-toggle="ajaxsearch"
 		th:action="@{/device/page/{path}(path=${depart.id})}" action="#"
 		method="POST">
-		<input id="devicedepart" type="hidden" th:value="${depart.id}"
+		<input id="devicedepart" name="depart.id" type="hidden" th:value="${depart.id}"
 			value="10" /> <input type="hidden" name="size" th:value="${size}"
 			value="10" /> <input type="hidden" name="page" th:value="${page}"
 			value="0" /><input type="hidden" name="orderField"
@@ -18,8 +18,8 @@
 				<option th:each="item : ${lines}" th:value="${item.id}"
 					th:text="${item.name}"
 					th:selected="${item.id.toString() == productionLine}">所属产线</option>
-			</select>&nbsp;<label>类别: </label><select data-toggle="selectpicker" data-width="150"
-				name="mainType">
+			</select>&nbsp;<label>类别: </label><select data-toggle="selectpicker"
+				data-width="150" name="mainType">
 				<option value="">请选择所属类别</option>
 				<option th:each="item : ${types}" th:value="${item.id}"
 					th:text="${item.name}"
@@ -33,6 +33,9 @@
 		<button sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-new"
 			data-url="device/create/{#devicedepart}">新增设备</button>
+		<button sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
+			data-toggle="doexport" class="btn-red"
+			data-url="device/export" data-confirm-msg="确定要导出吗？">导出</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -52,8 +55,8 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td width="300"><img th:src="@{/device/pic/{path}(path=${e.mainPic})}"
-					width="300" /></td>
+				<td width="300"><img
+					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="300" /></td>
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${e.typeInfo}">型号</td>

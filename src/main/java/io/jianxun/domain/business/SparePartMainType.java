@@ -41,4 +41,11 @@ public class SparePartMainType extends AbstractBusinessEntity {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "设备类别 [名称=" + name + "]";
+	}
+	
+	
+
 }

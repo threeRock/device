@@ -1,7 +1,13 @@
 package io.jianxun.web.business;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.jeecgframework.poi.excel.ExcelExportUtil;
+import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -234,6 +240,34 @@ public class DeivceController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
+	
+	@RequestMapping("export")
+	@PreAuthorize("hasAuthority('DEVICELIST')")
+	public void export(@RequestParam("depart.id") Long departId, Model model,
+			@QuerydslPredicate(root = Device.class) Predicate predicate, HttpServletResponse response)
+			throws Exception {
+		// 告诉浏览器用什么软件可以打开此文件
+		response.setHeader("content-Type", "application/vnd.ms-excel");
+		// 下载文件的默认名称
+		response.setHeader("Content-Disposition", "attachment;filename=设备导出.xls");
+		Depart depart = this.departService.findActiveOne(departId);
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = null;
+		List<Device> list = null;
+		if (predicate == null && depart.isRoot()) {
+			list = this.deviceService.findActiveAll(new Sort("name", "id"));
+		} else {
+			searchPredicate = ExpressionUtils.and(DevicePredicates.departSubPredicate(depart), predicate);
+			list = this.deviceService.findActiveAll(searchPredicate, new Sort("name", "id"));
+		}
+		Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), Device.class, list);
+		workbook.write(response.getOutputStream());
+	}
+	
+	
 
 	@ModelAttribute(name = "device")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {

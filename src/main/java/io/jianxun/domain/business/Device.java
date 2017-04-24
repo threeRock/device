@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.jeecgframework.poi.excel.annotation.Excel;
 
 import com.google.common.collect.Lists;
 
@@ -26,39 +27,51 @@ public class Device extends AbstractBusinessDepartEntity {
 
 	// 名称
 	@NotBlank(message = "{device.name.notblank}")
+	@Excel(name = "设备名称", orderNum = "20")
 	private String name;
 	// 首要图片地址
 	private String mainPic;
 	// 所属产线(根据机构过滤)
 	@NotNull(message = "device.productionLine.notnull")
 	@ManyToOne
-	@JoinColumn(name="productionline_id")
+	@JoinColumn(name = "productionline_id")
 	private ProductionLine productionLine;
+	@Excel(name = "产线", orderNum = "30")
+	private String productionLineName;
 	// 型号
+	@Excel(name = "型号", orderNum = "40")
 	private String typeInfo;
 	// 编码
 	@NotBlank(message = "device.code.notblank")
+	@Excel(name = "设备编码", orderNum = "50")
 	private String code;
 
 	// 设备类别
 	@NotNull(message = "device.mainType.notnull")
 	@ManyToOne
-	@JoinColumn(name="mainType_id")
+	@JoinColumn(name = "mainType_id")
 	private SparePartMainType mainType;
+	@Excel(name = "类别", orderNum = "60")
+	private String mainTypeName;
 
 	// 生产厂家
+	@Excel(name = "生产厂家", orderNum = "70")
 	private String manufacturer;
 
 	// 出厂编号
+	@Excel(name = "出厂编号", orderNum = "80")
 	private String serialNumber;
 
 	// 日期信息
+	@Excel(name = "出厂/投产日期", orderNum = "90")
 	private String dateInfo;
 
 	// 重量信息
+	@Excel(name = "重量", orderNum = "100")
 	private String weightInfo;
 
 	// 技术参数
+	@Excel(name = "技术参数", orderNum = "110")
 	private String description;
 
 	// 图片地址
@@ -171,6 +184,26 @@ public class Device extends AbstractBusinessDepartEntity {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getProductionLineName() {
+		if (this.productionLine != null)
+			return this.productionLine.toString();
+		return productionLineName;
+	}
+
+	public void setProductionLineName(String productionLineName) {
+		this.productionLineName = productionLineName;
+	}
+
+	public String getMainTypeName() {
+		if (this.mainType != null)
+			return this.mainType.toString();
+		return mainTypeName;
+	}
+
+	public void setMainTypeName(String mainTypeName) {
+		this.mainTypeName = mainTypeName;
 	}
 
 }

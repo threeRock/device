@@ -55,6 +55,8 @@ public class QDevice extends EntityPathBase<Device> {
 
     public final QSparePartMainType mainType;
 
+    public final StringPath mainTypeName = createString("mainTypeName");
+
     public final StringPath manufacturer = createString("manufacturer");
 
     public final StringPath name = createString("name");
@@ -62,6 +64,8 @@ public class QDevice extends EntityPathBase<Device> {
     public final ListPath<String, StringPath> pics = this.<String, StringPath>createList("pics", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final QProductionLine productionLine;
+
+    public final StringPath productionLineName = createString("productionLineName");
 
     public final StringPath serialNumber = createString("serialNumber");
 

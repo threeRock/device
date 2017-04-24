@@ -4,9 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.jeecgframework.poi.excel.annotation.Excel;
 
 import io.jianxun.domain.AbstractBusinessDepartEntity;
 
@@ -18,9 +20,11 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	private static final long serialVersionUID = 5727162012567100772L;
 	// 备件名称
 	@NotBlank(message = "sparepart.name.notblank")
+	@Excel(name = "备件名称", orderNum = "20")
 	private String name;
 	// 备件编码
 	@NotBlank(message = "sparepart.code.notblank")
+	@Excel(name = "库存编码", orderNum = "30")
 	private String code;
 	// 首要图片地址
 	private String mainPic;
@@ -29,6 +33,9 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	@JoinColumn(name = "storehouse_id")
 	@NotNull(message = "{sparepart.storepart.notnull}")
 	private Storehouse storehouse;
+	@Transient
+	@Excel(name = "所属仓库", orderNum = "10", mergeVertical = true)
+	private String storehouseName;
 
 	private String description;
 
@@ -89,6 +96,16 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	 */
 	public void setSubType(SparePartSubType subType) {
 		this.subType = subType;
+	}
+
+	public String getStorehouseName() {
+		if (this.storehouse != null)
+			return storehouse.toString();
+		return storehouseName;
+	}
+
+	public void setStorehouseName(String storehouseName) {
+		this.storehouseName = storehouseName;
 	}
 
 }

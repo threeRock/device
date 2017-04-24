@@ -38,4 +38,11 @@ public class ProductionLine extends AbstractBusinessDepartEntity {
 		this.name = name;
 	}
 
+	@Override
+	public String toString() {
+		return "生产线 [名称=" + name + "]";
+	}
+	
+	
+
 }

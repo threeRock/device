@@ -1,8 +1,8 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/device/sparePart/page/{path}(path=${depart.id})}" action="#"
-		method="POST">
-		<input id="sparePartdepart" type="hidden" th:value="${depart.id}"
+		th:action="@{/device/sparepart/page/{path}(path=${depart.id})}"
+		action="#" method="POST">
+		<input id="sparePartdepart" name="depart.id" type="hidden" th:value="${depart.id}"
 			value="10" /> <input type="hidden" name="size" th:value="${size}"
 			value="10" /> <input type="hidden" name="page" th:value="${page}"
 			value="0" /><input type="hidden" name="orderField"
@@ -12,8 +12,8 @@
 			<label>备件名称</label><input type="text" th:value="${name}" value=""
 				name="name" class="form-control" size="10" />&nbsp;<label>备件编码</label><input
 				type="text" th:value="${code}" value="" name="code"
-				class="form-control" size="10" />&nbsp;<label>仓库: </label><select data-toggle="selectpicker" data-width="150"
-				name="mainType">
+				class="form-control" size="10" />&nbsp;<label>仓库: </label><select
+				data-toggle="selectpicker" data-width="150" name="mainType">
 				<option value="">请选择所属仓库</option>
 				<option th:each="item : ${storehouses}" th:value="${item.id}"
 					th:text="${item.name}"
@@ -24,9 +24,13 @@
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button sec:authorize="hasAnyAuthority('SPAREPARTCREATE')" type="button"
-			data-toggle="navtab" class="btn-red" data-id="sparepart-form-new"
+		<button sec:authorize="hasAnyAuthority('SPAREPARTCREATE')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="sparepart-form-new"
 			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')"
+			type="button" data-toggle="doexport" class="btn-red"
+			data-url="device/sparepart/export" data-confirm-msg="确定要导出吗？">导出</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -45,18 +49,19 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td><img th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
+				<td><img
+					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
 					width="300" /></td>
 				<td th:text="${e.storehouse.name}">仓库</td>
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${e.code}">设备编号</td>
 				<td th:text="${e.subType.name}">装备类别</td>
 				<td><a sec:authorize="hasAnyAuthority('SPAREPARTMODIFY')"
-					th:href="@{/device/sparePart/modify/{id}(id=${e.id})}" href="#"
+					th:href="@{/device/sparepart/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
 					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
 					sec:authorize="hasAnyAuthority('SPAREPARTREMOVE')"
-					th:href="@{/devicesparePart/remove/{id}(id=${e.id})}" href="#"
+					th:href="@{/devicesparepart/remove/{id}(id=${e.id})}" href="#"
 					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>
