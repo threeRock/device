@@ -55,7 +55,7 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td width="300"><img
+				<td width="300"><img th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="300" /></td>
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>

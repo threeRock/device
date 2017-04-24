@@ -1,11 +1,13 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/device/storehouse/page/{path}(path=${depart.id})}" action="#" method="POST">
-		<input id="storehousedepart" type="hidden"  th:value="${depart.id}" value="10" />
-		<input type="hidden" name="size" th:value="${size}" value="10" /> <input
-			type="hidden" name="page" th:value="${page}" value="0" /><input
-			type="hidden" name="orderField" th:value="${orderField}" /> <input
-			type="hidden" name="orderDirection" th:value="${orderDirection}" />
+		th:action="@{/device/storehouse/page/{path}(path=${depart.id})}"
+		action="#" method="POST">
+		<input id="storehousedepart" type="hidden" th:value="${depart.id}"
+			value="10" /> <input type="hidden" name="size" th:value="${size}"
+			value="10" /> <input type="hidden" name="page" th:value="${page}"
+			value="0" /><input type="hidden" name="orderField"
+			th:value="${orderField}" /> <input type="hidden"
+			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
 			<label>仓库名称</label><input type="text" th:value="${name}" value=""
 				name="name" class="form-control" size="10" />&nbsp;
@@ -14,8 +16,9 @@
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button sec:authorize="hasAnyAuthority('STOREHOUSECREATE')" type="button"
-			data-toggle="navtab" class="btn-red" data-id="storehouse-form-new"
+		<button sec:authorize="hasAnyAuthority('STOREHOUSECREATE')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="storehouse-form-new"
 			data-url="device/storehouse/create/{#storehousedepart}">新增仓库</button>
 	</div>
 </div>
@@ -33,7 +36,8 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td><img th:src="@{/device/storehouse/pic/{path}(path=${e.mainPic})}"
+				<td><img th:if="${!#strings.isEmpty(e.mainPic)}"
+					th:src="@{/device/storehouse/pic/{path}(path=${e.mainPic})}"
 					width="300" /></td>
 				<td th:text="${e.code}">仓库编码</td>
 				<td th:text="${e.name}">仓库名称</td>

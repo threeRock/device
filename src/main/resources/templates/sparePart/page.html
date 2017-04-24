@@ -2,11 +2,11 @@
 	<form id="pagerForm" data-toggle="ajaxsearch"
 		th:action="@{/device/sparepart/page/{path}(path=${depart.id})}"
 		action="#" method="POST">
-		<input id="sparePartdepart" name="depart.id" type="hidden" th:value="${depart.id}"
-			value="10" /> <input type="hidden" name="size" th:value="${size}"
-			value="10" /> <input type="hidden" name="page" th:value="${page}"
-			value="0" /><input type="hidden" name="orderField"
-			th:value="${orderField}" /> <input type="hidden"
+		<input id="sparePartdepart" name="depart.id" type="hidden"
+			th:value="${depart.id}" value="10" /> <input type="hidden"
+			name="size" th:value="${size}" value="10" /> <input type="hidden"
+			name="page" th:value="${page}" value="0" /><input type="hidden"
+			name="orderField" th:value="${orderField}" /> <input type="hidden"
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
 			<label>备件名称</label><input type="text" th:value="${name}" value=""
@@ -28,8 +28,8 @@
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="sparepart-form-new"
 			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
-		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')"
-			type="button" data-toggle="doexport" class="btn-red"
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
+			data-toggle="doexport" class="btn-red"
 			data-url="device/sparepart/export" data-confirm-msg="确定要导出吗？">导出</button>
 	</div>
 </div>
@@ -49,7 +49,7 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td><img
+				<td><img th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
 					width="300" /></td>
 				<td th:text="${e.storehouse.name}">仓库</td>

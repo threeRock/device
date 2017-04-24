@@ -44,7 +44,7 @@
 					<td><input type="hidden" th:field="*{mainPic}" value=""
 						id="storehouse_pic" /> <span id="storehouse_pic_span"></span><span id="storehouse_pic_showspan"
 						th:if="${storehouse.mainPic!=null}"><img
-							th:src="@{/storehouse/pic/{path}(path=${storehouse.mainPic})}" width="300" /></span></td>
+							th:src="@{/device/storehouse/pic/{path}(path=${storehouse.mainPic})}" width="300" /></span></td>
 				</tr>
 			</tbody>
 		</table>
