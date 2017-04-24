@@ -110,8 +110,7 @@ public class UserControllerITest extends AbstractIT {
 	@Test
 	public void page_success() throws Exception {
 		this.mockMvc
-				.perform(get("/user/page/{id}", root.getId()).with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USERLIST"))))
+				.perform(get("/user/page/{id}", root.getId()).with(securityContext(initSecurityContext("USERLIST"))))
 				.andDo(print()).andExpect(status().isOk());
 	}
 

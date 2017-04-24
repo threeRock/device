@@ -74,8 +74,7 @@ public class StorehouseControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/storehouse/page/{id}", root.getId()).with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("STOREHOUSELIST"))))
+				.perform(get("/device/storehouse/page/{id}", root.getId()).with(securityContext(initSecurityContext("STOREHOUSELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(NAME)));
 	}
 

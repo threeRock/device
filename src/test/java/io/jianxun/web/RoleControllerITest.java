@@ -70,8 +70,7 @@ public class RoleControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/role/").with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("ROLELIST"))))
+				.perform(get("/role/").with(securityContext(initSecurityContext("ROLELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("测试用户")));
 	}
 

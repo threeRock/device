@@ -146,8 +146,8 @@ public class SparePartControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/sparepart/page/{id}", root.getId()).with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("SPAREPARTLIST"))))
+				.perform(get("/device/sparepart/page/{id}", root.getId())
+						.with(securityContext(initSecurityContext("SPAREPARTLIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(NAME)));
 	}
 

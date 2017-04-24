@@ -80,8 +80,7 @@ public class SparePartMainTypeControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/maintype/").with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("MAINTYPELIST"))))
+				.perform(get("/device/maintype/").with(securityContext(initSecurityContext("MAINTYPELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(MAINTYPE_NAME)));
 	}
 

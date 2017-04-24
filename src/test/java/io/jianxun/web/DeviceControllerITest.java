@@ -125,8 +125,8 @@ public class DeviceControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/page/{id}", root.getId()).with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("DEVICELIST"))))
+				.perform(get("/device/page/{id}", root.getId())
+						.with(securityContext(initSecurityContext("DEVICELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(NAME)));
 	}
 

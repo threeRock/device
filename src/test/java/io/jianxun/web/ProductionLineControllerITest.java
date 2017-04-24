@@ -74,8 +74,7 @@ public class ProductionLineControllerITest extends AbstractIT {
 
 		this.mockMvc
 				.perform(
-						get("/device/productionline/page/{id}", root.getId()).with(user("testUser").password("password")
-								.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("PRODUCTIONLINELIST"))))
+						get("/device/productionline/page/{id}", root.getId()).with(securityContext(initSecurityContext("PRODUCTIONLINELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(NAME)));
 	}
 

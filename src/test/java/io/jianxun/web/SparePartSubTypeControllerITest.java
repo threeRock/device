@@ -82,8 +82,7 @@ public class SparePartSubTypeControllerITest extends AbstractIT {
 	public void page_success() throws Exception {
 
 		this.mockMvc
-				.perform(get("/device/subtype/").with(user("testUser").password("password")
-						.authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("SUBTYPELIST"))))
+				.perform(get("/device/subtype/").with(securityContext(initSecurityContext("SUBTYPELIST"))))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString(SUBTYPE_NAME)));
 	}
 
