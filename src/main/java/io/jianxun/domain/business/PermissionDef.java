@@ -217,7 +217,7 @@ public enum PermissionDef {
 	public enum DomainDef {
 		// 系统配置
 		SYS_USER("sys_user", "用户管理", 0), SYS_ROLE("sys_role", "角色管理", 10), ORG_DEPART("org_depart", "机构管理",
-				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_maintype", "备件子类",
+				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_subtype", "备件子类",
 						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50), DEVICE_PRODUCTIONLINE(
 								"device_productionline", "生产线管理", 60), DEVICE_DEVICE("device_device", "设备管理",
 										70), DEVICE_SPAREPART("device_sparepart", "备件管理", 70);
