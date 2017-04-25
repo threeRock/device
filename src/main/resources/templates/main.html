@@ -1411,7 +1411,9 @@
 									sec:authorize="hasAnyAuthority('DEPARTLIST','DEPARTCREATE','DEPARTMODIFY','DEPARTREMOVE')"
 									class="menu-items" data-tit="测试机构设置" data-faicon="cog">
 									<li><a href="#" th:href="@{/depttest/tree/}"
-										data-options="{id:'depttest-page', faicon:'caret-right'}">机构管理</a></li>
+										data-options="{id:'depttest-page', faicon:'caret-right'}">测试机构管理</a></li>
+									<li><a href="#" th:href="@{/usertest/tree/}"
+										data-options="{id:'usertest-page', faicon:'caret-right'}">测试用户管理</a></li>
 								</ul>
 
 							</div></li>

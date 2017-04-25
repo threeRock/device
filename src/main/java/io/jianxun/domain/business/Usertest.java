@@ -21,7 +21,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.Lists;
 
-import io.jianxun.domain.AbstractBusinessDepartEntity;;
+import io.jianxun.domain.AbstractBusinessDepartEntity;
+import io.jianxun.domain.AbstractBusinessEntity;
 
 /**
  * 系统用户
@@ -32,31 +33,21 @@ import io.jianxun.domain.AbstractBusinessDepartEntity;;
  */
 @Entity
 @Table(name = "jx_test_usertest")
-public class Usertest extends AbstractBusinessDepartEntity implements UserDetails {
+public class Usertest extends AbstractBusinessEntity {
 
-	private static final long serialVersionUID = 585375273427805552L;
-
-//	public static final String SUPER_ADMIN_USERNAME = "admin";
-//	public static final String SUPER_ADMIN_DISPLAYNAME = "系统管理员";
-//	public static final String SUPER_ADMIN_PASSWORD = "qtgs!Sbgl-";
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1371614245790559518L;
 	// 登录名称
-	@NotBlank(message = "{user.username.notnull}")
+	@NotBlank(message = "{usertest.username.notnull}")
 	private String username;
 	// 密码
 	private String password;
 	// 显示名称
 	private String displayName;
-
-	// 角色信息
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "jx_sys_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "role_id") })
-	// Fecth策略定义
-	@Fetch(FetchMode.SUBSELECT)
-	// 集合按id排序.
-	@OrderBy("id")
-	private List<Role> roles = Lists.newArrayList();
+	
+	private Depttest depttest; 
 
 	public String getUsername() {
 		return username;
@@ -74,28 +65,6 @@ public class Usertest extends AbstractBusinessDepartEntity implements UserDetail
 		this.displayName = displayName;
 	}
 
-	@Override
-	@Transient
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (this.roles.size() == 0)
-			return AuthorityUtils.commaSeparatedStringToAuthorityList("");
-		StringBuilder commaBuilder = new StringBuilder();
-		for (Role role : roles) {
-			if (!role.isActive())
-				continue;
-			List<String> permissions = role.getPermissions();
-			if (permissions == null || permissions.size() < 1) {
-				continue;
-			}
-			for (String permission : permissions) {
-				commaBuilder.append(permission.toUpperCase()).append(",");
-			}
-		}
-		String authorities = commaBuilder.substring(0, commaBuilder.length() - 1);
-		return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-	}
-
-	@Override
 	public String getPassword() {
 		return this.password;
 	}
@@ -103,35 +72,13 @@ public class Usertest extends AbstractBusinessDepartEntity implements UserDetail
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
+	
+	public Depttest getDepttest() {
+		return this.depttest;
 	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
-	/**
-	 * @return the roles
-	 */
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	/**
-	 * @param roles
-	 *            the roles to set
-	 */
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setDepttest(Depttest d) {
+		this.depttest = d;
 	}
 
 	/*
@@ -141,12 +88,7 @@ public class Usertest extends AbstractBusinessDepartEntity implements UserDetail
 	 */
 	@Override
 	public String toString() {
-		return String.format("[用户id:%d,用户名称%s]", this.getId(), this.getUsername());
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
+		return String.format("[用户id:%d,用户名称:%s]", this.getId(), this.getUsername());
 	}
 
 }

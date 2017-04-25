@@ -46,29 +46,29 @@ public class DepttestService extends AbstractBaseService<Depttest> {
 		return 0 == countActiveAll(DepttestPredicates.nameAndIdNotPredicate(name, id));
 	}
 
-//	/**
-//	 * 返回用户机构树形结构
-//	 * 
-//	 * @return
-//	 */
-//	public List<DepartTree> getUserDepartTree() {
-//		List<Depart> departs = getUserDepart();
-//		return convertEntityToUserDepartTree(departs);
-//	}
-//
-//	/**
-//	 * 返回用户机构树形列表
-//	 * 
-//	 * @return
-//	 */
-//	public List<Depart> getUserDepart() {
-//		Depart root = currentLoginInfo.currentLoginUser().getDepart();
-//		if (root == null)
-//			throw new BusinessException(localeMessageSourceService.getMessage("depart.currentuser.notfound"));
-//		List<Depart> departs = Lists.newArrayList(root);
-//		getSubDeparts(departs, root);
-//		return departs;
-//	}
+	/**
+	 * 返回用户机构树形结构
+	 * 
+	 * @return
+	 */
+	public List<DepttestTree> getUserDepartTree() {
+		List<Depttest> departs = getUserDepart();
+		return convertEntityToUserDepartTree(departs);
+	}
+
+	/**
+	 * 返回用户机构树形列表
+	 * 
+	 * @return
+	 */
+	public List<Depttest> getUserDepart() {
+		Depttest root = this.initRoot();
+		if (root == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depttest.currentuser.notfound"));
+		List<Depttest> departs = Lists.newArrayList(root);
+		getSubDeparts(departs, root);
+		return departs;
+	}
 
 	/**
 	 * 返回机构树形结构
@@ -100,20 +100,20 @@ public class DepttestService extends AbstractBaseService<Depttest> {
 		}
 	}
 
-//	private List<DepttestTree> convertEntityToUserDepartTree(List<Depttest> list) {
-//		List<DepttestTree> tree = Lists.newArrayList();
-//		for (Depttest depart : list) {
-//			DepttestTree d = new DepttestTree();
-//			d.setId(depart.getId());
-//			if (depart.getParent() != null)
-//				d.setpId(depart.getParent().getId());
-//			d.setName(depart.getName());
-//			d.setUrl("user/page");
-//			d.setDivid("#user-page-layout");
-//			tree.add(d);
-//		}
-//		return tree;
-//	}
+	private List<DepttestTree> convertEntityToUserDepartTree(List<Depttest> list) {
+		List<DepttestTree> tree = Lists.newArrayList();
+		for (Depttest depart : list) {
+			DepttestTree d = new DepttestTree();
+			d.setId(depart.getId());
+			if (depart.getParent() != null)
+				d.setpId(depart.getParent().getId());
+			d.setName(depart.getName());
+			d.setUrl("usertest/page");
+			d.setDivid("#usertest-page-layout");
+			tree.add(d);
+		}
+		return tree;
+	}
 
 	private List<DepttestTree> convertEntityToDepartTree(List<Depttest> list) {
 		List<DepttestTree> tree = Lists.newArrayList();
@@ -128,8 +128,8 @@ public class DepttestService extends AbstractBaseService<Depttest> {
 		return tree;
 	}
 
-//	@Autowired
-//	private CurrentLoginInfo currentLoginInfo;
+	@Autowired
+	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
 	private LocaleMessageSourceService localeMessageSourceService;
 

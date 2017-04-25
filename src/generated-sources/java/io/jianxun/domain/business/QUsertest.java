@@ -22,11 +22,7 @@ public class QUsertest extends EntityPathBase<Usertest> {
 
     public static final QUsertest usertest = new QUsertest("usertest");
 
-    public final io.jianxun.domain.QAbstractBusinessDepartEntity _super;
-
-    public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
-
-    public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
+    public final io.jianxun.domain.QAbstractBusinessEntity _super;
 
     //inherited
     public final BooleanPath active;
@@ -37,14 +33,9 @@ public class QUsertest extends EntityPathBase<Usertest> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate;
 
-    public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
-
-    // inherited
-    public final QDepart depart;
+    public final QDepttest depttest;
 
     public final StringPath displayName = createString("displayName");
-
-    public final BooleanPath enabled = createBoolean("enabled");
 
     //inherited
     public final NumberPath<Long> id;
@@ -56,8 +47,6 @@ public class QUsertest extends EntityPathBase<Usertest> {
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
     public final StringPath password = createString("password");
-
-    public final ListPath<Role, QRole> roles = this.<Role, QRole>createList("roles", Role.class, QRole.class, PathInits.DIRECT2);
 
     public final StringPath username = createString("username");
 
@@ -82,11 +71,11 @@ public class QUsertest extends EntityPathBase<Usertest> {
 
     public QUsertest(Class<? extends Usertest> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new io.jianxun.domain.QAbstractBusinessDepartEntity(type, metadata, inits);
+        this._super = new io.jianxun.domain.QAbstractBusinessEntity(type, metadata, inits);
         this.active = _super.active;
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;
-        this.depart = _super.depart;
+        this.depttest = inits.isInitialized("depttest") ? new QDepttest(forProperty("depttest"), inits.get("depttest")) : null;
         this.id = _super.id;
         this.lastModifieBy = _super.lastModifieBy;
         this.lastModifiedDate = _super.lastModifiedDate;
