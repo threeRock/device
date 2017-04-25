@@ -97,7 +97,7 @@ public class DepttestController {
 	@PreAuthorize("hasAuthority('DEPARTCREATE')")
 	String createForm(@PathVariable("parentId") Long parentId, Model model,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		model.addAttribute("depart", new Depttest());
+		model.addAttribute("depttest", new Depttest());
 		model.addAttribute("parentId", parentId);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
@@ -195,7 +195,7 @@ public class DepttestController {
 	}
 
 	private String templatePrefix() {
-		return "departtest/";
+		return "depttest/";
 	}
 
 	ObjectMapper mapper = new ObjectMapper();

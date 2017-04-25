@@ -1406,6 +1406,13 @@
 										href="#" th:href="@{/device/subtype/page/}"
 										data-options="{id:'subtype-page', faicon:'devicet-right'}">配件类别</a></li>
 								</ul>
+								
+								<ul
+									sec:authorize="hasAnyAuthority('DEPARTLIST','DEPARTCREATE','DEPARTMODIFY','DEPARTREMOVE')"
+									class="menu-items" data-tit="测试机构设置" data-faicon="cog">
+									<li><a href="#" th:href="@{/depttest/tree/}"
+										data-options="{id:'depttest-page', faicon:'caret-right'}">机构管理</a></li>
+								</ul>
 
 							</div></li>
 					</ul>
