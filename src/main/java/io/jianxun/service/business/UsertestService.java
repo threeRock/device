@@ -3,22 +3,22 @@ package io.jianxun.service.business;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
-import com.google.common.collect.Lists;
-
-import io.jianxun.domain.business.Depttest;
+//import org.springframework.util.StringUtils;
+//
+//import com.google.common.collect.Lists;
+//
+//import io.jianxun.domain.business.Depttest;
 //import io.jianxun.domain.business.Role;
 import io.jianxun.domain.business.Usertest;
 import io.jianxun.service.AbstractBaseService;
-import io.jianxun.service.BusinessException;
-import io.jianxun.web.dto.ChangePasswordDto;
-import io.jianxun.web.dto.ResetPasswordDto;
+//import io.jianxun.service.BusinessException;
+//import io.jianxun.web.dto.ChangePasswordDto;
+//import io.jianxun.web.dto.ResetPasswordDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 
 @Service
@@ -139,7 +139,7 @@ public class UsertestService extends AbstractBaseService<Usertest> {
 	 * @return
 	 */
 	public boolean validateUsernameUnique(String username, Long id) {
-		Long count = countActiveAll(UserPredicates.usernameAndIdNotPredicate(username, id));
+		Long count = countActiveAll(UsertestPredicates.usernameAndIdNotPredicate(username, id));
 		return count == 0;
 
 	}

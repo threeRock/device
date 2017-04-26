@@ -119,13 +119,14 @@ public class UsertestController {
 	 * @param parameters
 	 * @return
 	 */
-//	@PostMapping("create")
-//	@PreAuthorize("hasAuthority('USERCREATE')")
-//	@ResponseBody
-//	ReturnDto createSave(@Valid User user, @RequestParam MultiValueMap<String, String> parameters) {
-//		userService.register(user);
-//		return getOptionReturn("user.save.successd");
-//	}
+	@PostMapping("create")
+	@PreAuthorize("hasAuthority('USERCREATE')")
+	@ResponseBody
+	ReturnDto createSave(@Valid Usertest user, @RequestParam MultiValueMap<String, String> parameters) {
+		usertestService.save(user);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("usertest.save.successd"), true, "",
+				"usertest-page-layout");
+	}
 //
 //	/**
 //	 * 重置登录密碼表单
