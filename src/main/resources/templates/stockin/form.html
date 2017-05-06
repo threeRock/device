@@ -1,0 +1,40 @@
+<div class="bjui-pageContent">
+	<form action="#" id="sparePart_form"
+		th:action="@{/stockin/{path}(path=${action})}" method="POST"
+		th:object="${stockin}" data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" /> <input
+			type="hidden" name="depart.id" th:value="${departId}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td><label class="control-label x105">备件：</label> <input
+						type="text" th:field="*{name}" name="name"
+						data-rule="required;remote[device/sparepart/check/nameunique, id, depart.id]"
+						size="15" /></td>
+					<td><label class="control-label x105">设备编号：</label> <input
+						type="text" th:field="*{code}" name="code"
+						data-rule="required;remote[device/sparepart/check/codeunique, id, depart.id]"
+						size="15" /></td>
+						<td>
+					<label class="control-label x105">备件类别：</label>
+					<select id="sparePart_form_subType"
+						data-toggle="selectpicker" data-width="150" th:field="*{subType}">
+						<option th:each="item : ${types}" th:value="${item.id}"
+							th:text="${item.name}">备件类别</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td colspan="3"><label class="control-label x105">主要技术参数：</label>
+						<textarea th:field="*{description}" name="description"
+							data-toggle="autoheight" cols="80" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

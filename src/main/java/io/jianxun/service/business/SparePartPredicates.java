@@ -23,6 +23,11 @@ public class SparePartPredicates {
 		return nameAndIdNotPredicate(name, null);
 	}
 
+	public static Predicate nameContainsPredicate(String name) {
+		QSparePart sparePart = QSparePart.sparePart;
+		return sparePart.name.containsIgnoreCase(name);
+	}
+
 	public static Predicate nameAndIdNotPredicate(String name, Long id) {
 		QSparePart sparePart = QSparePart.sparePart;
 		if (id == null)

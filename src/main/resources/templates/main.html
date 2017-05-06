@@ -260,6 +260,7 @@
 
 			zTree.expandNode(treeNode, !treeNode.open, false, true, true)
 			return
+
 		}
 		/*<![CDATA[*/
 		if (treeNode.target && treeNode.target == 'dialog')
@@ -383,10 +384,12 @@
 										href="#" th:href="@{/device/subtype/page/}"
 										data-options="{id:'subtype-page', faicon:'devicet-right'}">配件类别</a></li>
 								</ul>
-								<ul sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')" class="menu-items" data-tit="库存设置" data-faicon="cog">
+								<ul
+									sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"
+									class="menu-items" data-tit="库存设置" data-faicon="cog">
 									<li
 										sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"><a
-										href="#" th:href="@{/stockin/page/}"
+										href="#" th:href="@{/stockin/tree/}"
 										data-options="{id:'stockin-page', faicon:'devicet-right'}">入库管理</a></li>
 								</ul>
 

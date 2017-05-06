@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -43,14 +45,15 @@ import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.DeviceStorageService;
-import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.service.business.SparePartPredicates;
 import io.jianxun.service.business.SparePartService;
+import io.jianxun.service.business.SparePartSubTypeService;
 import io.jianxun.service.business.StorehousePredicates;
 import io.jianxun.service.business.StorehouseService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
+import io.jianxun.web.dto.ValueLabelDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
@@ -130,7 +133,7 @@ public class SparePartController {
 	private void addStorehouseAndTypeInfo(Model model, Depart depart) {
 		model.addAttribute("storehouses",
 				storehouseService.findActiveAll(StorehousePredicates.departPredicate(depart), new Sort("name")));
-		model.addAttribute("types", sparePartMainTypeService.findActiveAll(new Sort("name")));
+		model.addAttribute("types", sparePartSubTypeService.findActiveAll(new Sort("name")));
 	}
 
 	/**
@@ -266,6 +269,32 @@ public class SparePartController {
 		workbook.write(response.getOutputStream());
 	}
 
+	@RequestMapping(value = "/search/{currentDeparrId}")
+	@ResponseBody
+	public List<ValueLabelDto> getParentDepartStock(@PathVariable("currentDeparrId") Long pId,
+			@RequestParam("term") String name, Model model) {
+		Depart currentDepart = departService.findOne(pId);
+		if (currentDepart == null)
+			throw new BusinessException("获取机构信息失败,无法获取对应备件");
+		if (StringUtils.isBlank(name))
+			return Lists.newArrayList();
+		List<SparePart> parts = sparePartService.findActiveAll(SparePartPredicates.nameContainsPredicate(name),
+				new Sort("name"));
+		return getDto(parts);
+
+	}
+
+	private List<ValueLabelDto> getDto(List<SparePart> parts) {
+		List<ValueLabelDto> vls = Lists.newArrayList();
+		for (SparePart part : parts) {
+			ValueLabelDto d = new ValueLabelDto();
+			d.setLabel(part.toString());
+			d.setValue(part.getId().toString());
+			vls.add(d);
+		}
+		return vls;
+	}
+
 	@ModelAttribute(name = "sparePart")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
@@ -292,7 +321,7 @@ public class SparePartController {
 	@Autowired
 	private StorehouseService storehouseService;
 	@Autowired
-	private SparePartMainTypeService sparePartMainTypeService;
+	private SparePartSubTypeService sparePartSubTypeService;
 
 	@Autowired
 	private Utils util;
