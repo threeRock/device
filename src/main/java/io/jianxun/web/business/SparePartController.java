@@ -44,6 +44,8 @@ import io.jianxun.domain.business.SparePart;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
+import io.jianxun.service.business.DevicePredicates;
+import io.jianxun.service.business.DeviceService;
 import io.jianxun.service.business.DeviceStorageService;
 import io.jianxun.service.business.SparePartPredicates;
 import io.jianxun.service.business.SparePartService;
@@ -134,6 +136,8 @@ public class SparePartController {
 		model.addAttribute("storehouses",
 				storehouseService.findActiveAll(StorehousePredicates.departPredicate(depart), new Sort("name")));
 		model.addAttribute("types", sparePartSubTypeService.findActiveAll(new Sort("name")));
+		model.addAttribute("devices",
+				deviceService.findActiveAll(DevicePredicates.departPredicate(depart), new Sort("name")));
 	}
 
 	/**
@@ -211,18 +215,6 @@ public class SparePartController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		if (!this.sparePartService.validateNameUnique(name, depart, id))
 			return localeMessageSourceService.getMessage("sparePart.name.isUsed", new Object[] { name });
-		return "";
-	}
-
-	@RequestMapping("check/codeunique")
-	@ResponseBody
-	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
-			@RequestParam("id") Long id) {
-		Depart depart = this.departService.findActiveOne(departId);
-		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		if (!this.sparePartService.validateCodeUnique(code, depart, id))
-			return localeMessageSourceService.getMessage("sparePart.code.isUsed", new Object[] { code });
 		return "";
 	}
 
@@ -318,6 +310,8 @@ public class SparePartController {
 	private LocaleMessageSourceService localeMessageSourceService;
 	@Autowired
 	private DeviceStorageService deviceStorageService;
+	@Autowired
+	private DeviceService deviceService;
 	@Autowired
 	private StorehouseService storehouseService;
 	@Autowired

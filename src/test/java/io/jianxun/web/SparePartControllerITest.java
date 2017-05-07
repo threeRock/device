@@ -113,7 +113,6 @@ public class SparePartControllerITest extends AbstractIT {
 		if (sparePart == null) {
 			sparePart = new SparePart();
 			sparePart.setName(NAME);
-			sparePart.setCode(NAME);
 			sparePart.setDepart(root);
 			sparePart.setStorehouse(storehouse);
 			sparePart.setSubType(subType);

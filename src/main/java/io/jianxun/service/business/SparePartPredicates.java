@@ -40,13 +40,6 @@ public class SparePartPredicates {
 		return sparePart.depart.eq(depart);
 	}
 
-	public static Predicate codeAndIdNotPredicate(String code, Long id) {
-		QSparePart sparePart = QSparePart.sparePart;
-		if (id == null)
-			return sparePart.code.eq(code);
-		return sparePart.id.ne(id).and(sparePart.code.eq(code));
-	}
-
 	public static Predicate departSubPredicate(Depart depart) {
 		QSparePart sparePart = QSparePart.sparePart;
 		if (StringUtils.isBlank(depart.getLevelCode()))

@@ -27,8 +27,6 @@ public class QSparePart extends EntityPathBase<SparePart> {
     //inherited
     public final BooleanPath active;
 
-    public final StringPath code = createString("code");
-
     // inherited
     public final QUser createdBy;
 
@@ -39,6 +37,8 @@ public class QSparePart extends EntityPathBase<SparePart> {
     public final QDepart depart;
 
     public final StringPath description = createString("description");
+
+    public final QDevice device;
 
     //inherited
     public final NumberPath<Long> id;
@@ -52,6 +52,12 @@ public class QSparePart extends EntityPathBase<SparePart> {
     public final StringPath mainPic = createString("mainPic");
 
     public final StringPath name = createString("name");
+
+    public final StringPath partcode = createString("partcode");
+
+    public final StringPath partnumber = createString("partnumber");
+
+    public final StringPath specification = createString("specification");
 
     public final QStorehouse storehouse;
 
@@ -83,6 +89,7 @@ public class QSparePart extends EntityPathBase<SparePart> {
         this.createdBy = _super.createdBy;
         this.createdDate = _super.createdDate;
         this.depart = _super.depart;
+        this.device = inits.isInitialized("device") ? new QDevice(forProperty("device"), inits.get("device")) : null;
         this.id = _super.id;
         this.lastModifieBy = _super.lastModifieBy;
         this.lastModifiedDate = _super.lastModifiedDate;

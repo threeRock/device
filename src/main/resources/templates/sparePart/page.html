@@ -10,8 +10,12 @@
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
 			<label>备件名称</label><input type="text" th:value="${name}" value=""
-				name="name" class="form-control" size="10" />&nbsp;<label>备件编码</label><input
-				type="text" th:value="${code}" value="" name="code"
+				name="name" class="form-control" size="10" />&nbsp;<label>备件编号</label><input
+				type="text" th:value="${partcode}" value="" name="partcode"
+				class="form-control" size="10" />&nbsp;<label>备件号</label><input
+				type="text" th:value="${partnumber}" value="" name="partnumber"
+				class="form-control" size="10" />&nbsp;<label>规格型号</label><input
+				type="text" th:value="${specification}" value="" name="specification"
 				class="form-control" size="10" />&nbsp;<label>仓库: </label><select
 				data-toggle="selectpicker" data-width="150" name="mainType">
 				<option value="">请选择所属仓库</option>
@@ -34,14 +38,17 @@
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="120%"  data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
 				<th>示意图</th>
 				<th data-order-field="storehouse.name">仓库</th>
+				<th data-order-field="device.name">所属设备</th>
 				<th data-order-field="name">名称</th>
-				<th data-order-field="code">编号</th>
+				<th data-order-field="partcode">备件编号</th>
+				<th data-order-field="partnumber">备件号</th>
+				<th data-order-field="specification">规格型号</th>
 				<th data-order-field="subType.name">类别</th>
 				<th width="100">操作</th>
 			</tr>
@@ -53,8 +60,11 @@
 					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
 					width="300" /></td>
 				<td th:text="${e.storehouse.name}">仓库</td>
+				<td th:text="${e.device != null?e.device.name:''}">设备</td>
 				<td th:text="${e.name}">装备名称</td>
-				<td th:text="${e.code}">设备编号</td>
+				<td th:text="${e.partcode}">备件编号</td>
+				<td th:text="${e.partnumber}">备件号</td>
+				<td th:text="${e.specification}">规格型号</td>
 				<td th:text="${e.subType.name}">装备类别</td>
 				<td><a sec:authorize="hasAnyAuthority('SPAREPARTMODIFY')"
 					th:href="@{/device/sparepart/modify/{id}(id=${e.id})}" href="#"

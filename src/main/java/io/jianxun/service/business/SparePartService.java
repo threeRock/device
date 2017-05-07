@@ -25,11 +25,6 @@ public class SparePartService extends AbstractBaseService<SparePart> {
 				SparePartPredicates.nameAndIdNotPredicate(name, id)));
 	}
 
-	public boolean validateCodeUnique(String code, Depart depart, Long id) {
-		return 0 == countActiveAll(ExpressionUtils.and(SparePartPredicates.departPredicate(depart),
-				SparePartPredicates.codeAndIdNotPredicate(code, id)));
-	}
-
 	public List<DepartTree> getSparePartTree() {
 		return convertEntityToDepartTree(departService.getUserDepart());
 	}

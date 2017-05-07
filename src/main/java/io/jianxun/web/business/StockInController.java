@@ -94,7 +94,7 @@ public class StockInController {
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		model.addAttribute("stockin", new StockIn());
-		model.addAttribute("departmentId", departId);
+		model.addAttribute("departId", departId);
 		model.addAttribute("departmentName", depart.getName());
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;

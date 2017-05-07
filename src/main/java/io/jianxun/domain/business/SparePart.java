@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.jeecgframework.poi.excel.annotation.Excel;
 
@@ -22,10 +23,16 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	@NotBlank(message = "sparepart.name.notblank")
 	@Excel(name = "备件名称", orderNum = "20")
 	private String name;
+	// 备件号
+	@Excel(name = "备件号", orderNum = "30")
+	private String partnumber;
+	// 规格型号号
+	@Excel(name = "规格型号", orderNum = "40")
+	private String specification;
 	// 备件编码
-	@NotBlank(message = "sparepart.code.notblank")
-	@Excel(name = "库存编码", orderNum = "30")
-	private String code;
+	@Excel(name = "备件编码", orderNum = "50")
+	private String partcode;
+
 	// 首要图片地址
 	private String mainPic;
 
@@ -36,6 +43,14 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	@Transient
 	@Excel(name = "所属仓库", orderNum = "10", mergeVertical = true)
 	private String storehouseName;
+
+	// 所属设备
+	@ManyToOne
+	@JoinColumn(name = "device_id")
+	private Device device;
+	@Transient
+	@Excel(name = "所属设备", orderNum = "11", mergeVertical = true)
+	private String deviceName;
 
 	private String description;
 
@@ -51,12 +66,56 @@ public class SparePart extends AbstractBusinessDepartEntity {
 		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
+	/**
+	 * @return the partnumber
+	 */
+	public String getPartnumber() {
+		return partnumber;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	/**
+	 * @param partnumber
+	 *            the partnumber to set
+	 */
+	public void setPartnumber(String partnumber) {
+		this.partnumber = partnumber;
+	}
+
+	/**
+	 * @return the specification
+	 */
+	public String getSpecification() {
+		return specification;
+	}
+
+	/**
+	 * @param specification
+	 *            the specification to set
+	 */
+	public void setSpecification(String specification) {
+		this.specification = specification;
+	}
+
+	/**
+	 * @return the partcode
+	 */
+	public String getPartcode() {
+		return partcode;
+	}
+
+	/**
+	 * @param partcode
+	 *            the partcode to set
+	 */
+	public void setPartcode(String partcode) {
+		this.partcode = partcode;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getMainPic() {
@@ -106,6 +165,57 @@ public class SparePart extends AbstractBusinessDepartEntity {
 
 	public void setStorehouseName(String storehouseName) {
 		this.storehouseName = storehouseName;
+	}
+
+	/**
+	 * @return the device
+	 */
+	public Device getDevice() {
+		return device;
+	}
+
+	/**
+	 * @param device
+	 *            the device to set
+	 */
+	public void setDevice(Device device) {
+		this.device = device;
+	}
+
+	/**
+	 * @return the deviceName
+	 */
+	public String getDeviceName() {
+		if (this.device != null)
+			return device.toString();
+		return deviceName;
+	}
+
+	/**
+	 * @param deviceName
+	 *            the deviceName to set
+	 */
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("所属仓库:" + this.getStorehouseName() + ";名称:" + this.name);
+		if (StringUtils.isNotBlank(this.deviceName))
+			sb.append(";所属设备:" + this.deviceName);
+		if (StringUtils.isNotBlank(this.partcode))
+			sb.append(";备件编码:" + this.partcode);
+		if (StringUtils.isNotBlank(this.partnumber))
+			sb.append(";备件号:" + this.partnumber);
+		if (StringUtils.isNotBlank(this.specification))
+			sb.append(";规格型号:" + this.specification);
+		return sb.toString();
 	}
 
 }

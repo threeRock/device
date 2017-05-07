@@ -21,13 +21,12 @@ public class ValidatorSparePartTest extends AbstractValidator {
 		// LocaleContextHolder.setLocale(Locale.ENGLISH);
 		SparePart sparePart = new SparePart();
 		sparePart.setName(" ");
-		sparePart.setCode(" ");
 		Validator validator = createValidator();
 		Set<ConstraintViolation<SparePart>> constraintViolations = validator.validate(sparePart);
 
 		assertThat(constraintViolations.size()).isEqualTo(4);
 		ConstraintViolation<SparePart> violation = constraintViolations.iterator().next();
-		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name", "code", "storehouse");
+		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name", "storehouse");
 	}
 
 	@Test
@@ -35,7 +34,6 @@ public class ValidatorSparePartTest extends AbstractValidator {
 		SparePart sparePart = new SparePart();
 		sparePart.setDepart(new Depart());
 		sparePart.setName("tt");
-		sparePart.setCode("tt");
 		sparePart.setStorehouse(new Storehouse());
 		Validator validator = createValidator();
 		Set<ConstraintViolation<SparePart>> constraintViolations = validator.validate(sparePart);

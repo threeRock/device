@@ -206,4 +206,14 @@ public class Device extends AbstractBusinessDepartEntity {
 		this.mainTypeName = mainTypeName;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "设备名称:" + this.name;
+	}
+
 }

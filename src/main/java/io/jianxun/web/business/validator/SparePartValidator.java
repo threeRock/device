@@ -24,7 +24,6 @@ public class SparePartValidator implements Validator {
 		final SparePart sparePart = (SparePart) target;
 		final String name = sparePart.getName();
 		final Depart depart = sparePart.getDepart();
-		final String code = sparePart.getCode();
 		final Long id = sparePart.getId();
 
 		if (depart == null || depart.getId() == null || !departService.exists(depart.getId()))
@@ -36,9 +35,6 @@ public class SparePartValidator implements Validator {
 		if (!sparePartService.validateNameUnique(name, depart, id))
 			errors.rejectValue("name", "name.unique",
 					localeMessageSourceService.getMessage("sparePart.name.isUsed", new Object[] { name }));
-		if (!sparePartService.validateCodeUnique(code, depart, id))
-			errors.rejectValue("code", "code.unique",
-					localeMessageSourceService.getMessage("sparePart.code.isUsed", new Object[] { code }));
 
 	}
 

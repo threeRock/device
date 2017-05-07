@@ -47,20 +47,34 @@
 							width="300" /></span></td>
 				</tr>
 				<tr>
+					<td colspan="3"><label class="control-label x105">所属设备：</label>	<select id="sparePart_form_subType" data-toggle="selectpicker"
+						data-width="150" th:field="*{device}">
+							<option value="">请选择所属设备</option>
+							<option th:each="item : ${devices}" th:value="${item.id}"
+								th:text="${item.name}">设备</option>
+					</select>
+						</td>
+				</tr>
+				<tr>
 					<td><label class="control-label x105">备件名称：</label> <input
 						type="text" th:field="*{name}" name="name"
 						data-rule="required;remote[device/sparepart/check/nameunique, id, depart.id]"
 						size="15" /></td>
-					<td><label class="control-label x105">设备编号：</label> <input
-						type="text" th:field="*{code}" name="code"
-						data-rule="required;remote[device/sparepart/check/codeunique, id, depart.id]"
+					<td><label class="control-label x105">备件编码：</label> <input
+						type="text" th:field="*{partcode}" name="partcode" size="15" /></td>
+					<td><label class="control-label x105">备件号：</label> <input
+						type="text" th:field="*{partnumber}" name="partnumber" size="15" /></td>
+
+				</tr>
+				<tr>
+					<td><label class="control-label x105">规格型号：</label> <input
+						type="text" th:field="*{specification}" name="specification"
 						size="15" /></td>
-						<td>
-					<label class="control-label x105">备件类别：</label>
-					<select id="sparePart_form_subType"
-						data-toggle="selectpicker" data-width="150" th:field="*{subType}">
-						<option th:each="item : ${types}" th:value="${item.id}"
-							th:text="${item.name}">备件类别</option>
+					<td colspan="2"><label class="control-label x105">备件类别：</label>
+						<select id="sparePart_form_subType" data-toggle="selectpicker"
+						data-width="150" th:field="*{subType}">
+							<option th:each="item : ${types}" th:value="${item.id}"
+								th:text="${item.name}">备件类别</option>
 					</select></td>
 				</tr>
 				<tr>
