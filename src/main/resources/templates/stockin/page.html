@@ -29,7 +29,7 @@
 				<th data-order-field="shelf">货架</th>
 				<th data-order-field="location">使用位置</th>
 				<th data-order-field="sparepart.name">备件名称</th>
-				<th >备件型号</th>
+				<th data-order-field="sparepart.specification">备件型号</th>
 				<th>入库数量</th>
 				<th>厂家</th>
 				<th>备注</th>
@@ -39,11 +39,11 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td th:text="${#temporals.format(createdDate, 'yyyy-MM-dd')}">时间</td>
+				<td th:text="${#temporals.format(e.createdDate, 'yyyy-MM-dd')}">时间</td>
 				<td th:text="${e.shelf}">货架</td>
 				<td th:text="${e.location}">使用位置</td>
 				<td th:text="${e.sparepart.name}">备件名称</td>
-				<td th:text="${e.sparepart.code}">备件型号</td>
+				<td th:text="${e.sparepart.specification}">备件型号</td>
 				<td th:text="${e.capacity}">数量</td>
 				<td th:text="${e.manufacturer}">厂家</td>
 				<td th:text="${e.remark}">备注</td>

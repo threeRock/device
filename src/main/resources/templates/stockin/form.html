@@ -8,19 +8,36 @@
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td colspan="3"><label class="control-label x95">所属机构：</label>
-						<label th:if="${!'create'.equals(action)}" class="control-label"
-						th:text="${departmentName}"></label></td>
+					<td colspan="2"><label class="control-label x95">所属机构：</label>
+						<label class="control-label" th:text="${departmentName}"></label></td>
 				</tr>
 				<tr>
-					<td colspan="3"><label class="control-label x95">备件信息：</label>
+					<td colspan="2"><label class="control-label x95">备件信息：</label>
 						<input th:if="${'create'.equals(action)}" type="text"
-						data-toggle="tags" data-tagname="sparepart"
-						data-url="sparepart/search/{#stockin_depart}" data-max="1"
+						data-toggle="tags" data-tagname="sparepart" data-width="700"
+						data-url="device/sparepart/search/{#stockin_depart}" data-max="1"
 						size="40"> </input> <label th:if="${!'create'.equals(action)}"
 						class="control-label" th:text="${sparepartinfo}"></label></td>
 				</tr>
 				<tr>
+					<td colspan="2"><label class="control-label x95">入库数量：</label>
+						<input type="text"  data-toggle="spinner" th:field="*{capacity}" name="capacity"
+						data-rule="required;integer; range[1~100000]" data-min="1"
+						data-max="100000" size="20" /></td>
+
+
+				</tr>
+				<tr>
+					<td><label class="control-label x95">位号：</label> <input
+						type="text" th:field="*{shelf}" name="shelf" size="15" /></td>
+					<td><label class="control-label x95">生产厂家：</label> <input
+						type="text" th:field="*{manufacturer}" name="manufacturer"
+						size="15" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+							th:field="*{remark}" name="remark" data-toggle="autoheight"
+							cols="80" rows="10"></textarea></td>
 				</tr>
 			</tbody>
 		</table>

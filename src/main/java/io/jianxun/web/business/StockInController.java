@@ -1,5 +1,7 @@
 package io.jianxun.web.business;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,9 +15,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +34,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.StockInPredicates;
 import io.jianxun.service.business.StockInService;
+import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
@@ -87,7 +93,7 @@ public class StockInController {
 	 * 新增表单页面
 	 */
 	@GetMapping("create/{departId}")
-	@PreAuthorize("hasAuthority('SPAREPARTCREATE')")
+	@PreAuthorize("hasAuthority('STOCKINCREATE')")
 	String createForm(@PathVariable("departId") Long departId, Model model,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = departService.findActiveOne(departId);
@@ -98,6 +104,76 @@ public class StockInController {
 		model.addAttribute("departmentName", depart.getName());
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 新增保存
+	 * 
+	 * @param sparePart
+	 * @param parameters
+	 * @return
+	 */
+	@PostMapping("create")
+	@PreAuthorize("hasAuthority('STOCKINCREATE')")
+	@ResponseBody
+	ReturnDto createSave(@Valid StockIn stockIn, @RequestParam MultiValueMap<String, String> parameters) {
+		this.stockInService.save(stockIn);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("stockIn.save.successd"), true, "",
+				"stockIn-page-layout");
+	}
+
+	/**
+	 * 修改角色表单
+	 * 
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@GetMapping(value = "/modify/{id}")
+	@PreAuthorize("hasAuthority('STOCKINMODIFY')")
+	public String modify(@PathVariable("id") Long id, Model model) {
+		StockIn stockin = this.stockInService.findActiveOne(id);
+		model.addAttribute("stockin", stockin);
+		model.addAttribute("departId", stockin.getDepart() != null ? stockin.getDepart().getId() : null);
+		model.addAttribute("departmentName", stockin.getDepart() != null ? stockin.getDepart().getName() : null);
+		model.addAttribute("sparepartinfo", stockin.getSparepart().toString());
+		util.addModifyFormAction(model);
+		return templatePrefix() + "form";
+
+	}
+
+	/**
+	 * 修改角色保存
+	 * 
+	 * @param entity
+	 * @param model
+	 * @return
+	 */
+	@PostMapping(value = "/modify")
+	@PreAuthorize("hasAuthority('STOCKINMODIFY')")
+	@ResponseBody
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "stockin") StockIn stockin, Model model) {
+		this.stockInService.save(stockin);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("stockin.save.successd"), true, "",
+				"stockin-page-layout");
+	}
+
+	@PostMapping("remove/{id}")
+	@PreAuthorize("hasAuthority('STOCKINREMOVE')")
+	@ResponseBody
+	public ReturnDto remove(@PathVariable("id") Long id) {
+		//TODO 库存判断
+		stockInService.delete(id);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("stockin.remove.successd"));
+	}
+
+	@ModelAttribute(name = "stockin")
+	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
+		if (id != null && id != -1L) {
+			StockIn stockin = stockInService.findActiveOne(id);
+			if (stockin != null)
+				model.addAttribute("stockin", stockin);
+		}
 	}
 
 	private String templatePrefix() {
