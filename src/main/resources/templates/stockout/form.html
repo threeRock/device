@@ -1,0 +1,45 @@
+<div class="bjui-pageContent">
+	<form action="#" id="stockout_form"
+		th:action="@{/stockout/{path}(path=${action})}" method="POST"
+		th:object="${stockout}" data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" /> <input
+			id="stockout_depart" type="hidden" name="depart.id"
+			th:value="${departId}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x95">所属机构：</label>
+						<label class="control-label" th:text="${departmentName}"></label></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">备件信息：</label>
+						<input th:if="${'create'.equals(action)}" type="text"
+						data-toggle="tags" data-tagname="sparePart" data-width="700"
+						data-url="device/sparepart/search/{#stockout_depart}" data-max="1"
+						size="40"> </input> <label th:if="${!'create'.equals(action)}"
+						class="control-label" th:text="${sparepartinfo}"></label></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x95">领用数量：</label> <input
+						type="text" data-toggle="spinner" th:field="*{capacity}"
+						name="capacity" data-rule="required;integer; range[1~100000]"
+						data-min="1" data-max="100000" size="20" /></td>
+					<td><label class="control-label x95">领用人：</label> <input
+						type="text" th:field="*{requisitionUser}" name="requisitionUser" size="15" /></td>
+
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+							th:field="*{remark}" name="remark" data-toggle="autoheight"
+							cols="80" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

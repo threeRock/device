@@ -385,12 +385,16 @@
 										data-options="{id:'subtype-page', faicon:'devicet-right'}">配件类别</a></li>
 								</ul>
 								<ul
-									sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"
+									sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE','STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"
 									class="menu-items" data-tit="库存设置" data-faicon="cog">
 									<li
 										sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"><a
 										href="#" th:href="@{/stockin/tree/}"
 										data-options="{id:'stockin-page', faicon:'devicet-right'}">入库管理</a></li>
+										<li
+										sec:authorize="hasAnyAuthority('STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"><a
+										href="#" th:href="@{/stockout/tree/}"
+										data-options="{id:'stockout-page', faicon:'devicet-right'}">出库管理</a></li>
 								</ul>
 
 							</div></li>

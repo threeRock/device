@@ -1,8 +1,10 @@
 package io.jianxun.domain.business;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import io.jianxun.domain.AbstractBusinessDepartEntity;
 
@@ -13,6 +15,8 @@ public class StockIn extends AbstractBusinessDepartEntity {
 	private static final long serialVersionUID = 8366464276775587307L;
 	// 备件
 	@ManyToOne
+	@JoinColumn(name = "part_id")
+	@NotNull(message="{stockin.part.notnull}")
 	private SparePart sparepart;
 	// 申请数量
 	private Integer capacity = 1;
