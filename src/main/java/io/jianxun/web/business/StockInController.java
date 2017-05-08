@@ -67,7 +67,7 @@ public class StockInController {
 	@RequestMapping(value = { "/page/{depart}" })
 	@PreAuthorize("hasAuthority('STOCKINLIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
-			@QuerydslPredicate(root = Depart.class) Predicate predicate,
+			@QuerydslPredicate(root = StockIn.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);

@@ -35,11 +35,12 @@ public class Utils {
 		for (String property : keySet) {
 			if (!Arrays.asList(PAGE, SIZE, TOTAL, ORDER_FIELD, ORDER_DIRECTION).contains(property)) {
 				List<String> values = parameters.get(property);
+				String p = property.replace(".", "");
 				if (values != null && values.size() != 0) {
 					if (values.size() == 1)
-						map.put(property, parameters.getFirst(property));
+						map.put(p, parameters.getFirst(property));
 					else
-						map.put(property, StringUtils.collectionToDelimitedString(values, ","));
+						map.put(p, StringUtils.collectionToDelimitedString(values, ","));
 				}
 			}
 		}

@@ -42,7 +42,7 @@
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="140%" data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="160%" data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
@@ -72,7 +72,7 @@
 				<td th:text="${e.partcode}">备件编号</td>
 				<td th:text="${e.partnumber}">备件号</td>
 				<td th:text="${e.specification}">规格型号</td>
-				<td th:text="${e.subType.name}">装备类别</td>
+				<td th:text="${e.subType != null?e.subType.name:''}">装备类别</td>
 				<td th:text="${#temporals.format(e.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">时间</td>
 				<td><a sec:authorize="hasAnyAuthority('SPAREPARTMODIFY')"
 					th:href="@{/device/sparepart/modify/{id}(id=${e.id})}" href="#"
