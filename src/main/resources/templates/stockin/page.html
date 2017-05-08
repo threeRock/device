@@ -24,10 +24,10 @@
 	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
 		<thead>
 			<tr>
-				<th data-order-field="e.depart.name">所属机构</th>
+				<th data-order-field="depart.name">所属机构</th>
 				<th data-order-field="createdDate">时间</th>
-				<th data-order-field="shelf">货架</th>
-				<th data-order-field="location">使用位置</th>
+				<th data-order-field="sparepart.shelf">货架</th>
+				<th data-order-field="sparepart.location">使用位置</th>
 				<th data-order-field="sparepart.name">备件名称</th>
 				<th data-order-field="sparepart.specification">备件型号</th>
 				<th>入库数量</th>
@@ -40,12 +40,12 @@
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
 				<td th:text="${#temporals.format(e.createdDate, 'yyyy-MM-dd')}">时间</td>
-				<td th:text="${e.shelf}">货架</td>
-				<td th:text="${e.location}">使用位置</td>
+				<td th:text="${e.sparepart.shelf}">货架</td>
+				<td th:text="${e.sparepart.location}">使用位置</td>
 				<td th:text="${e.sparepart.name}">备件名称</td>
 				<td th:text="${e.sparepart.specification}">备件型号</td>
 				<td th:text="${e.capacity}">数量</td>
-				<td th:text="${e.manufacturer}">厂家</td>
+				<td th:text="${e.sparepart.manufacturer}">厂家</td>
 				<td th:text="${e.remark}">备注</td>
 				<td><a sec:authorize="hasAnyAuthority('STOCKINMODIFY')"
 					th:href="@{/stockin/modify/{id}(id=${e.id})}" href="#"

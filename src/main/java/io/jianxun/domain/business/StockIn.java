@@ -16,19 +16,13 @@ public class StockIn extends AbstractBusinessDepartEntity {
 	// 备件
 	@ManyToOne
 	@JoinColumn(name = "part_id")
-	@NotNull(message="{stockin.part.notnull}")
+	@NotNull(message = "{stockin.part.notnull}")
 	private SparePart sparepart;
 	// 申请数量
 	private Integer capacity = 1;
 
-	// 使用位置
-	private String location;
-	// 货架
-	private String shelf;
 	// 备注
 	private String remark;
-	// 制造商厂家
-	private String manufacturer;
 
 	public SparePart getSparepart() {
 		return sparepart;
@@ -46,36 +40,12 @@ public class StockIn extends AbstractBusinessDepartEntity {
 		this.capacity = capacity;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getShelf() {
-		return shelf;
-	}
-
-	public void setShelf(String shelf) {
-		this.shelf = shelf;
-	}
-
 	public String getRemark() {
 		return remark;
 	}
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-
-	public String getManufacturer() {
-		return manufacturer;
-	}
-
-	public void setManufacturer(String manufacturer) {
-		this.manufacturer = manufacturer;
 	}
 
 }

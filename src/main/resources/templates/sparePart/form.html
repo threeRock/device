@@ -21,13 +21,15 @@
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td colspan="3"><label class="control-label x105">仓库：</label>
+					<td ><label class="control-label x105">仓库：</label>
 						<select id="sparePart_form_productionLine"
 						data-toggle="selectpicker" data-width="150"
 						th:field="*{storehouse}">
 							<option th:each="item : ${storehouses}" th:value="${item.id}"
 								th:text="${item.name}">仓库</option>
 					</select></td>
+					<td colspan="2"><label class="control-label x95">位号：</label> <input
+						type="text" th:field="*{shelf}" name="shelf" size="15" /></td>
 				</tr>
 				<tr>
 					<td><label class="control-label x105">备件照片：</label>
@@ -47,13 +49,13 @@
 							width="300" /></span></td>
 				</tr>
 				<tr>
-					<td colspan="3"><label class="control-label x105">所属设备：</label>	<select id="sparePart_form_subType" data-toggle="selectpicker"
+					<td colspan="3"><label class="control-label x105">所属设备：</label>
+						<select id="sparePart_form_subType" data-toggle="selectpicker"
 						data-width="150" th:field="*{device}">
 							<option value="">请选择所属设备</option>
 							<option th:each="item : ${devices}" th:value="${item.id}"
 								th:text="${item.name}">设备</option>
-					</select>
-						</td>
+					</select></td>
 				</tr>
 				<tr>
 					<td><label class="control-label x105">备件名称：</label> <input
@@ -70,17 +72,15 @@
 					<td><label class="control-label x105">规格型号：</label> <input
 						type="text" th:field="*{specification}" name="specification"
 						size="15" /></td>
-					<td colspan="2"><label class="control-label x105">备件类别：</label>
+					<td><label class="control-label x105">备件类别：</label>
 						<select id="sparePart_form_subType" data-toggle="selectpicker"
 						data-width="150" th:field="*{subType}">
 							<option th:each="item : ${types}" th:value="${item.id}"
 								th:text="${item.name}">备件类别</option>
 					</select></td>
-				</tr>
-				<tr>
-					<td colspan="3"><label class="control-label x105">主要技术参数：</label>
-						<textarea th:field="*{description}" name="description"
-							data-toggle="autoheight" cols="80" rows="10"></textarea></td>
+					<td><label class="control-label x95">生产厂家：</label> <input
+						type="text" th:field="*{manufacturer}" name="manufacturer"
+						size="15" /></td>
 				</tr>
 			</tbody>
 		</table>

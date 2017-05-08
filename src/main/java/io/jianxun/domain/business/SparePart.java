@@ -52,6 +52,14 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	@Excel(name = "所属设备", orderNum = "11", mergeVertical = true)
 	private String deviceName;
 
+	// 使用位置
+	private String location;
+	// 货架
+	private String shelf;
+
+	// 制造商厂家
+	private String manufacturer;
+
 	private String description;
 
 	@ManyToOne
@@ -197,6 +205,30 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	 */
 	public void setDeviceName(String deviceName) {
 		this.deviceName = deviceName;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getShelf() {
+		return shelf;
+	}
+
+	public void setShelf(String shelf) {
+		this.shelf = shelf;
+	}
+
+	public String getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 
 	/*

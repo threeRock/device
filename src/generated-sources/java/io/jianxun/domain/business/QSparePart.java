@@ -49,13 +49,19 @@ public class QSparePart extends EntityPathBase<SparePart> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
+    public final StringPath location = createString("location");
+
     public final StringPath mainPic = createString("mainPic");
+
+    public final StringPath manufacturer = createString("manufacturer");
 
     public final StringPath name = createString("name");
 
     public final StringPath partcode = createString("partcode");
 
     public final StringPath partnumber = createString("partnumber");
+
+    public final StringPath shelf = createString("shelf");
 
     public final StringPath specification = createString("specification");
 

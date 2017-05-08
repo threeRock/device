@@ -47,13 +47,7 @@ public class QStockIn extends EntityPathBase<StockIn> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> lastModifiedDate;
 
-    public final StringPath location = createString("location");
-
-    public final StringPath manufacturer = createString("manufacturer");
-
     public final StringPath remark = createString("remark");
-
-    public final StringPath shelf = createString("shelf");
 
     public final QSparePart sparepart;
 
