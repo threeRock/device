@@ -44,7 +44,25 @@ public class SparePartService extends AbstractBaseService<SparePart> {
 		return tree;
 	}
 
+	public void getStock(List<SparePart> parts) {
+		for (SparePart sparePart : parts) {
+			sparePart.setStock(getStock(sparePart));
+		}
+
+	}
+
+	public Integer getStock(SparePart sparePart) {
+		Integer in = stockInService.getSparePartCapacity(sparePart.getDepart(), sparePart, null);
+		Integer out = stockOutService.getSparePartCapacity(sparePart.getDepart(), sparePart, null);
+		return in - out;
+	}
+
 	@Autowired
 	private DepartService departService;
+
+	@Autowired
+	private StockInService stockInService;
+	@Autowired
+	private StockOutService stockOutService;
 
 }

@@ -104,6 +104,8 @@ public class SparePartController {
 			searchPredicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
 			page = sparePartService.findActivePage(searchPredicate, pageable);
 		}
+		// 计算库存
+		sparePartService.getStock(page.getContent());
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentSparePartInfo(model, depart);

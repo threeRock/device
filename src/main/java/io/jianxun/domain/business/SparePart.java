@@ -65,6 +65,10 @@ public class SparePart extends AbstractBusinessDepartEntity {
 	@ManyToOne
 	@JoinColumn(name = "subType_id")
 	private SparePartSubType subType;
+	
+	//库存
+	@Transient
+	private Integer stock =0;
 
 	public String getName() {
 		return name;
@@ -229,6 +233,16 @@ public class SparePart extends AbstractBusinessDepartEntity {
 
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
+	}
+	
+	
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
 	}
 
 	/*
