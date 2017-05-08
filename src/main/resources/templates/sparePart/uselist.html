@@ -1,0 +1,70 @@
+<div class="bjui-pageHeader">
+	<form id="pagerForm" data-toggle="ajaxsearch"
+		th:action="@{/device/sparepart/use/}"
+		action="#" method="POST">
+		<div class="bjui-searchBar">
+			<label>查询年份</label><select data-toggle="selectpicker" data-width="150" name="year">
+				<option value="">请选择查询年份</option>
+				<option th:each="item : ${years}" th:value="${item.id}"
+					th:text="${item.id}"
+					th:selected="${item.id.toString() == year}">年份</option>
+			</select>&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
+		</div>
+	</form>
+	<hr style="margin: 5px 0" />
+	<div class="pull-left">
+	</div>
+</div>
+<div class="bjui-pageContent tableContent">
+	<table data-toggle="tablefixed" data-width="140%" data-nowrap="true">
+		<thead>
+			<tr>
+				<th>年份</th>
+				<th>所属机构</th>
+				<th>仓库</th>
+				<th>所属设备</th>
+				<th>名称</th>
+				<th>库存数量</th>
+				<th>1月份消耗数量</th>
+				<th>2月份消耗数量</th>
+				<th>3月份消耗数量</th>
+				<th>4月份消耗数量</th>
+				<th>5月份消耗数量</th>
+				<th>6月份消耗数量</th>
+				<th>7月份消耗数量</th>
+				<th>8月份消耗数量</th>
+				<th>9月份消耗数量</th>
+				<th>10月份消耗数量</th>
+				<th>11月份消耗数量</th>
+				<th>12月份消耗数量</th>
+				<th>库存余量</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td th:text="${use.year}">所属机构</td>
+				<td th:text="${use.sparePart.depart.name}">所属机构</td>
+				<td th:text="${use.sparePart.storehouse.name}">仓库</td>
+				<td th:text="${use.sparePart.device != null?use.sparePart.device.name:''}">设备</td>
+				<td th:text="${use.sparePart.name}">装备名称</td>
+				<td th:text="${use.beforeStock}">库存数量</td>
+				<td th:text="${use.one}">1月份消耗数量</td>
+				<td th:text="${use.two}">2月份消耗数量</td>
+				<td th:text="${use.three}">3月份消耗数量</td>
+				<td th:text="${use.four}">4月份消耗数量</td>
+				<td th:text="${use.five}">5月份消耗数量</td>
+				<td th:text="${use.six}">6月份消耗数量</td>
+				<td th:text="${use.seven}">7月份消耗数量</td>
+				<td th:text="${use.eight}">8月份消耗数量</td>
+				<td th:text="${use.night}">9月份消耗数量</td>
+				<td th:text="${use.ten}">10月份消耗数量</td>
+				<td th:text="${use.eleven}">11月份消耗数量</td>
+				<td th:text="${use.twelve}">12月份消耗数量</td>
+				<td th:text="${use.afterStock}">库存数量</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="bjui-pageFooter">
+</div>

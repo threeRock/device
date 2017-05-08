@@ -72,6 +72,20 @@ public class StockOutService extends AbstractBaseService<StockOut> {
 		return super.delete(id);
 	}
 
+	public Integer getSparePartBeforeCapacity(SparePart sparePart, Integer year) {
+		return findActiveAll(StockOutPredicates.sparePartBeforePredicate(sparePart, year), new Sort("id")).stream()
+				.mapToInt(stockOut -> stockOut.getCapacity()).sum();
+	}
+
+	public int getSparePartAfterCapacity(SparePart sparePart, Integer year) {
+		return findActiveAll(StockOutPredicates.sparePartAfterPredicate(sparePart, year), new Sort("id")).stream()
+				.mapToInt(stockOut -> stockOut.getCapacity()).sum();
+	}
+
+	public List<StockOut> getOutByYear(SparePart sparePart, Integer year){
+		return findActiveAll(StockOutPredicates.sparePartBetweenPredicate(sparePart,year), new Sort("id"));
+	}
+
 	@Autowired
 	private DepartService departService;
 	@Autowired

@@ -1,5 +1,8 @@
 package io.jianxun.service.business;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
@@ -34,6 +37,17 @@ public class StockInPredicates {
 		}
 		return sparePartPredicate(depart, sparepart);
 
+	}
+
+	public static Predicate sparePartBeforePredicate(SparePart sparePart, Integer year) {
+		QStockIn stockIn = QStockIn.stockIn;
+		System.out.println(LocalDateTime.of(year - 1, Month.DECEMBER, 31, 23, 59));
+		return stockIn.lastModifiedDate.before(LocalDateTime.of(year - 1, Month.DECEMBER, 31, 23, 59))
+				.and(sparePartPredicate(sparePart.getDepart(), sparePart));
+	}
+
+	public static Predicate sparePartAfterPredicate(SparePart sparePart, Integer year) {
+		return sparePartBeforePredicate(sparePart, year + 1);
 	}
 
 }

@@ -15,9 +15,9 @@
 				class="form-control" size="10" />&nbsp;<label>备件号</label><input
 				type="text" th:value="${partnumber}" value="" name="partnumber"
 				class="form-control" size="10" />&nbsp;<label>规格型号</label><input
-				type="text" th:value="${specification}" value="" name="specification"
-				class="form-control" size="10" />&nbsp;<label>仓库: </label><select
-				data-toggle="selectpicker" data-width="150" name="mainType">
+				type="text" th:value="${specification}" value=""
+				name="specification" class="form-control" size="10" />&nbsp;<label>仓库:
+			</label><select data-toggle="selectpicker" data-width="150" name="mainType">
 				<option value="">请选择所属仓库</option>
 				<option th:each="item : ${storehouses}" th:value="${item.id}"
 					th:text="${item.name}"
@@ -32,13 +32,17 @@
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="sparepart-form-new"
 			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="sparepart-user-list"
+			data-url="device/sparepart/use/{#bjui-selected}">消耗明细</button>
 		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
 			data-toggle="doexport" class="btn-red"
 			data-url="device/sparepart/export" data-confirm-msg="确定要导出吗？">导出</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="140%"  data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="140%" data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
@@ -51,6 +55,7 @@
 				<th data-order-field="partnumber">备件号</th>
 				<th data-order-field="specification">规格型号</th>
 				<th data-order-field="subType.name">类别</th>
+				<th>时间</th>
 				<th width="100">操作</th>
 			</tr>
 		</thead>
@@ -68,6 +73,7 @@
 				<td th:text="${e.partnumber}">备件号</td>
 				<td th:text="${e.specification}">规格型号</td>
 				<td th:text="${e.subType.name}">装备类别</td>
+				<td th:text="${#temporals.format(e.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">时间</td>
 				<td><a sec:authorize="hasAnyAuthority('SPAREPARTMODIFY')"
 					th:href="@{/device/sparepart/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"

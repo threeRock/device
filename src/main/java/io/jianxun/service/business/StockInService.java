@@ -1,5 +1,6 @@
 package io.jianxun.service.business;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -67,6 +68,20 @@ public class StockInService extends AbstractBaseService<StockIn> {
 		if (!validateDeleteCapacity(in))
 			throw new BusinessException(localeMessageSourceService.getMessage("stockin.capacity.notenough"));
 		return super.delete(id);
+	}
+
+	public Integer getSparePartBeforeCapacity(SparePart sparePart, Integer year) {
+		return findActiveAll(StockInPredicates.sparePartBeforePredicate(sparePart, year), new Sort("id")).stream()
+				.mapToInt(stockOut -> stockOut.getCapacity()).sum();
+	}
+
+	public int getSparePartAfterCapacity(SparePart sparePart, Integer year) {
+		List<StockIn> in = findActiveAll(StockInPredicates.sparePartAfterPredicate(sparePart, year), new Sort("id"));
+		for (StockIn stockIn : in) {
+			System.out.println(stockIn.getLastModifiedDate().isBefore(LocalDateTime.of(year, 12, 30, 23, 59, 59)));
+			System.out.println(stockIn.getLastModifiedDate().toString());
+		}
+		return in.stream().mapToInt(stockOut -> stockOut.getCapacity()).sum();
 	}
 
 	@Autowired

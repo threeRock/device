@@ -278,6 +278,17 @@ public class SparePartController {
 
 	}
 
+	@RequestMapping(value = "/use/{id}")
+	public String getUserList(@PathVariable("id") Long id, @RequestParam(value = "year", required = false) Integer year,
+			Model model) {
+		SparePart spartPart = this.sparePartService.findActiveOne(id);
+		if (spartPart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("sparepart.notfound"));
+		model.addAttribute("use", this.sparePartService.getUse(year, spartPart));
+		return templatePrefix() + "uselist";
+
+	}
+
 	private List<ValueLabelDto> getDto(List<SparePart> parts) {
 		List<ValueLabelDto> vls = Lists.newArrayList();
 		for (SparePart part : parts) {
