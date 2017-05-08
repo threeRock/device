@@ -34,6 +34,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.StockInPredicates;
 import io.jianxun.service.business.StockInService;
+import io.jianxun.web.business.validator.StockInValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
@@ -42,9 +43,9 @@ import io.jianxun.web.utils.Utils;
 @RequestMapping("stockin")
 public class StockInController {
 
-	@InitBinder("depart")
+	@InitBinder("stockIn")
 	public void initBinder(WebDataBinder webDataBinder) {
-
+		webDataBinder.addValidators(stockInValidator);
 	}
 
 	@GetMapping(value = "tree")
@@ -99,7 +100,7 @@ public class StockInController {
 		Depart depart = departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		model.addAttribute("stockin", new StockIn());
+		model.addAttribute("stockIn", new StockIn());
 		model.addAttribute("departId", departId);
 		model.addAttribute("departmentName", depart.getName());
 		util.addCreateFormAction(model);
@@ -133,7 +134,7 @@ public class StockInController {
 	@PreAuthorize("hasAuthority('STOCKINMODIFY')")
 	public String modify(@PathVariable("id") Long id, Model model) {
 		StockIn stockin = this.stockInService.findActiveOne(id);
-		model.addAttribute("stockin", stockin);
+		model.addAttribute("stockIn", stockin);
 		model.addAttribute("departId", stockin.getDepart() != null ? stockin.getDepart().getId() : null);
 		model.addAttribute("departmentName", stockin.getDepart() != null ? stockin.getDepart().getName() : null);
 		model.addAttribute("sparepartinfo", stockin.getSparepart().toString());
@@ -152,7 +153,7 @@ public class StockInController {
 	@PostMapping(value = "/modify")
 	@PreAuthorize("hasAuthority('STOCKINMODIFY')")
 	@ResponseBody
-	public ReturnDto modifySave(@Valid @ModelAttribute(name = "stockin") StockIn stockin, Model model) {
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "stockIn") StockIn stockin, Model model) {
 		this.stockInService.save(stockin);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("stockin.save.successd"), true, "",
 				"stockin-page-layout");
@@ -162,17 +163,16 @@ public class StockInController {
 	@PreAuthorize("hasAuthority('STOCKINREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
-		//TODO 库存判断
 		stockInService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("stockin.remove.successd"));
 	}
 
-	@ModelAttribute(name = "stockin")
+	@ModelAttribute(name = "stockIn")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
 			StockIn stockin = stockInService.findActiveOne(id);
 			if (stockin != null)
-				model.addAttribute("stockin", stockin);
+				model.addAttribute("stockIn", stockin);
 		}
 	}
 
@@ -184,6 +184,8 @@ public class StockInController {
 
 	@Autowired
 	private StockInService stockInService;
+	@Autowired
+	private StockInValidator stockInValidator;
 	@Autowired
 	private DepartService departService;
 	@Autowired

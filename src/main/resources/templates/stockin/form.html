@@ -1,7 +1,7 @@
 <div class="bjui-pageContent">
 	<form action="#" id="stockin_form"
 		th:action="@{/stockin/{path}(path=${action})}" method="POST"
-		th:object="${stockin}" data-toggle="validate" data-alertmsg="false">
+		th:object="${stockIn}" data-toggle="validate" data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" /> <input
 			id="stockin_depart" type="hidden" name="depart.id"
 			th:value="${departId}" />

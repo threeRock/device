@@ -12,7 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,7 @@ import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
 import io.jianxun.service.business.StockOutPredicates;
 import io.jianxun.service.business.StockOutService;
+import io.jianxun.web.business.validator.StockOutValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
@@ -39,6 +42,11 @@ import io.jianxun.web.utils.Utils;
 @Controller
 @RequestMapping("stockout")
 public class StockOutController {
+
+	@InitBinder("stockOut")
+	public void initBinder(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(stockOutValidator);
+	}
 
 	@GetMapping(value = "tree")
 	@PreAuthorize("hasAuthority('STOCKOUTLIST')")
@@ -92,7 +100,7 @@ public class StockOutController {
 		Depart depart = departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		model.addAttribute("stockout", new StockOut());
+		model.addAttribute("stockOut", new StockOut());
 		model.addAttribute("departId", departId);
 		model.addAttribute("departmentName", depart.getName());
 		util.addCreateFormAction(model);
@@ -126,7 +134,7 @@ public class StockOutController {
 	@PreAuthorize("hasAuthority('STOCKOUTMODIFY')")
 	public String modify(@PathVariable("id") Long id, Model model) {
 		StockOut stockout = this.stockOutService.findActiveOne(id);
-		model.addAttribute("stockout", stockout);
+		model.addAttribute("stockOut", stockout);
 		model.addAttribute("departId", stockout.getDepart() != null ? stockout.getDepart().getId() : null);
 		model.addAttribute("departmentName", stockout.getDepart() != null ? stockout.getDepart().getName() : null);
 		model.addAttribute("sparepartinfo", stockout.getSparePart().toString());
@@ -145,7 +153,7 @@ public class StockOutController {
 	@PostMapping(value = "/modify")
 	@PreAuthorize("hasAuthority('STOCKOUTMODIFY')")
 	@ResponseBody
-	public ReturnDto modifySave(@Valid @ModelAttribute(name = "stockout") StockOut stockout, Model model) {
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "stockOut") StockOut stockout, Model model) {
 		this.stockOutService.save(stockout);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("stockout.save.successd"), true, "",
 				"stockout-page-layout");
@@ -155,17 +163,16 @@ public class StockOutController {
 	@PreAuthorize("hasAuthority('STOCKOUTREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
-		//TODO 库存判断
 		stockOutService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("stockout.remove.successd"));
 	}
 
-	@ModelAttribute(name = "stockout")
+	@ModelAttribute(name = "stockOut")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
 			StockOut stockout = stockOutService.findActiveOne(id);
 			if (stockout != null)
-				model.addAttribute("stockout", stockout);
+				model.addAttribute("stockOut", stockout);
 		}
 	}
 
@@ -177,6 +184,8 @@ public class StockOutController {
 
 	@Autowired
 	private StockOutService stockOutService;
+	@Autowired
+	private StockOutValidator stockOutValidator;
 	@Autowired
 	private DepartService departService;
 	@Autowired
