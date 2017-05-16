@@ -53,6 +53,13 @@ public enum PermissionDef {
 							DomainDef.DEVICE_DEVICE), DEVICE_DISCARD("DEVICEDISCARD", "报废", ModuleDef.DEVICE,
 									DomainDef.DEVICE_DEVICE), DEVICE_DISCARD_PAGE("DEVICEDISCARDPAGE", "报废查询",
 											ModuleDef.DEVICE, DomainDef.DEVICE_DEVICE),
+	// 设备附属设备技术参数
+	DEVICETECHNICALPARAM_PAGE("DEVICETECHNICALPARAMLIST", "列表", ModuleDef.DEVICE,
+			DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_CREATE("DEVICETECHNICALPARAMCREATE", "新增",
+					ModuleDef.DEVICE, DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_MODIFY(
+							"DEVICETECHNICALPARAMMODIFY", "修改", ModuleDef.DEVICE,
+							DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_REMOVE("DEVICETECHNICALPARAMREMOVE", "删除",
+									ModuleDef.DEVICE, DomainDef.DEVICE_TECHNICALPARAM),
 	// 备件
 	SPAREPART_PAGE("SPAREPARTLIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_CREATE(
 			"SPAREPARTCREATE", "新增", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_MODIFY("SPAREPARTMODIFY",
@@ -232,9 +239,10 @@ public enum PermissionDef {
 				20), DEVICE_MAINTYPE("device_maintype", "备件大类", 30), DEVICE_SUBTYPE("device_subtype", "备件子类",
 						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50), DEVICE_PRODUCTIONLINE(
 								"device_productionline", "生产线管理",
-								60), DEVICE_DEVICE("device_device", "设备管理", 70), DEVICE_SPAREPART("device_sparepart",
-										"备件管理", 80), STOCK_STOCKIN("stock_stockin", "入库管理",
-												90), STOCK_STOCKOUT("stock_stockout", "出库管理", 100);
+								60), DEVICE_DEVICE("device_device", "设备管理", 70), DEVICE_TECHNICALPARAM(
+										"device_TechnicalParam", "附属设备技术参数管理", 71), DEVICE_SPAREPART("device_sparepart",
+												"备件管理", 80), STOCK_STOCKIN("stock_stockin", "入库管理",
+														90), STOCK_STOCKOUT("stock_stockout", "出库管理", 100);
 
 		private String code;
 		private String name;

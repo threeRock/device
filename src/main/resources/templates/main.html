@@ -498,9 +498,9 @@
 										href="#" th:href="@{/device/tree/}"
 										data-options="{id:'device-page', faicon:'devicet-right'}">设备基本信息</a></li>
 									<li
-										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
-										href="#" th:href="@{/device/page/}"
-										data-options="{id:'device-page', faicon:'devicet-right'}">附属设备技术参数</a></li>
+										sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMLIST','DEVICETECHNICALPARAMCREATE','DEVICETECHNICALPARAMMODIFY','DEVICETECHNICALPARAMREMOVE')"><a
+										href="#" th:href="@{/device/technicalParam/page}"
+										data-options="{id:'deviceTechnicalParam-page', faicon:'devicet-right'}">附属设备技术参数</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
 										href="#" th:href="@{/device/tree/}"
