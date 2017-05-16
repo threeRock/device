@@ -52,7 +52,9 @@ public class DevicePredicates {
 
 	public static Predicate statusPredicate(DeviceStatus status) {
 		QDevice device = QDevice.device;
-		return device.status.eq(status.getName());
+		if (status != null)
+			return device.status.eq(status.getName());
+		return device.status.isNull();
 	}
 
 }

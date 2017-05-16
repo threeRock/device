@@ -6,12 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
+import io.jianxun.domain.business.DeviceDiscard;
+import io.jianxun.domain.business.DeviceStatus;
+import io.jianxun.repository.business.DeviceDiscardRepository;
 import io.jianxun.service.AbstractBaseService;
 import io.jianxun.web.dto.DepartTree;
 
@@ -19,6 +23,14 @@ import io.jianxun.web.dto.DepartTree;
 public class DeviceService extends AbstractBaseService<Device> {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Transactional(readOnly = false)
+	public void discard(DeviceDiscard discard) {
+		Device device = discard.getDevice();
+		device.setStatus(DeviceStatus.DISCARD.getName());
+		save(device);
+		deviceDiscardRepository.save(discard);
+	}
 
 	public boolean validateNameUnique(String name, Depart depart, Long id) {
 		return 0 == countActiveAll(ExpressionUtils.and(DevicePredicates.departPredicate(depart),
@@ -51,5 +63,7 @@ public class DeviceService extends AbstractBaseService<Device> {
 
 	@Autowired
 	private DepartService departService;
+	@Autowired
+	private DeviceDiscardRepository deviceDiscardRepository;
 
 }

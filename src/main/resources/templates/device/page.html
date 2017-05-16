@@ -34,6 +34,10 @@
 			data-toggle="navtab" class="btn-red" data-id="device-form-new"
 			data-url="device/create/{#devicedepart}">新增设备</button>
 		<button th:if="${createable}"
+			sec:authorize="hasAnyAuthority('DEVICEDISCARD')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-form-discard"
+			data-url="device/discard/{#bjui-selected}">设备报废</button>	
+		<button th:if="${createable}"
 			sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
 			data-toggle="doexport" class="btn-red" data-url="device/export"
 			data-confirm-msg="确定要导出吗？">导出</button>

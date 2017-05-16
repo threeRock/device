@@ -39,6 +39,7 @@ import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
+import io.jianxun.domain.business.DeviceDiscard;
 import io.jianxun.domain.business.DeviceStatus;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
@@ -93,14 +94,14 @@ public class DeivceController {
 		// 查看仓库查询权限
 		if (!currentLoginInfo.validateCurrentUserDepart(depart))
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
-		Predicate searchPredicate = null;
+		Predicate searchPredicate = DevicePredicates.statusPredicate(null);
 		Page<Device> page = null;
-		if (predicate == null && depart.isRoot()) {
-			page = deviceService.findActivePage(pageable);
-		} else {
-			searchPredicate = ExpressionUtils.and(DevicePredicates.departSubPredicate(depart), predicate);
-			page = deviceService.findActivePage(searchPredicate, pageable);
+		if (predicate != null) {
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
 		}
+		if (!depart.isRoot())
+			searchPredicate = ExpressionUtils.and(searchPredicate, DevicePredicates.departSubPredicate(depart));
+		page = deviceService.findActivePage(searchPredicate, pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
@@ -330,6 +331,29 @@ public class DeivceController {
 		list = deviceService.findActiveAll(searchPredicate, new Sort("name", "id"));
 		Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), Device.class, list);
 		workbook.write(response.getOutputStream());
+	}
+
+	@GetMapping(value = { "/discard/{id}" })
+	@PreAuthorize("hasAuthority('DEVICEDISCARD')")
+	String discardForm(@PathVariable("id") Long id, Model model) {
+		Device device = this.deviceService.findActiveOne(id);
+		if (device == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("device.notfound"));
+		DeviceDiscard discard = new DeviceDiscard();
+		discard.setDevice(device);
+		model.addAttribute("discard", discard);
+		return templatePrefix() + "discard";
+	}
+
+	@PostMapping(value = { "/discard" })
+	@PreAuthorize("hasAuthority('DEVICEDISCARD')")
+	ReturnDto discard(DeviceDiscard discard) {
+		Device device = this.deviceService.findActiveOne(discard.getDevice().getId());
+		if (device == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("device.notfound"));
+		discard.setDevice(device);
+		this.deviceService.discard(discard);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.discard.successd"));
 	}
 
 	@ModelAttribute(name = "device")

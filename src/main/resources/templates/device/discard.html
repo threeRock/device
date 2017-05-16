@@ -1,0 +1,26 @@
+<div class="bjui-pageContent">
+	<form action="#" id="device_form" th:action="@{/device/discard}"
+		method="POST" th:object="${discard}" data-toggle="validate"
+		data-alertmsg="false">
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x120">设备信息：</label>
+						<span th:text="${discard.device}"></span></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x120">报废原因及备注：</label>
+						<input type="hidden" name="device.id"
+						th:value="${discard.device.id}" /> <textarea th:field="*{reason}"
+							name="reason" data-toggle="autoheight" cols="60" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>
