@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
+import io.jianxun.domain.business.DeviceStatus;
 import io.jianxun.domain.business.QDevice;
 
 /**
@@ -47,6 +48,11 @@ public class DevicePredicates {
 	public static Predicate departPredicate(Depart depart) {
 		QDevice device = QDevice.device;
 		return device.depart.eq(depart);
+	}
+
+	public static Predicate statusPredicate(DeviceStatus status) {
+		QDevice device = QDevice.device;
+		return device.status.eq(status.getName());
 	}
 
 }

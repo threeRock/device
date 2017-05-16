@@ -39,6 +39,7 @@ import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
+import io.jianxun.domain.business.DeviceStatus;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
@@ -103,8 +104,18 @@ public class DeivceController {
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
+		addUrl(model, "page/" + departId);
 		addLineAndTypeInfo(model, depart);
+		addCreateable(model);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	private void addCreateable(Model model) {
+		model.addAttribute("createable", true);
+	}
+
+	private void addUrl(Model model, String url) {
+		model.addAttribute("url", url);
 	}
 
 	private void addParentDeviceInfo(Model model, Depart depart) {
@@ -202,7 +213,7 @@ public class DeivceController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart.id") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("d.id") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -214,7 +225,7 @@ public class DeivceController {
 
 	@RequestMapping("check/codeunique")
 	@ResponseBody
-	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
+	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("d.id") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -240,10 +251,10 @@ public class DeivceController {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
 				.body(file);
 	}
-	
+
 	@RequestMapping("export")
 	@PreAuthorize("hasAuthority('DEVICELIST')")
-	public void export(@RequestParam("depart.id") Long departId, Model model,
+	public void export(@RequestParam("d.id") Long departId, Model model,
 			@QuerydslPredicate(root = Device.class) Predicate predicate, HttpServletResponse response)
 			throws Exception {
 		// 告诉浏览器用什么软件可以打开此文件
@@ -266,8 +277,60 @@ public class DeivceController {
 		Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), Device.class, list);
 		workbook.write(response.getOutputStream());
 	}
-	
-	
+
+	/**
+	 * 报废分页列表 支持 查询 分页 及 排序
+	 */
+	@RequestMapping(value = { "/discard/page" })
+	@PreAuthorize("hasAuthority('DEVICEDISCARDPAGE')")
+	String discardPage(Model model, @QuerydslPredicate(root = Device.class) Predicate predicate,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		Predicate searchPredicate = DevicePredicates.statusPredicate(DeviceStatus.DISCARD);
+		if (!depart.isRoot())
+			searchPredicate = ExpressionUtils.and(searchPredicate, DevicePredicates.departSubPredicate(depart));
+		Page<Device> page = null;
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		page = deviceService.findActivePage(searchPredicate, pageable);
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		addParentDeviceInfo(model, depart);
+		addLineAndTypeInfo(model, depart);
+		addDiscardable(model);
+		addUrl(model, "discard/page");
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	private void addDiscardable(Model model) {
+		model.addAttribute("discardable", true);
+
+	}
+
+	@RequestMapping("/discard/export")
+	@PreAuthorize("hasAuthority('DEVICEDISCARDPAGE')")
+	public void discardExport(Model model, @QuerydslPredicate(root = Device.class) Predicate predicate,
+			HttpServletResponse response) throws Exception {
+		// 告诉浏览器用什么软件可以打开此文件
+		response.setHeader("content-Type", "application/vnd.ms-excel");
+		// 下载文件的默认名称
+		response.setHeader("Content-Disposition", "attachment;filename=设备导出.xls");
+		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		Predicate searchPredicate = DevicePredicates.statusPredicate(DeviceStatus.DISCARD);
+		if (!depart.isRoot())
+			searchPredicate = ExpressionUtils.and(searchPredicate, DevicePredicates.departSubPredicate(depart));
+		List<Device> list = null;
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		list = deviceService.findActiveAll(searchPredicate, new Sort("name", "id"));
+		Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), Device.class, list);
+		workbook.write(response.getOutputStream());
+	}
 
 	@ModelAttribute(name = "device")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {

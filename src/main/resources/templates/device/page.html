@@ -1,12 +1,11 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/device/page/{path}(path=${depart.id})}" action="#"
-		method="POST">
-		<input id="devicedepart" name="depart.id" type="hidden" th:value="${depart.id}"
-			value="10" /> <input type="hidden" name="size" th:value="${size}"
-			value="10" /> <input type="hidden" name="page" th:value="${page}"
-			value="0" /><input type="hidden" name="orderField"
-			th:value="${orderField}" /> <input type="hidden"
+		th:action="@{/device/{path}(path=${url})}" action="#" method="POST">
+		<input id="devicedepart" name="d.id" type="hidden"
+			th:value="${depart.id}" value="10" /> <input type="hidden"
+			name="size" th:value="${size}" value="10" /> <input type="hidden"
+			name="page" th:value="${page}" value="0" /><input type="hidden"
+			name="orderField" th:value="${orderField}" /> <input type="hidden"
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
 			<label>设备名称</label><input type="text" th:value="${name}" value=""
@@ -30,12 +29,18 @@
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
+		<button th:if="${createable}"
+			sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-new"
 			data-url="device/create/{#devicedepart}">新增设备</button>
-		<button sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
-			data-toggle="doexport" class="btn-red"
-			data-url="device/export" data-confirm-msg="确定要导出吗？">导出</button>
+		<button th:if="${createable}"
+			sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
+			data-toggle="doexport" class="btn-red" data-url="device/export"
+			data-confirm-msg="确定要导出吗？">导出</button>
+		<button th:if="${discardable}"
+			sec:authorize="hasAnyAuthority('DEVICEDISCARDPAGE')" type="button"
+			data-toggle="doexport" class="btn-red" data-url="device/discard/export"
+			data-confirm-msg="确定要报废导出吗？">报废信息导出</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">

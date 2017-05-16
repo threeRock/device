@@ -261,6 +261,132 @@
 			zTree.expandNode(treeNode, !treeNode.open, false, true, true)
 			return
 
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+												
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+															
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+												
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+																		
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+												
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+															
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
+												
+
+			
+
+						
+
+			
+
+									
+
+			
+
+						
+
+			
+
 		}
 		/*<![CDATA[*/
 		if (treeNode.target && treeNode.target == 'dialog')
@@ -366,32 +492,52 @@
 
 								<ul
 									sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE','SPAREPARTLIST','SPAREPARTCREATE','SPAREPARTMODIFY','SPAREPARTREMOVE','MAINTYPELIST','MAINTYPECREATE','MAINTYPEMODIFY','MAINTYPEREMOVE','SUBTYPELIST','SUBTYPECREATE','SUBTYPEMODIFY','SUBTYPEREMOVE')"
-									class="menu-items" data-tit="设备设置" data-faicon="cog">
+									class="menu-items" data-tit="设备资产及技术管理" data-faicon="cog">
 									<li
 										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
 										href="#" th:href="@{/device/tree/}"
-										data-options="{id:'device-page', faicon:'devicet-right'}">设备管理</a></li>
+										data-options="{id:'device-page', faicon:'devicet-right'}">设备基本信息</a></li>
 									<li
-										sec:authorize="hasAnyAuthority('SPAREPARTLIST','SPAREPARTCREATE','SPAREPARTMODIFY','SPAREPARTREMOVE')"><a
-										href="#" th:href="@{/device/sparepart/tree/}"
-										data-options="{id:'sparepart-page', faicon:'devicet-right'}">备件管理</a></li>
+										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
+										href="#" th:href="@{/device/page/}"
+										data-options="{id:'device-page', faicon:'devicet-right'}">附属设备技术参数</a></li>
+									<li
+										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
+										href="#" th:href="@{/device/tree/}"
+										data-options="{id:'device-page', faicon:'devicet-right'}">设备技术调整记录</a></li>
+									<li
+										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
+										href="#" th:href="@{/device/tree/}"
+										data-options="{id:'device-page', faicon:'devicet-right'}">设备检修（技改）履历</a></li>
+									<li
+										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
+										href="#" th:href="@{/device/tree/}"
+										data-options="{id:'device-page', faicon:'devicet-right'}">设备事故履历</a></li>
+									<li
+										sec:authorize="hasAnyAuthority('DEVICEDISCARDPAGE')"><a
+										href="#" th:href="@{/device/discard/page}"
+										data-options="{id:'device-discardpage', faicon:'devicet-right'}">报废设备查询</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('MAINTYPELIST','MAINTYPECREATE','MAINTYPEMODIFY','MAINTYPEREMOVE')"><a
 										href="#" th:href="@{/device/maintype/page/}"
-										data-options="{id:'maintype-page', faicon:'devicet-right'}">设备类别</a></li>
+										data-options="{id:'maintype-page', faicon:'devicet-right'}">设备分类</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('SUBTYPELIST','SUBTYPECREATE','SUBTYPEMODIFY','SUBTYPEREMOVE')"><a
 										href="#" th:href="@{/device/subtype/page/}"
-										data-options="{id:'subtype-page', faicon:'devicet-right'}">配件类别</a></li>
+										data-options="{id:'subtype-page', faicon:'devicet-right'}">备件分类</a></li>
 								</ul>
 								<ul
-									sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE','STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"
-									class="menu-items" data-tit="库存设置" data-faicon="cog">
+									sec:authorize="hasAnyAuthority('SPAREPARTLIST','SPAREPARTCREATE','SPAREPARTMODIFY','SPAREPARTREMOVE','STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE','STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"
+									class="menu-items" data-tit="备件管理" data-faicon="cog">
+									<li
+										sec:authorize="hasAnyAuthority('SPAREPARTLIST','SPAREPARTCREATE','SPAREPARTMODIFY','SPAREPARTREMOVE')"><a
+										href="#" th:href="@{/device/sparepart/tree/}"
+										data-options="{id:'sparepart-page', faicon:'devicet-right'}">备件基本信息</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"><a
 										href="#" th:href="@{/stockin/tree/}"
 										data-options="{id:'stockin-page', faicon:'devicet-right'}">入库管理</a></li>
-										<li
+									<li
 										sec:authorize="hasAnyAuthority('STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"><a
 										href="#" th:href="@{/stockout/tree/}"
 										data-options="{id:'stockout-page', faicon:'devicet-right'}">出库管理</a></li>

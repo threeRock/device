@@ -81,7 +81,7 @@ public class Device extends AbstractBusinessDepartEntity {
 	@CollectionTable(name = "jx_device_device_pics")
 	private List<String> pics = Lists.newArrayList();
 
-	// 设备状态
+	// 设备状态 标识 报废、检修
 	private String status;
 
 	public String getName() {
