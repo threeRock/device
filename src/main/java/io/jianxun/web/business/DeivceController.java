@@ -347,6 +347,7 @@ public class DeivceController {
 
 	@PostMapping(value = { "/discard" })
 	@PreAuthorize("hasAuthority('DEVICEDISCARD')")
+	@ResponseBody
 	ReturnDto discard(DeviceDiscard discard) {
 		Device device = this.deviceService.findActiveOne(discard.getDevice().getId());
 		if (device == null)
