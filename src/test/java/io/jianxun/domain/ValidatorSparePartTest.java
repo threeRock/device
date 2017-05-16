@@ -24,7 +24,7 @@ public class ValidatorSparePartTest extends AbstractValidator {
 		Validator validator = createValidator();
 		Set<ConstraintViolation<SparePart>> constraintViolations = validator.validate(sparePart);
 
-		assertThat(constraintViolations.size()).isEqualTo(4);
+		assertThat(constraintViolations.size()).isEqualTo(3);
 		ConstraintViolation<SparePart> violation = constraintViolations.iterator().next();
 		assertThat(violation.getPropertyPath().toString()).isIn("depart", "name", "storehouse");
 	}
