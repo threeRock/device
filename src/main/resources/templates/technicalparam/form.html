@@ -12,7 +12,8 @@
 						data-toggle="tags" data-tagname="device.id" data-width="700"
 						data-url="device/search/" data-max="1" size="40"> </input> <label
 						th:if="${!'create'.equals(action)}" class="control-label"
-						th:text="${deviceinfo}"></label></td>
+						th:text="${deviceinfo}"></label> 
+						<input th:if="${!'create'.equals(action)}" type="hidden" name="device.id" th:value="${deviceTechnicalParam.device.id}" /></td>
 				</tr>
 				<tr>
 					<td colspan="2"><label class="control-label x95">名称：</label> <input
