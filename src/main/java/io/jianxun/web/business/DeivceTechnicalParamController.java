@@ -101,7 +101,7 @@ public class DeivceTechnicalParamController {
 			@RequestParam MultiValueMap<String, String> parameters) {
 		deviceTechnicalParamService.save(deviceTechnicalParam);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice() }), true, "deviceTechnicalParam-page", "");
+				new Object[] { deviceTechnicalParam.getDevice().toString() }), true, "deviceTechnicalParam-page", "");
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class DeivceTechnicalParamController {
 			Model model) {
 		deviceTechnicalParamService.save(deviceTechnicalParam);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice() }), true, "deviceTechnicalParam-page", "");
+				new Object[] { deviceTechnicalParam.getDevice().toString() }), true, "deviceTechnicalParam-page", "");
 	}
 
 	@PostMapping("remove/{id}")

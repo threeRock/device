@@ -101,7 +101,7 @@ public class DeivceAdjustController {
 			@RequestParam MultiValueMap<String, String> parameters) {
 		deviceAdjustmentService.save(deviceAdjustment);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceAdjustment.getDevice() }), true, "deviceAdjustment-page", "");
+				new Object[] { deviceAdjustment.getDevice().toString() }), true, "deviceAdjustment-page", "");
 	}
 
 	/**
