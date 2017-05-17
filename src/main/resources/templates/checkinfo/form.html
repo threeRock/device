@@ -1,0 +1,66 @@
+<div class="bjui-pageContent">
+	<form action="#" id="checkInfo_form"
+		th:action="@{/device/checkInfo/{path}(path=${action})}" method="POST"
+		th:object="${deviceCheckInfo}" data-toggle="validate"
+		data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x95">设备信息：</label>
+						<input th:if="${'create'.equals(action)}" type="text"
+						data-toggle="tags" data-tagname="device.id" data-width="700"
+						data-url="device/search/" data-max="1" size="40"> </input> <label
+						th:if="${!'create'.equals(action)}" class="control-label"
+						th:text="${deviceinfo}"></label> <input
+						th:if="${!'create'.equals(action)}" type="hidden" name="device.id"
+						th:value="${deviceCheckInfo.device.id}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x95">检修时间：</label> <input
+						th:field="*{checkDate}" name="checkDate" data-toggle="datepicker"
+						data-rule="date" size="20" /></td>
+					<td><label class="control-label x95">检修性质：</label> <input
+						th:field="*{nature}" name="nature"></input></td>
+
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">项目编号：</label>
+						<input th:field="*{projectCode}" name="projectCode"></input></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">内容：</label> <textarea
+							th:field="*{content}" name="content" data-toggle="autoheight"
+							data-rule="required;" cols="60" rows="6"></textarea></td>
+				</tr>
+
+				<tr>
+
+					<td colspan="2"><label class="control-label x95">备件更换情况：</label>
+						<textarea th:field="*{replacement}" name="replacement"
+							data-toggle="autoheight" cols="60" rows="6"></textarea></td>
+
+				</tr>
+				<tr>
+					<td><label class="control-label x95">施工单位：</label> <input
+						th:field="*{implementation}" name="implementation"></input></td>
+					<td><label class="control-label x95">质量评价：</label> <input
+						th:field="*{evaluation}" name="evaluation"></input></td>
+
+				</tr>
+
+				<tr>
+					<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+							th:field="*{description}" name="description"
+							data-toggle="autoheight" cols="60" rows="6"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

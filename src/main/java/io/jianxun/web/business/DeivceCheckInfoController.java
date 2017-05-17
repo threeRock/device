@@ -22,30 +22,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
-import io.jianxun.domain.business.Device;
-import io.jianxun.domain.business.DeviceAdjustment;
+import io.jianxun.domain.business.DeviceCheckInfo;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
-import io.jianxun.service.business.DeviceAdjustmentPredicates;
-import io.jianxun.service.business.DeviceAdjustmentService;
-import io.jianxun.service.business.DeviceService;
-import io.jianxun.web.business.validator.DeviceAdjustmentValidator;
+import io.jianxun.service.business.DeviceCheckInfoPredicates;
+import io.jianxun.service.business.DeviceCheckInfoService;
+import io.jianxun.web.business.validator.DeviceCheckInfoValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
-@RequestMapping("device/adjustment")
-public class DeivceAdjustController {
+@RequestMapping("device/checkInfo")
+public class DeivceCheckInfoController {
 
-	@InitBinder("deviceAdjustment")
+	@InitBinder("deviceCheckInfo")
 	public void initBinder(WebDataBinder webDataBinder) {
-		webDataBinder.addValidators(deviceAdjustmentValidator);
+		webDataBinder.addValidators(deviceCheckInfoValidator);
 
 	}
 
@@ -53,8 +50,8 @@ public class DeivceAdjustController {
 	 * 分页列表 支持 查询 分页 及 排序
 	 */
 	@RequestMapping(value = { "/page" })
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTLIST')")
-	String page(Model model, @QuerydslPredicate(root = DeviceAdjustment.class) Predicate predicate,
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOLIST')")
+	String page(Model model, @QuerydslPredicate(root = DeviceCheckInfo.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
@@ -62,15 +59,15 @@ public class DeivceAdjustController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		Predicate searchPredicate = null;
 		if (!depart.isRoot())
-			searchPredicate = DeviceAdjustmentPredicates.departPredicate(depart);
+			searchPredicate = DeviceCheckInfoPredicates.departPredicate(depart);
 		if (searchPredicate == null && predicate != null) {
 			searchPredicate = predicate;
 		}
-		Page<DeviceAdjustment> page = null;
+		Page<DeviceCheckInfo> page = null;
 		if (searchPredicate != null)
-			page = deviceAdjustmentService.findActivePage(searchPredicate, pageable);
+			page = deviceCheckInfoService.findActivePage(searchPredicate, pageable);
 		else
-			page = deviceAdjustmentService.findActivePage(pageable);
+			page = deviceCheckInfoService.findActivePage(pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
@@ -80,9 +77,9 @@ public class DeivceAdjustController {
 	 * 新增表单页面
 	 */
 	@GetMapping("create")
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTCREATE')")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOCREATE')")
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
-		model.addAttribute("deviceAdjustment", new DeviceAdjustment());
+		model.addAttribute("deviceCheckInfo", new DeviceCheckInfo());
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
 	}
@@ -95,13 +92,13 @@ public class DeivceAdjustController {
 	 * @return
 	 */
 	@PostMapping("create")
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTCREATE')")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOCREATE')")
 	@ResponseBody
-	ReturnDto createSave(@Valid DeviceAdjustment deviceAdjustment,
+	ReturnDto createSave(@Valid DeviceCheckInfo deviceCheckInfo,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		deviceAdjustmentService.save(deviceAdjustment);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.adjustment.save.successd",
-				new Object[] { deviceAdjustment.getDevice().toString() }), true, "deviceAdjustment-page", "");
+		deviceCheckInfoService.save(deviceCheckInfo);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.checkinfo.save.successd",
+				new Object[] { deviceCheckInfo.getDevice().toString() }), true, "deviceCheckInfo-page", "");
 	}
 
 	/**
@@ -112,11 +109,11 @@ public class DeivceAdjustController {
 	 * @return
 	 */
 	@GetMapping(value = "/modify/{id}")
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTMODIFY')")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOMODIFY')")
 	public String modify(@PathVariable("id") Long id, Model model) {
-		DeviceAdjustment deviceAdjustment = deviceAdjustmentService.findActiveOne(id);
-		model.addAttribute("deviceAdjustment", deviceAdjustment);
-		model.addAttribute("deviceinfo", deviceAdjustment.getDevice().toString());
+		DeviceCheckInfo deviceCheckInfo = deviceCheckInfoService.findActiveOne(id);
+		model.addAttribute("deviceCheckInfo", deviceCheckInfo);
+		model.addAttribute("deviceinfo", deviceCheckInfo.getDevice().toString());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -130,64 +127,38 @@ public class DeivceAdjustController {
 	 * @return
 	 */
 	@PostMapping(value = "/modify")
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTMODIFY')")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOMODIFY')")
 	@ResponseBody
-	public ReturnDto modifySave(
-			@Valid @ModelAttribute(name = "deviceAdjustment") DeviceAdjustment deviceAdjustment,
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "deviceCheckInfo") DeviceCheckInfo deviceCheckInfo,
 			Model model) {
-		deviceAdjustmentService.save(deviceAdjustment);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.adjustment.save.successd",
-				new Object[] { deviceAdjustment.getDevice().toString() }), true, "deviceAdjustment-page", "");
+		deviceCheckInfoService.save(deviceCheckInfo);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.checkinfo.save.successd",
+				new Object[] { deviceCheckInfo.getDevice().toString() }), true, "deviceCheckInfo-page", "");
 	}
 
 	@PostMapping("remove/{id}")
-	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTREMOVE')")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
-		deviceAdjustmentService.delete(id);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.adjustment.remove.successd"));
+		deviceCheckInfoService.delete(id);
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.checkinfo.remove.successd"));
 	}
 
-	/**
-	 * 验证名称是否重复
-	 * 
-	 * @param username
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("check/nameunique")
-	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("device.id") Long deviceId,
-			@RequestParam("id") Long id) {
-		if (deviceId == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.adjustment.device.notnull"));
-		Device device = this.deviceService.findActiveOne(deviceId);
-		if (device == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.adjustment.device.notnull"));
-		if (!this.deviceAdjustmentService.validateNameUnique(device, name, id))
-			return localeMessageSourceService.getMessage("device.adjustment.name.isUsed", new Object[] { name });
-		return "";
-	}
-
-	@ModelAttribute(name = "deviceAdjustment")
+	@ModelAttribute(name = "deviceCheckInfo")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
-			DeviceAdjustment deviceAdjustment = deviceAdjustmentService.findActiveOne(id);
-			if (deviceAdjustment != null)
-				model.addAttribute("deviceAdjustment", deviceAdjustment);
+			DeviceCheckInfo deviceCheckInfo = deviceCheckInfoService.findActiveOne(id);
+			if (deviceCheckInfo != null)
+				model.addAttribute("deviceCheckInfo", deviceCheckInfo);
 		}
 	}
 
 	private String templatePrefix() {
-		return "adjustment/";
+		return "checkinfo/";
 	}
 
-	ObjectMapper mapper = new ObjectMapper();
-
 	@Autowired
-	private DeviceAdjustmentService deviceAdjustmentService;
-	@Autowired
-	private DeviceService deviceService;
+	private DeviceCheckInfoService deviceCheckInfoService;
 	@Autowired
 	private DepartService departService;
 	@Autowired
@@ -198,6 +169,6 @@ public class DeivceAdjustController {
 	@Autowired
 	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
-	private DeviceAdjustmentValidator deviceAdjustmentValidator;
+	private DeviceCheckInfoValidator deviceCheckInfoValidator;
 
 }
