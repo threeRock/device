@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
+import io.jianxun.domain.business.Device;
 import io.jianxun.domain.business.QSparePart;
 
 /**
@@ -45,6 +46,11 @@ public class SparePartPredicates {
 		if (StringUtils.isBlank(depart.getLevelCode()))
 			return null;
 		return sparePart.depart.levelCode.startsWith(depart.getLevelCode());
+	}
+
+	public static Predicate devicePredicate(Device device) {
+		QSparePart sparePart = QSparePart.sparePart;
+		return sparePart.device.eq(device);
 	}
 
 }

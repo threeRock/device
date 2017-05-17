@@ -127,7 +127,7 @@
         BJUI.setRegional('sessiontimeout', '会话超时，请重新登陆！')
         
         /* 占位符对应选择器无有效值提示 */
-        BJUI.setRegional('plhmsg', '占位符对应的选择器无有效值！')
+        BJUI.setRegional('plhmsg', '请选择一个选项！')
         
         /* 未定义复选框组名提示 */
         BJUI.setRegional('nocheckgroup', '未定义选中项的组名[复选框的"data-group"]！')

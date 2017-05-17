@@ -36,15 +36,19 @@
 		<button th:if="${createable}"
 			sec:authorize="hasAnyAuthority('DEVICEDISCARD')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-discard"
-			data-url="device/discard/{#bjui-selected}">设备报废</button>	
+			data-url="device/discard/{#bjui-selected}">设备报废</button>
 		<button th:if="${createable}"
 			sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
 			data-toggle="doexport" class="btn-red" data-url="device/export"
 			data-confirm-msg="确定要导出吗？">导出</button>
 		<button th:if="${discardable}"
 			sec:authorize="hasAnyAuthority('DEVICEDISCARDPAGE')" type="button"
-			data-toggle="doexport" class="btn-red" data-url="device/discard/export"
-			data-confirm-msg="确定要报废导出吗？">报废信息导出</button>
+			data-toggle="doexport" class="btn-red"
+			data-url="device/discard/export" data-confirm-msg="确定要报废导出吗？">报废信息导出</button>
+		<button th:if="${createable}"
+			sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-sparepart-page"
+			data-url="device/parts/{#bjui-selected}">相关备件</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -71,7 +75,8 @@
 				<td th:text="${e.typeInfo}">型号</td>
 				<td th:text="${e.code}">设备编号</td>
 				<td th:text="${e.mainType.name}">装备类别</td>
-				<td th:if="${createable}"><a sec:authorize="hasAnyAuthority('DEVICEMODIFY')"
+				<td th:if="${createable}"><a
+					sec:authorize="hasAnyAuthority('DEVICEMODIFY')"
 					th:href="@{/device/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
 					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a

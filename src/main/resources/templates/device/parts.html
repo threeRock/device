@@ -1,0 +1,73 @@
+<div class="bjui-pageHeader">
+	<form id="pagerForm" data-toggle="ajaxsearch"
+		th:action="@{/device/parts/{path}(path=${deviceId})}"
+		action="#" method="POST">
+		 <input type="hidden"
+			name="size" th:value="${size}" value="10" /> <input type="hidden"
+			name="page" th:value="${page}" value="0" /><input type="hidden"
+			name="orderField" th:value="${orderField}" /> <input type="hidden"
+			name="orderDirection" th:value="${orderDirection}" />
+		<div class="bjui-searchBar">
+			<label>备件名称</label><input type="text" th:value="${name}" value=""
+				name="name" class="form-control" size="10" />&nbsp;<label>备件编号</label><input
+				type="text" th:value="${partcode}" value="" name="partcode"
+				class="form-control" size="10" />&nbsp;<label>备件号</label><input
+				type="text" th:value="${partnumber}" value="" name="partnumber"
+				class="form-control" size="10" />&nbsp;<label>规格型号</label><input
+				type="text" th:value="${specification}" value=""
+				name="specification" class="form-control" size="10" />&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
+		</div>
+	</form>
+	<hr style="margin: 5px 0" />
+	<div class="pull-left">
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
+			data-toggle="doexport" class="btn-red"
+			data-url="device/sparepart/export" data-confirm-msg="确定要导出吗？">导出</button>
+	</div>
+</div>
+<div class="bjui-pageContent tableContent">
+	<table data-toggle="tablefixed" data-width="160%" data-nowrap="true">
+		<thead>
+			<tr>
+				<th data-order-field="e.depart.name">所属机构</th>
+				<th>示意图</th>
+				<th data-order-field="storehouse.name">仓库</th>
+				<th>当前库存</th>
+				<th data-order-field="device.name">所属设备</th>
+				<th data-order-field="name">名称</th>
+				<th data-order-field="partcode">备件编号</th>
+				<th data-order-field="partnumber">备件号</th>
+				<th data-order-field="specification">规格型号</th>
+				<th data-order-field="subType.name">类别</th>
+				<th>时间</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
+				<td th:text="${e.depart.name}">所属机构</td>
+				<td><img th:if="${!#strings.isEmpty(e.mainPic)}"
+					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
+					width="300" /></td>
+				<td th:text="${e.storehouse.name}">仓库</td>
+				<td th:text="${e.stock}">库存</td>
+				<td th:text="${e.device != null?e.device.name:''}">设备</td>
+				<td th:text="${e.name}">装备名称</td>
+				<td th:text="${e.partcode}">备件编号</td>
+				<td th:text="${e.partnumber}">备件号</td>
+				<td th:text="${e.specification}">规格型号</td>
+				<td th:text="${e.subType != null?e.subType.name:''}">装备类别</td>
+				<td th:text="${#temporals.format(e.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">时间</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="bjui-pageFooter">
+	<div class="pages">
+		<span th:text="'每页 '+${size}+' 条 '">每页 0 条</span> &nbsp; <span
+			th:text="',共 '+${total}+' 条 '">共 0 条</span>
+	</div>
+	<div class="pagination-box" data-toggle="pagination"
+		th:attrappend="data-total=${total},data-page-size=${size},data-page-current=${page}">
+	</div>
+</div>

@@ -43,6 +43,7 @@ import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
 import io.jianxun.domain.business.DeviceDiscard;
 import io.jianxun.domain.business.DeviceStatus;
+import io.jianxun.domain.business.SparePart;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
@@ -52,6 +53,8 @@ import io.jianxun.service.business.DeviceStorageService;
 import io.jianxun.service.business.ProductionLinePredicates;
 import io.jianxun.service.business.ProductionLineService;
 import io.jianxun.service.business.SparePartMainTypeService;
+import io.jianxun.service.business.SparePartPredicates;
+import io.jianxun.service.business.SparePartService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
@@ -375,6 +378,32 @@ public class DeivceController {
 
 	}
 
+	// 设备相关备件列表
+	@RequestMapping("parts/{id}")
+	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
+	public String spareparts(@PathVariable("id") Long id, Model model,
+			@QuerydslPredicate(root = SparePart.class) Predicate predicate,
+			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Device device = this.deviceService.findActiveOne(id);
+		if (device == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("dvice.notfound"));
+		Predicate searchPredicate = ExpressionUtils.and(SparePartPredicates.devicePredicate(device),
+				SparePartPredicates.departSubPredicate(device.getDepart()));
+		Page<SparePart> page = null;
+		if (predicate != null) {
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		}
+		page = sparePartService.findActivePage(searchPredicate, pageable);
+
+		// 计算库存
+		sparePartService.getStock(page.getContent());
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		model.addAttribute("deviceId", id);
+		return templatePrefix() + "parts";
+	}
+
 	@ModelAttribute(name = "device")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
@@ -413,6 +442,8 @@ public class DeivceController {
 	private ProductionLineService productionLineService;
 	@Autowired
 	private SparePartMainTypeService sparePartMainTypeService;
+	@Autowired
+	private SparePartService sparePartService;
 
 	@Autowired
 	private Utils util;
