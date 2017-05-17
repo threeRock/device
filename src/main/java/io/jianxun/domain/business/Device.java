@@ -73,7 +73,7 @@ public class Device extends AbstractBusinessDepartEntity {
 
 	// 技术参数
 	@Excel(name = "技术参数", orderNum = "110")
-	@Column(length=1000)
+	@Column(length=3000)
 	private String description;
 
 	// 图片地址

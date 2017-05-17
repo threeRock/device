@@ -1,0 +1,38 @@
+<div class="bjui-pageContent">
+	<form action="#" id="technicalParam_form"
+		th:action="@{/device/technicalParam/{path}(path=${action})}"
+		method="POST" th:object="${deviceTechnicalParam}"
+		data-toggle="validate" data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x95">设备信息：</label>
+						<input th:if="${'create'.equals(action)}" type="text"
+						data-toggle="tags" data-tagname="device.id" data-width="700"
+						data-url="device/search/" data-max="1" size="40"> </input> <label
+						th:if="${!'create'.equals(action)}" class="control-label"
+						th:text="${deviceinfo}"></label></td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">名称：</label> <input
+						th:field="*{name}" name="name"
+						data-rule="required;remote[device/technicalParam/check/nameunique, id, device.id]"></input></td>
+
+
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">参数：</label> <textarea
+							th:field="*{params}" name="params" data-toggle="autoheight"
+							cols="60" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>

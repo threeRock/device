@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.jeecgframework.poi.excel.ExcelExportUtil;
 import org.jeecgframework.poi.excel.entity.ExportParams;
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -53,6 +55,7 @@ import io.jianxun.service.business.SparePartMainTypeService;
 import io.jianxun.web.business.validator.DeviceValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.dto.UploadPicReturnDto;
+import io.jianxun.web.dto.ValueLabelDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
@@ -214,7 +217,7 @@ public class DeivceController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("d.id") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart.id") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -226,7 +229,7 @@ public class DeivceController {
 
 	@RequestMapping("check/codeunique")
 	@ResponseBody
-	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("d.id") Long departId,
+	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -357,6 +360,21 @@ public class DeivceController {
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.discard.successd"));
 	}
 
+	@RequestMapping(value = "/search")
+	@ResponseBody
+	public List<ValueLabelDto> getParentDepartStock(@RequestParam("term") String name, Model model) {
+		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
+		if (depart == null)
+			throw new BusinessException("获取机构信息失败,无法获取对应设备");
+		if (StringUtils.isBlank(name))
+			return Lists.newArrayList();
+		List<Device> parts = deviceService.findActiveAll(ExpressionUtils
+				.and(DevicePredicates.departSubPredicate(depart), DevicePredicates.nameContainsPredicate(name)),
+				new Sort("name"));
+		return getDto(parts);
+
+	}
+
 	@ModelAttribute(name = "device")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
@@ -368,6 +386,17 @@ public class DeivceController {
 
 	private String templatePrefix() {
 		return "device/";
+	}
+
+	private List<ValueLabelDto> getDto(List<Device> devices) {
+		List<ValueLabelDto> vls = Lists.newArrayList();
+		for (Device device : devices) {
+			ValueLabelDto d = new ValueLabelDto();
+			d.setLabel(device.toString());
+			d.setValue(device.getId().toString());
+			vls.add(d);
+		}
+		return vls;
 	}
 
 	ObjectMapper mapper = new ObjectMapper();

@@ -116,6 +116,7 @@ public class DeivceTechnicalParamController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		DeviceTechnicalParam deviceTechnicalParam = deviceTechnicalParamService.findActiveOne(id);
 		model.addAttribute("deviceTechnicalParam", deviceTechnicalParam);
+		model.addAttribute("deviceinfo", deviceTechnicalParam.getDevice().toString());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -156,7 +157,7 @@ public class DeivceTechnicalParamController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("d.id") Long deviceId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("device.id") Long deviceId,
 			@RequestParam("id") Long id) {
 		if (deviceId == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("device.technical.param.device.notnull"));

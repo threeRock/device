@@ -57,4 +57,9 @@ public class DevicePredicates {
 		return device.status.isNull();
 	}
 
+	public static Predicate nameContainsPredicate(String name) {
+		QDevice device = QDevice.device;
+		return device.name.containsIgnoreCase(name);
+	}
+
 }
