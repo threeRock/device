@@ -506,13 +506,13 @@
 										href="#" th:href="@{/device/adjustment/page}"
 										data-options="{id:'deviceAdjustment-page', faicon:'devicet-right'}">设备技术调整记录</a></li>
 									<li
-										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
+										sec:authorize="hasAnyAuthority('DEVICECHECKINFOLIST','DEVICECHECKINFOCREATE','DEVICECHECKINFOMODIFY','DEVICECHECKINFOREMOVE')"><a
 										href="#" th:href="@{/device/checkInfo/page}"
 										data-options="{id:'deviceCheckInfo-page', faicon:'devicet-right'}">设备检修（技改）履历</a></li>
 									<li
-										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
-										href="#" th:href="@{/device/tree/}"
-										data-options="{id:'device-page', faicon:'devicet-right'}">设备事故履历</a></li>
+										sec:authorize="hasAnyAuthority('DEVICEFAULTLIST','DEVICEFAULTCREATE','DEVICEFAULTMODIFY','DEVICEFAULTREMOVE')"><a
+										href="#" th:href="@{/device/fault/page}"
+										data-options="{id:'deviceFault-page', faicon:'devicet-right'}">设备事故履历</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('DEVICEDISCARDPAGE')"><a
 										href="#" th:href="@{/device/discard/page}"

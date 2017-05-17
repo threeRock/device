@@ -67,11 +67,17 @@ public enum PermissionDef {
 							ModuleDef.DEVICE, DomainDef.DEVICE_ADJUSTMENT), DEVICEADJUSTMENT_REMOVE(
 									"DEVICEADJUSTMENTREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_ADJUSTMENT),
 	// 设备检修及技改履历
-		DEVICECHECKINFO_PAGE("DEVICECHECKINFOLIST", "列表", ModuleDef.DEVICE,
-				DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_CREATE("DEVICECHECKINFOCREATE", "新增", ModuleDef.DEVICE,
-						DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_MODIFY("DEVICECHECKINFOMODIFY", "修改",
-								ModuleDef.DEVICE, DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_REMOVE(
-										"DEVICECHECKINFOREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_CHECKINFO),
+	DEVICECHECKINFO_PAGE("DEVICECHECKINFOLIST", "列表", ModuleDef.DEVICE,
+			DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_CREATE("DEVICECHECKINFOCREATE", "新增", ModuleDef.DEVICE,
+					DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_MODIFY("DEVICECHECKINFOMODIFY", "修改", ModuleDef.DEVICE,
+							DomainDef.DEVICE_CHECKINFO), DEVICECHECKINFO_REMOVE("DEVICECHECKINFOREMOVE", "删除",
+									ModuleDef.DEVICE, DomainDef.DEVICE_CHECKINFO),
+	// 设备故障事故履历
+		DEVICEFAULT_PAGE("DEVICEFAULTLIST", "列表", ModuleDef.DEVICE,
+				DomainDef.DEVICE_FAULT), DEVICEFAULT_CREATE("DEVICEFAULTCREATE", "新增", ModuleDef.DEVICE,
+						DomainDef.DEVICE_FAULT), DEVICEFAULT_MODIFY("DEVICEFAULTMODIFY", "修改", ModuleDef.DEVICE,
+								DomainDef.DEVICE_FAULT), DEVICEFAULT_REMOVE("DEVICEFAULTREMOVE", "删除",
+										ModuleDef.DEVICE, DomainDef.DEVICE_FAULT),
 	// 备件
 	SPAREPART_PAGE("SPAREPARTLIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_CREATE(
 			"SPAREPARTCREATE", "新增", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_MODIFY("SPAREPARTMODIFY",
@@ -253,9 +259,12 @@ public enum PermissionDef {
 								"device_productionline", "生产线管理",
 								60), DEVICE_DEVICE("device_device", "设备管理", 70), DEVICE_TECHNICALPARAM(
 										"device_technicalParam", "附属设备技术参数管理",
-										71), DEVICE_ADJUSTMENT("device_adjustment", "设备技术参数调整", 72), DEVICE_CHECKINFO("device_checkinfo", "设备检修(技改)", 73), DEVICE_SPAREPART(
-												"device_sparepart", "备件管理", 80), STOCK_STOCKIN("stock_stockin", "入库管理",
-														90), STOCK_STOCKOUT("stock_stockout", "出库管理", 100);
+										71), DEVICE_ADJUSTMENT("device_adjustment", "设备技术参数调整", 72), DEVICE_FAULT(
+												"device_fault", "设备故障（事故）", 73), DEVICE_CHECKINFO("device_checkinfo",
+														"设备检修(技改)", 74), DEVICE_SPAREPART("device_sparepart", "备件管理",
+																80), STOCK_STOCKIN("stock_stockin", "入库管理",
+																		90), STOCK_STOCKOUT("stock_stockout", "出库管理",
+																				100);
 
 		private String code;
 		private String name;

@@ -1,0 +1,68 @@
+<div class="bjui-pageContent">
+	<form action="#" id="fault_form"
+		th:action="@{/device/fault/{path}(path=${action})}" method="POST"
+		th:object="${deviceFault}" data-toggle="validate"
+		data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" />
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x95">设备信息：</label>
+						<input th:if="${'create'.equals(action)}" type="text"
+						data-toggle="tags" data-tagname="device.id" data-width="700"
+						data-url="device/search/" data-max="1" size="40"> </input> <label
+						th:if="${!'create'.equals(action)}" class="control-label"
+						th:text="${deviceinfo}"></label> <input
+						th:if="${!'create'.equals(action)}" type="hidden" name="device.id"
+						th:value="${deviceFault.device.id}" /></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x95">发生时间：</label> <input
+						th:field="*{occurrenceDate}" name="occurrenceDate" data-toggle="datepicker"
+						data-rule="date" size="20" /></td>
+					<td><label class="control-label x95">停机时间：</label> <input
+						th:field="*{duration}" name="duration"></input></td>
+
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x95">原因分析：</label> <textarea
+							th:field="*{reason}" name="reason" data-toggle="autoheight"
+							data-rule="required;" cols="60" rows="6"></textarea></td>
+				</tr>
+
+				<tr>
+
+					<td colspan="2"><label class="control-label x95">纠正预防措施：</label>
+						<textarea th:field="*{measures}" name="measures"
+							data-toggle="autoheight" cols="60" rows="6"></textarea></td>
+
+				</tr>
+				<tr>
+					<td><label class="control-label x95">实施单位/人：</label> <input
+						th:field="*{implementation}" name="implementation"></input></td>
+					<td><label class="control-label x95">验证结果：</label> <input
+						th:field="*{effect}" name="effect"></input></td>
+
+				</tr>
+				
+				<tr>
+					<td><label class="control-label x95">事故性质：</label> <input
+						th:field="*{nature}" name="nature"></input></td>
+
+				</tr>
+
+				<tr>
+					<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+							th:field="*{description}" name="description"
+							data-toggle="autoheight" cols="60" rows="6"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<div class="bjui-pageFooter">
+	<ul>
+		<li><button type="button" class="btn-close" data-icon="close">取消</button></li>
+		<li><button type="submit" class="btn-default" data-icon="save">保存</button></li>
+	</ul>
+</div>
