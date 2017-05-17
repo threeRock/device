@@ -502,9 +502,9 @@
 										href="#" th:href="@{/device/technicalParam/page}"
 										data-options="{id:'deviceTechnicalParam-page', faicon:'devicet-right'}">附属设备技术参数</a></li>
 									<li
-										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
-										href="#" th:href="@{/device/tree/}"
-										data-options="{id:'device-page', faicon:'devicet-right'}">设备技术调整记录</a></li>
+										sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTLIST','DEVICEADJUSTMENTCREATE','DEVICEADJUSTMENTMODIFY','DEVICEADJUSTMENTREMOVE')"><a
+										href="#" th:href="@{/device/adjustment/page}"
+										data-options="{id:'deviceAdjustment-page', faicon:'devicet-right'}">设备技术调整记录</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE')"><a
 										href="#" th:href="@{/device/tree/}"

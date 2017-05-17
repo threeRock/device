@@ -1,0 +1,66 @@
+<div class="bjui-pageHeader">
+	<form id="pagerForm" data-toggle="ajaxsearch"
+		th:action="@{/device/adjustment/page}" action="#" method="POST">
+		 <input type="hidden"
+			name="size" th:value="${size}" value="10" /> <input type="hidden"
+			name="page" th:value="${page}" value="0" /><input type="hidden"
+			name="orderField" th:value="${orderField}" /> <input type="hidden"
+			name="orderDirection" th:value="${orderDirection}" />
+		<div class="bjui-searchBar">
+			<label>设备名称</label><input type="text"  value=""
+				name="device.name" th:value="${devicename}" class="form-control" size="10" />&nbsp;<label>设备编码</label><input
+				type="text"  value="" name="device.code" th:text="${devicecode}"
+				class="form-control" size="10" />&nbsp;
+			<button type="submit" class="btn-default" data-icon="search">查询</button>
+		</div>
+	</form>
+	<hr style="margin: 5px 0" />
+	<div class="pull-left">
+		<button 
+			sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTCREATE')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-adjustment-form-new"
+			data-url="device/adjustment/create/">新增调整信息</button>
+	</div>
+</div>
+<div class="bjui-pageContent tableContent">
+	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+		<thead>
+			<tr>
+				<th data-order-field="e.depart.name">所属设备</th>
+				<th>设备示意图</th>
+				<th data-order-field="name">名称</th>
+				<th data-order-field="adjustDate">调整时间</th>
+				<th data-order-field="content">内容</th>
+				<th data-order-field="implementation">实施单位/人</th>
+				<th width="100" >操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
+				<td th:text="${e.device.name}">所属设备</td>
+				<td width="300"><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="300" /></td>
+				<td th:text="${e.name}">装备名称</td>
+				<td th:text="${#temporals.format(e.adjustDate, 'yyyy-MM-dd')}">调整时间</td>
+				<td th:text="${e.content}">内容</td>
+				<td th:text="${e.implementation}">实施单位/人</td>
+				<td ><a sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTMODIFY')"
+					th:href="@{/device/adjustment/modify/{id}(id=${e.id})}" href="#"
+					class="btn btn-green" data-toggle="navtab"
+					data-id="device-adjustment-form--modify" data-title="修改附属设备技术参数">修改</a> <a
+					sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTREMOVE')"
+					th:href="@{/device/adjustment/remove/{id}(id=${e.id})}" href="#"
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="bjui-pageFooter">
+	<div class="pages">
+		<span th:text="'每页 '+${size}+' 条 '">每页 0 条</span> &nbsp; <span
+			th:text="',共 '+${total}+' 条 '">共 0 条</span>
+	</div>
+	<div class="pagination-box" data-toggle="pagination"
+		th:attrappend="data-total=${total},data-page-size=${size},data-page-current=${page}">
+	</div>
+</div>

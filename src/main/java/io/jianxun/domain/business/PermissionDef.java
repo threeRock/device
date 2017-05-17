@@ -58,8 +58,14 @@ public enum PermissionDef {
 			DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_CREATE("DEVICETECHNICALPARAMCREATE", "新增",
 					ModuleDef.DEVICE, DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_MODIFY(
 							"DEVICETECHNICALPARAMMODIFY", "修改", ModuleDef.DEVICE,
-							DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_REMOVE("DEVICETECHNICALPARAMREMOVE", "删除",
-									ModuleDef.DEVICE, DomainDef.DEVICE_TECHNICALPARAM),
+							DomainDef.DEVICE_TECHNICALPARAM), DEVICETECHNICALPARAM_REMOVE("DEVICETECHNICALPARAMREMOVE",
+									"删除", ModuleDef.DEVICE, DomainDef.DEVICE_TECHNICALPARAM),
+	// 设备附属设备技术调整记录
+	DEVICEADJUSTMENT_PAGE("DEVICEADJUSTMENTLIST", "列表", ModuleDef.DEVICE,
+			DomainDef.DEVICE_ADJUSTMENT), DEVICEADJUSTMENT_CREATE("DEVICEADJUSTMENTCREATE", "新增", ModuleDef.DEVICE,
+					DomainDef.DEVICE_ADJUSTMENT), DEVICEADJUSTMENT_MODIFY("DEVICEADJUSTMENTMODIFY", "修改",
+							ModuleDef.DEVICE, DomainDef.DEVICE_ADJUSTMENT), DEVICEADJUSTMENT_REMOVE(
+									"DEVICEADJUSTMENTREMOVE", "删除", ModuleDef.DEVICE, DomainDef.DEVICE_ADJUSTMENT),
 	// 备件
 	SPAREPART_PAGE("SPAREPARTLIST", "列表", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_CREATE(
 			"SPAREPARTCREATE", "新增", ModuleDef.DEVICE, DomainDef.DEVICE_SPAREPART), SPAREPART_MODIFY("SPAREPARTMODIFY",
@@ -240,8 +246,9 @@ public enum PermissionDef {
 						40), DEVICE_STOREHOUSE("device_storehouse", "仓库管理", 50), DEVICE_PRODUCTIONLINE(
 								"device_productionline", "生产线管理",
 								60), DEVICE_DEVICE("device_device", "设备管理", 70), DEVICE_TECHNICALPARAM(
-										"device_TechnicalParam", "附属设备技术参数管理", 71), DEVICE_SPAREPART("device_sparepart",
-												"备件管理", 80), STOCK_STOCKIN("stock_stockin", "入库管理",
+										"device_technicalParam", "附属设备技术参数管理",
+										71), DEVICE_ADJUSTMENT("device_adjustment", "设备技术参数调整", 72), DEVICE_SPAREPART(
+												"device_sparepart", "备件管理", 80), STOCK_STOCKIN("stock_stockin", "入库管理",
 														90), STOCK_STOCKOUT("stock_stockout", "出库管理", 100);
 
 		private String code;

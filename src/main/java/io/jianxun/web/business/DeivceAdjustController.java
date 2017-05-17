@@ -27,25 +27,25 @@ import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
-import io.jianxun.domain.business.DeviceTechnicalParam;
+import io.jianxun.domain.business.DeviceAdjustment;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
+import io.jianxun.service.business.DeviceAdjustmentPredicates;
+import io.jianxun.service.business.DeviceAdjustmentService;
 import io.jianxun.service.business.DeviceService;
-import io.jianxun.service.business.DeviceTechnicalParamPredicates;
-import io.jianxun.service.business.DeviceTechnicalParamService;
-import io.jianxun.web.business.validator.DeviceTechnicalParamValidator;
+import io.jianxun.web.business.validator.DeviceAdjustmentValidator;
 import io.jianxun.web.dto.ReturnDto;
 import io.jianxun.web.utils.CurrentLoginInfo;
 import io.jianxun.web.utils.Utils;
 
 @Controller
-@RequestMapping("device/technicalParam")
-public class DeivceTechnicalParamController {
+@RequestMapping("device/adjustment")
+public class DeivceAdjustController {
 
-	@InitBinder("technicalParam")
+	@InitBinder("deviceAdjustment")
 	public void initBinder(WebDataBinder webDataBinder) {
-		webDataBinder.addValidators(deviceTechnicalParamValidator);
+		webDataBinder.addValidators(deviceAdjustmentValidator);
 
 	}
 
@@ -53,8 +53,8 @@ public class DeivceTechnicalParamController {
 	 * 分页列表 支持 查询 分页 及 排序
 	 */
 	@RequestMapping(value = { "/page" })
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMLIST')")
-	String page(Model model, @QuerydslPredicate(root = DeviceTechnicalParam.class) Predicate predicate,
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTLIST')")
+	String page(Model model, @QuerydslPredicate(root = DeviceAdjustment.class) Predicate predicate,
 			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
@@ -62,15 +62,15 @@ public class DeivceTechnicalParamController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		Predicate searchPredicate = null;
 		if (!depart.isRoot())
-			searchPredicate = DeviceTechnicalParamPredicates.departPredicate(depart);
+			searchPredicate = DeviceAdjustmentPredicates.departPredicate(depart);
 		if (searchPredicate == null && predicate != null) {
 			searchPredicate = predicate;
 		}
-		Page<DeviceTechnicalParam> page = null;
+		Page<DeviceAdjustment> page = null;
 		if (searchPredicate != null)
-			page = deviceTechnicalParamService.findActivePage(searchPredicate, pageable);
+			page = deviceAdjustmentService.findActivePage(searchPredicate, pageable);
 		else
-			page = deviceTechnicalParamService.findActivePage(pageable);
+			page = deviceAdjustmentService.findActivePage(pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
@@ -80,9 +80,9 @@ public class DeivceTechnicalParamController {
 	 * 新增表单页面
 	 */
 	@GetMapping("create")
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMCREATE')")
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTCREATE')")
 	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
-		model.addAttribute("deviceTechnicalParam", new DeviceTechnicalParam());
+		model.addAttribute("deviceAdjustment", new DeviceAdjustment());
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
 	}
@@ -95,13 +95,13 @@ public class DeivceTechnicalParamController {
 	 * @return
 	 */
 	@PostMapping("create")
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMCREATE')")
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTCREATE')")
 	@ResponseBody
-	ReturnDto createSave(@Valid DeviceTechnicalParam deviceTechnicalParam,
+	ReturnDto createSave(@Valid DeviceAdjustment deviceAdjustment,
 			@RequestParam MultiValueMap<String, String> parameters) {
-		deviceTechnicalParamService.save(deviceTechnicalParam);
+		deviceAdjustmentService.save(deviceAdjustment);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice() }), true, "deviceTechnicalParam-page", "");
+				new Object[] { deviceAdjustment.getDevice() }), true, "deviceAdjustment-page", "");
 	}
 
 	/**
@@ -112,11 +112,11 @@ public class DeivceTechnicalParamController {
 	 * @return
 	 */
 	@GetMapping(value = "/modify/{id}")
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMMODIFY')")
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTMODIFY')")
 	public String modify(@PathVariable("id") Long id, Model model) {
-		DeviceTechnicalParam deviceTechnicalParam = deviceTechnicalParamService.findActiveOne(id);
-		model.addAttribute("deviceTechnicalParam", deviceTechnicalParam);
-		model.addAttribute("deviceinfo", deviceTechnicalParam.getDevice().toString());
+		DeviceAdjustment deviceAdjustment = deviceAdjustmentService.findActiveOne(id);
+		model.addAttribute("deviceAdjustment", deviceAdjustment);
+		model.addAttribute("deviceinfo", deviceAdjustment.getDevice().toString());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -130,21 +130,21 @@ public class DeivceTechnicalParamController {
 	 * @return
 	 */
 	@PostMapping(value = "/modify")
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMMODIFY')")
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTMODIFY')")
 	@ResponseBody
 	public ReturnDto modifySave(
-			@Valid @ModelAttribute(name = "deviceTechnicalParam") DeviceTechnicalParam deviceTechnicalParam,
+			@Valid @ModelAttribute(name = "deviceAdjustment") DeviceAdjustment deviceAdjustment,
 			Model model) {
-		deviceTechnicalParamService.save(deviceTechnicalParam);
+		deviceAdjustmentService.save(deviceAdjustment);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice() }), true, "deviceTechnicalParam-page", "");
+				new Object[] { deviceAdjustment.getDevice().toString() }), true, "deviceAdjustment-page", "");
 	}
 
 	@PostMapping("remove/{id}")
-	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMREMOVE')")
+	@PreAuthorize("hasAuthority('DEVICEADJUSTMENTREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
-		deviceTechnicalParamService.delete(id);
+		deviceAdjustmentService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.remove.successd"));
 	}
 
@@ -164,28 +164,28 @@ public class DeivceTechnicalParamController {
 		Device device = this.deviceService.findActiveOne(deviceId);
 		if (device == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("device.technical.param.device.notnull"));
-		if (!this.deviceTechnicalParamService.validateNameUnique(device, name, id))
+		if (!this.deviceAdjustmentService.validateNameUnique(device, name, id))
 			return localeMessageSourceService.getMessage("device.technical.param.name.isUsed", new Object[] { name });
 		return "";
 	}
 
-	@ModelAttribute(name = "deviceTechnicalParam")
+	@ModelAttribute(name = "deviceAdjustment")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {
-			DeviceTechnicalParam deviceTechnicalParam = deviceTechnicalParamService.findActiveOne(id);
-			if (deviceTechnicalParam != null)
-				model.addAttribute("deviceTechnicalParam", deviceTechnicalParam);
+			DeviceAdjustment deviceAdjustment = deviceAdjustmentService.findActiveOne(id);
+			if (deviceAdjustment != null)
+				model.addAttribute("deviceAdjustment", deviceAdjustment);
 		}
 	}
 
 	private String templatePrefix() {
-		return "technicalparam/";
+		return "adjustment/";
 	}
 
 	ObjectMapper mapper = new ObjectMapper();
 
 	@Autowired
-	private DeviceTechnicalParamService deviceTechnicalParamService;
+	private DeviceAdjustmentService deviceAdjustmentService;
 	@Autowired
 	private DeviceService deviceService;
 	@Autowired
@@ -198,6 +198,6 @@ public class DeivceTechnicalParamController {
 	@Autowired
 	private CurrentLoginInfo currentLoginInfo;
 	@Autowired
-	private DeviceTechnicalParamValidator deviceTechnicalParamValidator;
+	private DeviceAdjustmentValidator deviceAdjustmentValidator;
 
 }
