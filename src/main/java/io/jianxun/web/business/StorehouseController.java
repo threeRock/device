@@ -206,8 +206,7 @@ public class StorehouseController {
 	@PostMapping("pic/up")
 	@ResponseBody
 	public UploadPicReturnDto uploadPic(@RequestParam("file") MultipartFile file) {
-		deviceStorageService.store(UPLOAD_FOLDER_NAME, file);
-		return new UploadPicReturnDto(200, "", deviceStorageService.getFilePathString(UPLOAD_FOLDER_NAME, file));
+		return new UploadPicReturnDto(200, "", deviceStorageService.store(UPLOAD_FOLDER_NAME, file));
 	}
 
 	@GetMapping("/pic/{filename:.+}")

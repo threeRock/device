@@ -1,3 +1,7 @@
+<script type="text/javascript">
+
+</script>
+
 <div class="bjui-pageHeader" >
 	<form id="pagerForm" data-toggle="ajaxsearch" 
 		th:action="@{/device/{path}(path=${url})}" action="#" method="POST">
@@ -61,6 +65,7 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
+				<th id="xx">图片预览</th>
 				<!-- 
 				<th>示意图</th>
 				 -->
@@ -75,10 +80,9 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<!-- 
-				<td ><img th:if="${!#strings.isEmpty(e.mainPic)}"
+				<td ><i class="fa fa-eye fa-2x"></i></td>
+				<td th:attr="img-id=${e.id}" style="display:none"><img th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="180" height="100" /></td>
-				-->
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${e.typeInfo}">型号</td>

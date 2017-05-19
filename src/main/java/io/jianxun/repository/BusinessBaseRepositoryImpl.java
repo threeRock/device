@@ -71,7 +71,7 @@ public class BusinessBaseRepositoryImpl<T extends AbstractBusinessEntity> extend
 	@Override
 	public T findActiveOne(Long id) {
 		T t = findOne(id);
-		if (!t.isActive())
+		if (t==null||!t.isActive())
 			return null;
 		return t;
 	}

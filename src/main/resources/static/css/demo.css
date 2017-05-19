@@ -1,0 +1,256 @@
+
+body {
+}
+.aui_outer {
+    text-align: left;
+}
+table.aui_border, table.aui_dialog {
+    border: 0 none;
+    border-collapse: collapse;
+    margin: 0;
+    width: auto;
+}
+.aui_nw, .aui_n, .aui_ne, .aui_w, .aui_c, .aui_e, .aui_sw, .aui_s, .aui_se, .aui_header, .aui_tdIcon, .aui_main, .aui_footer {
+    padding: 0;
+}
+.aui_header, .aui_buttons button {
+    font: 12px/1.11 "Microsoft Yahei",Tahoma,Arial,Helvetica,STHeiti;
+}
+.aui_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.aui_state_noTitle .aui_title {
+    display: none;
+}
+.aui_close {
+    display: block;
+    outline: medium none;
+    position: absolute;
+    text-decoration: none;
+}
+.aui_close:hover {
+    text-decoration: none;
+}
+.aui_main {
+    min-width: 9em;
+    text-align: center;
+}
+.aui_content {
+    border: 0 none;
+    display: inline-block;
+    text-align: left;
+}
+.aui_content.aui_state_full {
+    display: block;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.aui_loading {
+    background: rgba(0, 0, 0, 0) url("icons/loading.gif") no-repeat scroll center center;
+    height: 32px;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -999em;
+    width: 96px;
+}
+.aui_icon {
+    vertical-align: middle;
+}
+.aui_icon div {
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 48px;
+    margin: 10px 0 10px 10px;
+    width: 48px;
+}
+.aui_buttons {
+    padding: 8px;
+    text-align: right;
+    white-space: nowrap;
+}
+.aui_buttons button {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #fff 0%, #ddd 100%) repeat scroll 0 0;
+    border: 1px solid #999;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7), 0 -1px 0 rgba(0, 0, 0, 0.09);
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-left: 15px;
+    overflow: visible;
+    padding: 6px 8px;
+    text-align: center;
+    text-shadow: 0 1px 1px rgb(255, 255, 255);
+    transition: box-shadow 0.2s linear 0s;
+    width: auto;
+}
+.aui_buttons button::-moz-focus-inner {
+    border: 0 none;
+    margin: 0;
+    padding: 0;
+}
+.aui_buttons button:focus {
+    border-color: #426dc9;
+    box-shadow: 0 0 8px rgba(66, 109, 201, 0.9);
+    outline: 0 none;
+}
+.aui_buttons button:hover {
+    border-color: #666;
+    color: #000;
+}
+.aui_buttons button:active {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #ddd 0%, #fff 100%) repeat scroll 0 0;
+    border-color: #666;
+    box-shadow: 0 1px 5px rgba(66, 109, 201, 0.9) inset, 0 1px 1em rgba(0, 0, 0, 0.3) inset;
+}
+.aui_buttons button[disabled] {
+    background: #ddd none repeat scroll 0 0;
+    border: 1px solid #999;
+    box-shadow: none;
+    color: #666;
+    cursor: default;
+    opacity: 0.5;
+}
+button.aui_state_highlight {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #33bbee 0%, #2288cc 100%) repeat scroll 0 0;
+    border: 1px solid #1c6a9e;
+    color: #fff;
+    text-shadow: -1px -1px 1px #1c6a9e;
+}
+button.aui_state_highlight:hover {
+    border-color: #0f3a56;
+    color: #fff;
+}
+button.aui_state_highlight:active {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #33bbee 0%, #2288cc 100%) repeat scroll 0 0;
+    border-color: #1c6a9e;
+}
+.aui_inner {
+    background: #fff none repeat scroll 0 0;
+}
+.aui_outer, .aui_inner {
+    border: 1px solid rgba(0, 0, 0, 0.7);
+}
+.aui_border {
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+/* .aui_nw, .aui_ne, .aui_sw, .aui_se {
+    height: 8px;
+    width: 8px;
+}
+.aui_nw, .aui_n, .aui_ne, .aui_w, .aui_e, .aui_sw, .aui_s, .aui_se {
+    background: rgba(0, 0, 0, 0.4) none repeat scroll 0 0;
+} */
+.aui_state_lock .aui_nw, .aui_state_lock .aui_n, .aui_state_lock .aui_ne, .aui_state_lock .aui_w, .aui_state_lock .aui_e, .aui_state_lock .aui_sw, .aui_state_lock .aui_s, .aui_state_lock .aui_se {
+    background: rgba(0, 0, 0, 0.5) none repeat scroll 0 0;
+}
+.aui_state_focus .aui_dialog {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+.aui_state_focus .aui_outer {
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+.aui_state_lock .aui_border {
+    box-shadow: 0 3px 26px rgba(0, 0, 0, 0.9);
+}
+.aui_state_drag .aui_outer, .aui_outer:active {
+    box-shadow: none;
+}
+.aui_titleBar {
+    height: 100%;
+    position: relative;
+}
+.aui_title {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #edf5f8 0%, #bdc6cd 100%) repeat scroll 0 0;
+    border-bottom: 1px solid #b6bec5;
+    border-top: 1px solid #edf5f8;
+    color: #95a7ae;
+    font-weight: bold;
+    height: 28px;
+    line-height: 27px;
+    padding: 0 28px 0 10px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.aui_state_focus .aui_title {
+    color: #4c5a5f;
+}
+.aui_state_drag .aui_title {
+    background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #bdc6cd 0%, #edf5f8 100%) repeat scroll 0 0;
+    box-shadow: none;
+}
+.aui_state_drag .aui_titleBar {
+    box-shadow: none;
+}
+.aui_close {
+    color: #68767b;
+    font-family: Helvetica,STHeiti;
+    font-size: 18px;
+    height: 21px;
+    line-height: 21px;
+    padding: 0;
+    right: 4px;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    top: 4px;
+    width: 21px;
+}
+.aui_close:hover {
+    background: #c72015 none repeat scroll 0 0;
+    color: #fff;
+}
+.aui_close:active {
+    box-shadow: none;
+}
+.aui_content {
+    color: #666;
+}
+.aui_state_focus .aui_content {
+    color: #000;
+}
+.aui_buttons {
+    background-color: #f6f6f6;
+    border-top: 1px solid #dadee5;
+}
+.aui_state_noTitle .aui_nw, .aui_state_noTitle .aui_ne, .aui_state_noTitle .aui_sw, .aui_state_noTitle .aui_se {
+    height: 3px;
+    width: 3px;
+}
+.aui_state_noTitle .aui_inner {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #666;
+}
+.aui_state_noTitle .aui_outer {
+    border: 0 none;
+    box-shadow: none;
+}
+.aui_state_noTitle .aui_nw, .aui_state_noTitle .aui_n, .aui_state_noTitle .aui_ne, .aui_state_noTitle .aui_w, .aui_state_noTitle .aui_e, .aui_state_noTitle .aui_sw, .aui_state_noTitle .aui_s, .aui_state_noTitle .aui_se {
+    background: rgba(0, 0, 0, 0.05) none repeat scroll 0 0;
+}
+.aui_state_noTitle .aui_titleBar {
+    bottom: 0;
+}
+.aui_state_noTitle .aui_close {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: #214fa3;
+    font-size: 18px;
+    height: 18px;
+    line-height: 18px;
+    right: 0;
+    text-align: center;
+    text-decoration: none;
+    text-indent: 0;
+    top: 0;
+    width: 18px;
+}
+.aui_state_noTitle .aui_close:hover, .aui_state_noTitle .aui_close:active {
+    color: #900;
+    text-decoration: none;
+}
+.aui_state_noTitle .aui_dialog {
+    box-shadow: none;
+}

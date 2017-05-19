@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
+import java.util.Calendar;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -28,22 +28,26 @@ public class DeviceStorageService {
 		return rootLocation;
 	}
 
-	public void store(String prefix, MultipartFile file) {
+	public String store(String prefix, MultipartFile file) {
 		try {
 			if (file.isEmpty()) {
 				throw new BusinessException("Failed to store empty file " + file.getOriginalFilename());
 			}
 			if (!Files.exists(this.rootLocation))
 				Files.createDirectory(rootLocation);
-			Files.copy(file.getInputStream(), this.rootLocation.resolve(getFilePathString(prefix, file)),
+			String path = getFilePathString(prefix, file);
+			Files.copy(file.getInputStream(), this.rootLocation.resolve(path),
 					StandardCopyOption.REPLACE_EXISTING);
+			return path;
 		} catch (IOException e) {
 			throw new BusinessException("Failed to store file " + file.getOriginalFilename(), e);
 		}
 	}
 
 	public String getFilePathString(String prefix, MultipartFile file) {
-		return prefix + LocalDate.now() + file.getOriginalFilename();
+		String fileName = file.getOriginalFilename();
+		String suffix=fileName.substring(fileName.lastIndexOf(".")+1);
+		return prefix + Calendar.getInstance().getTimeInMillis()+ "." + suffix;
 	}
 
 	public Path load(String filename) {
