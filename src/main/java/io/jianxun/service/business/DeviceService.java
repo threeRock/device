@@ -46,6 +46,18 @@ public class DeviceService extends AbstractBaseService<Device> {
 		return convertEntityToDepartTree(departService.getUserDepart());
 	}
 
+	// 验证设备信息是否可维护
+	public boolean modifiable(Device device) {
+		if (sparePartService.countActiveAll(SparePartPredicates.devicePredicate(device)) == 0
+				&& deviceAdjustmentService.countActiveAll(DeviceAdjustmentPredicates.devicePredicate(device)) == 0
+				&& deviceTechnicalParamService
+						.countActiveAll(DeviceTechnicalParamPredicates.devicePredicate(device)) == 0
+				&& deviceCheckInfoService.countActiveAll(DeviceCheckInfoPredicates.devicePredicate(device)) == 0
+				&& deviceFaultService.countActiveAll(DeviceFaultPredicates.devicePredicate(device)) == 0)
+			return true;
+		return false;
+	}
+
 	private List<DepartTree> convertEntityToDepartTree(List<Depart> userDepart) {
 		List<DepartTree> tree = Lists.newArrayList();
 		for (Depart depart : userDepart) {
@@ -65,5 +77,15 @@ public class DeviceService extends AbstractBaseService<Device> {
 	private DepartService departService;
 	@Autowired
 	private DeviceDiscardRepository deviceDiscardRepository;
+	@Autowired
+	private DeviceFaultService deviceFaultService;
+	@Autowired
+	private DeviceCheckInfoService deviceCheckInfoService;
+	@Autowired
+	private DeviceTechnicalParamService deviceTechnicalParamService;
+	@Autowired
+	private DeviceAdjustmentService deviceAdjustmentService;
+	@Autowired
+	private SparePartService sparePartService;
 
 }

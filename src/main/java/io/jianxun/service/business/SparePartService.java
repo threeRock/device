@@ -121,6 +121,14 @@ public class SparePartService extends AbstractBaseService<SparePart> {
 			use.setTwelve(maps.get(Month.DECEMBER));
 	}
 
+	public boolean modifiable(SparePart sparePart) {
+		if (stockInService.countActiveAll(StockInPredicates.sparePartPredicate(sparePart.getDepart(), sparePart)) == 0
+				&& stockOutService
+						.countActiveAll(StockOutPredicates.sparePartPredicate(sparePart.getDepart(), sparePart)) == 0)
+			return true;
+		return false;
+	}
+
 	@Autowired
 	private DepartService departService;
 

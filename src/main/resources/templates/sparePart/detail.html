@@ -1,0 +1,39 @@
+<div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td><label class="control-label x105">仓库：</label> <span
+					th:text="${sparePart.storehouse.name}"></span></td>
+				<td colspan="2"><label class="control-label x95">位号：</label> <span
+					th:text="${sparePart.shelf}"></span></td>
+			</tr>
+			<tr>
+				<td colspan="3"><label class="control-label x105">备件照片：</label>
+					<span><img th:if="${!#strings.isEmpty(sparePart.mainPic)}"
+						th:src="@{/device/sparepart/pic/{path}(path=${sparePart.mainPic})}"
+						width="300" /></span></td>
+			</tr>
+			<tr>
+				<td colspan="3"><label class="control-label x105">所属设备：</label>
+					<span th:text="${sparePart.device.toString()}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">备件名称：</label> <span
+					th:text="${sparePart.name}"></span></td>
+				<td><label class="control-label x105">备件编码：</label> <span
+					th:text="${sparePart.partcode}"></span></td>
+				<td><label class="control-label x105">备件号：</label> <span
+					th:text="${sparePart.partnumber}"></span></td>
+
+			</tr>
+			<tr>
+				<td><label class="control-label x105">规格型号：</label> <span
+					th:text="${sparePart.specification}"></span></td>
+				<td><label class="control-label x105">备件类别：</label> <span
+					th:text="${sparePart.subType.name}"></span></td>
+				<td><label class="control-label x95">生产厂家：</label> <span
+					th:text="${sparePart.manufacturer}"></span></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -198,6 +198,8 @@ public class DeivceController {
 	@PreAuthorize("hasAuthority('DEVICEMODIFY')")
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "device") Device device, Model model) {
+		if (!deviceService.modifiable(device))
+			throw new BusinessException(localeMessageSourceService.getMessage("device.cannotmodify"));
 		deviceService.save(device);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.save.successd"), true, "",
 				"device-page-layout");
@@ -207,6 +209,11 @@ public class DeivceController {
 	@PreAuthorize("hasAuthority('DEVICEREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
+		Device device = this.deviceService.findActiveOne(id);
+		if (device == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("device.notfound"));
+		if (!deviceService.modifiable(device))
+			throw new BusinessException(localeMessageSourceService.getMessage("device.cannotmodify"));
 		deviceService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.remove.successd"));
 	}

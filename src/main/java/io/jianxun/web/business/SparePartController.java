@@ -188,6 +188,8 @@ public class SparePartController {
 	@PreAuthorize("hasAuthority('SPAREPARTMODIFY')")
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "sparePart") SparePart sparePart, Model model) {
+		if (!sparePartService.modifiable(sparePart))
+			throw new BusinessException(localeMessageSourceService.getMessage("sparePart.cannotmodify"));
 		sparePartService.save(sparePart);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("sparePart.save.successd"), true, "",
 				"sparePart-page-layout");
@@ -197,6 +199,11 @@ public class SparePartController {
 	@PreAuthorize("hasAuthority('SPAREPARTREMOVE')")
 	@ResponseBody
 	public ReturnDto remove(@PathVariable("id") Long id) {
+		SparePart sparePart = this.sparePartService.findActiveOne(id);
+		if (sparePart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("sparepart.notfound"));
+		if (!sparePartService.modifiable(sparePart))
+			throw new BusinessException(localeMessageSourceService.getMessage("sparePart.cannotmodify"));
 		sparePartService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("sparePart.remove.successd"));
 	}
@@ -287,6 +294,18 @@ public class SparePartController {
 		model.addAttribute("use", this.sparePartService.getUse(year, spartPart));
 		return templatePrefix() + "uselist";
 
+	}
+	
+	@GetMapping("detail/{id}")
+	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
+	public String detail(@PathVariable("id") Long id, Model model) {
+		SparePart sparePart = sparePartService.findOne(id);
+		if (sparePart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("sparepart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(sparePart.getDepart()))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		model.addAttribute("sparePart", sparePart);
+		return templatePrefix() + "detail";
 	}
 
 	private List<ValueLabelDto> getDto(List<SparePart> parts) {

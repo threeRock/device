@@ -34,7 +34,10 @@
 			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
 		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')"
 			type="button" data-toggle="navtab" class="btn-red"
-			data-id="sparepart-user-list"
+			data-id="sparepart-detail"
+			data-url="device/sparepart/detail/{#bjui-selected}">详细信息</button>
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="sparepart-user-list"
 			data-url="device/sparepart/use/{#bjui-selected}">消耗明细</button>
 		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
 			data-toggle="doexport" class="btn-red"
@@ -73,7 +76,8 @@
 				<td th:text="${e.partnumber}">备件号</td>
 				<td th:text="${e.specification}">规格型号</td>
 				<td th:text="${e.subType != null?e.subType.name:''}">装备类别</td>
-				<td th:text="${#temporals.format(e.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">时间</td>
+				<td
+					th:text="${#temporals.format(e.lastModifiedDate, 'yyyy-MM-dd HH:mm')}">时间</td>
 				<td><a sec:authorize="hasAnyAuthority('SPAREPARTMODIFY')"
 					th:href="@{/device/sparepart/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
