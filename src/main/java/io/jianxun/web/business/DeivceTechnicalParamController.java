@@ -100,8 +100,10 @@ public class DeivceTechnicalParamController {
 	ReturnDto createSave(@Valid DeviceTechnicalParam deviceTechnicalParam,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		deviceTechnicalParamService.save(deviceTechnicalParam);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice().toString() }), true, "deviceTechnicalParam-page", "");
+		return ReturnDto.ok(
+				localeMessageSourceService.getMessage("device.technical.param.save.successd",
+						new Object[] { deviceTechnicalParam.getDevice().toString() }),
+				true, "deviceTechnicalParam-page", "");
 	}
 
 	/**
@@ -136,8 +138,10 @@ public class DeivceTechnicalParamController {
 			@Valid @ModelAttribute(name = "deviceTechnicalParam") DeviceTechnicalParam deviceTechnicalParam,
 			Model model) {
 		deviceTechnicalParamService.save(deviceTechnicalParam);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.technical.param.save.successd",
-				new Object[] { deviceTechnicalParam.getDevice().toString() }), true, "deviceTechnicalParam-page", "");
+		return ReturnDto.ok(
+				localeMessageSourceService.getMessage("device.technical.param.save.successd",
+						new Object[] { deviceTechnicalParam.getDevice().toString() }),
+				true, "deviceTechnicalParam-page", "");
 	}
 
 	@PostMapping("remove/{id}")
@@ -167,6 +171,20 @@ public class DeivceTechnicalParamController {
 		if (!this.deviceTechnicalParamService.validateNameUnique(device, name, id))
 			return localeMessageSourceService.getMessage("device.technical.param.name.isUsed", new Object[] { name });
 		return "";
+	}
+
+	@GetMapping("detail/{id}")
+	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMLIST')")
+	public String detail(@PathVariable("id") Long id, Model model) {
+		DeviceTechnicalParam deviceTechnicalParam = deviceTechnicalParamService.findActiveOne(id);
+		if (deviceTechnicalParam == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("deviceTechnicalParam.notfound"));
+		if (deviceTechnicalParam.getDevice() == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("dvice.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(deviceTechnicalParam.getDevice().getDepart()))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		model.addAttribute("deviceTechnicalParam", deviceTechnicalParam);
+		return templatePrefix() + "detail";
 	}
 
 	@ModelAttribute(name = "deviceTechnicalParam")

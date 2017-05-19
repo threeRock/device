@@ -1,0 +1,24 @@
+<div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2"><label class="control-label x95">设备信息：</label>
+				<span th:text="${deviceTechnicalParam.device.toString()}"></span>
+					</td>
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">名称：</label> 
+					<span th:text="${deviceTechnicalParam.name}"></span>
+				</td>
+
+
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">参数：</label>
+				 <textarea
+						th:text="${deviceTechnicalParam.params}" data-toggle="autoheight"
+						readonly="readonly" cols="60" rows="10"></textarea></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

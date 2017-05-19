@@ -1,25 +1,28 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
 		th:action="@{/device/technicalParam/page}" action="#" method="POST">
-		 <input type="hidden"
-			name="size" th:value="${size}" value="10" /> <input type="hidden"
-			name="page" th:value="${page}" value="0" /><input type="hidden"
-			name="orderField" th:value="${orderField}" /> <input type="hidden"
-			name="orderDirection" th:value="${orderDirection}" />
+		<input type="hidden" name="size" th:value="${size}" value="10" /> <input
+			type="hidden" name="page" th:value="${page}" value="0" /><input
+			type="hidden" name="orderField" th:value="${orderField}" /> <input
+			type="hidden" name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>设备名称</label><input type="text"  value=""
-				name="device.name" class="form-control" size="10" />&nbsp;<label>设备编码</label><input
-				type="text"  value="" name="device.code"
-				class="form-control" size="10" />&nbsp;
+			<label>设备名称</label><input type="text" value="" name="device.name"
+				class="form-control" size="10" />&nbsp;<label>设备编码</label><input
+				type="text" value="" name="device.code" class="form-control"
+				size="10" />&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button 
-			sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMCREATE')" type="button"
-			data-toggle="navtab" class="btn-red" data-id="device-technicalParam-form-new"
+		<button sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMCREATE')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="device-technicalParam-form-new"
 			data-url="device/technicalParam/create/">新增技术参数</button>
+		<button sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMLIST')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="device-detail"
+			data-url="device/technicalParam/detail/{#bjui-selected}">详细信息</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -30,7 +33,7 @@
 				<!-- <th>设备示意图</th> -->
 				<th data-order-field="name">名称</th>
 				<th data-order-field="params">相关参数</th>
-				<th width="100" >操作</th>
+				<th width="100">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -39,14 +42,17 @@
 				<!-- <td ><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
 					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td> -->
 				<td th:text="${e.name}">装备名称</td>
-				<td th:text="${e.params}">相关参数</td>
-				<td ><a sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMMODIFY')"
-					th:href="@{/device/technicalParam/modify/{id}(id=${e.id})}" href="#"
-					class="btn btn-green" data-toggle="navtab"
-					data-id="device-technicalParam-form--modify" data-title="修改附属设备技术参数">修改</a> <a
+				<td th:text="${#strings.substring(e.params,0,30)}">相关参数</td>
+				<td><a
+					sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMMODIFY')"
+					th:href="@{/device/technicalParam/modify/{id}(id=${e.id})}"
+					href="#" class="btn btn-green" data-toggle="navtab"
+					data-id="device-technicalParam-form--modify"
+					data-title="修改附属设备技术参数">修改</a> <a
 					sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMREMOVE')"
-					th:href="@{/device/technicalParam/remove/{id}(id=${e.id})}" href="#"
-					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+					th:href="@{/device/technicalParam/remove/{id}(id=${e.id})}"
+					href="#" class="btn btn-red" data-toggle="doajax"
+					data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>
 	</table>

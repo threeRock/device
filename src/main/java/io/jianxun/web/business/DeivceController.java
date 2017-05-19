@@ -407,6 +407,8 @@ public class DeivceController {
 	@GetMapping("detail/{id}")
 	public String detail(@PathVariable("id") Long id, Model model) {
 		Device device = deviceService.findActiveOne(id);
+		if (device == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("dvice.notfound"));
 		if (!currentLoginInfo.validateCurrentUserDepart(device.getDepart()))
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
 		model.addAttribute("device", device);
