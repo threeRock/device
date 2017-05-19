@@ -27,7 +27,7 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属设备</th>
-				<th>设备示意图</th>
+				<!-- <th>设备示意图</th> -->
 				<th data-order-field="occurrenceDate">发生日期</th>
 				<th data-order-field="duration">停机时间</th>
 				<th data-order-field="reason">原因分析</th>
@@ -41,8 +41,8 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.device.name}">所属设备</td>
-				<td width="300"><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
-					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="300" /></td>
+				<!-- <td ><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td> -->
 				<td th:text="${#temporals.format(e.occurrenceDate, 'yyyy-MM-dd')}">发生日期</td>
 				<td th:text="${e.duration}">停机时间</td>
 				<td th:text="${e.reason}">原因分析</td>

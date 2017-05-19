@@ -23,11 +23,13 @@
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="100%" data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="120%" data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属设备</th>
-				<th>设备示意图</th>
+				<!-- 
+				<th>示意图</th>
+				 -->
 				<th data-order-field="name">名称</th>
 				<th data-order-field="adjustDate">调整时间</th>
 				<th data-order-field="content">内容</th>
@@ -38,8 +40,10 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.device.name}">所属设备</td>
-				<td width="300"><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
-					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="300" /></td>
+				<!-- 
+				<td ><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td>
+					 -->
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${#temporals.format(e.adjustDate, 'yyyy-MM-dd')}">调整时间</td>
 				<td th:text="${e.content}">内容</td>

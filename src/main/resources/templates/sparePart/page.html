@@ -46,7 +46,7 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
-				<th>示意图</th>
+				<!-- <th>示意图</th> -->
 				<th data-order-field="storehouse.name">仓库</th>
 				<th>当前库存</th>
 				<th data-order-field="device.name">所属设备</th>
@@ -62,9 +62,9 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td><img th:if="${!#strings.isEmpty(e.mainPic)}"
+				<!-- <td><img th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
-					width="300" /></td>
+					width="180" height="100" /></td> -->
 				<td th:text="${e.storehouse.name}">仓库</td>
 				<td th:text="${e.stock}">库存</td>
 				<td th:text="${e.device != null?e.device.name:''}">设备</td>

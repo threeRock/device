@@ -1,5 +1,5 @@
-<div class="bjui-pageHeader">
-	<form id="pagerForm" data-toggle="ajaxsearch"
+<div class="bjui-pageHeader" >
+	<form id="pagerForm" data-toggle="ajaxsearch" 
 		th:action="@{/device/{path}(path=${url})}" action="#" method="POST">
 		<input id="devicedepart" name="d.id" type="hidden"
 			th:value="${depart.id}" value="10" /> <input type="hidden"
@@ -9,16 +9,16 @@
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
 			<label>设备名称</label><input type="text" th:value="${name}" value=""
-				name="name" class="form-control" size="10" />&nbsp;<label>设备编码</label><input
+				name="name" class="form-control" size="8" />&nbsp;<label>设备编码</label><input
 				type="text" th:value="${code}" value="" name="code"
-				class="form-control" size="10" />&nbsp;<label>产线: </label><select
-				data-toggle="selectpicker" data-width="150" name="productionLine">
+				class="form-control" size="8" />&nbsp;<label>产线: </label><select 
+				data-toggle="selectpicker" data-width="110" name="productionLine">
 				<option value="">请选择所属产线</option>
 				<option th:each="item : ${lines}" th:value="${item.id}"
 					th:text="${item.name}"
 					th:selected="${item.id.toString() == productionLine}">所属产线</option>
-			</select>&nbsp;<label>类别: </label><select data-toggle="selectpicker"
-				data-width="150" name="mainType">
+			</select>&nbsp;<label>类别: </label><select data-toggle="selectpicker" size="10"
+				data-width="110" name="mainType">
 				<option value="">请选择所属类别</option>
 				<option th:each="item : ${types}" th:value="${item.id}"
 					th:text="${item.name}"
@@ -26,6 +26,7 @@
 			</select>&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
+			
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
@@ -60,7 +61,9 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
+				<!-- 
 				<th>示意图</th>
+				 -->
 				<th data-order-field="productionLine.name">生产线</th>
 				<th data-order-field="name">名称</th>
 				<th data-order-field="typeInfo">型号</th>
@@ -72,8 +75,10 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td width="180"><img th:if="${!#strings.isEmpty(e.mainPic)}"
-					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="180" heigth="60" /></td>
+				<!-- 
+				<td ><img th:if="${!#strings.isEmpty(e.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="180" height="100" /></td>
+				-->
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${e.typeInfo}">型号</td>

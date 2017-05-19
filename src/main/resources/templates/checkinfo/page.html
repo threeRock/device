@@ -27,7 +27,9 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属设备</th>
+				<!-- 
 				<th>设备示意图</th>
+				 -->
 				<th data-order-field="checkDate">检修日期</th>
 				<th data-order-field="nature">性质</th>
 				<th data-order-field="projectCode">项目编号</th>
@@ -40,8 +42,8 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.device.name}">所属设备</td>
-				<td width="300"><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
-					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="300" /></td>
+				<!-- <td ><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td> -->
 				<td th:text="${#temporals.format(e.checkDate, 'yyyy-MM-dd')}">检修日期</td>
 				<td th:text="${e.nature}">性质</td>
 				<td th:text="${e.projectCode}">项目编号</td>
