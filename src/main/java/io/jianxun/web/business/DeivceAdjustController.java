@@ -168,6 +168,20 @@ public class DeivceAdjustController {
 			return localeMessageSourceService.getMessage("device.adjustment.name.isUsed", new Object[] { name });
 		return "";
 	}
+	
+	@GetMapping("detail/{id}")
+	@PreAuthorize("hasAuthority('DEVICETECHNICALPARAMLIST')")
+	public String detail(@PathVariable("id") Long id, Model model) {
+		DeviceAdjustment deviceAdjustment = deviceAdjustmentService.findActiveOne(id);
+		if (deviceAdjustment == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("deviceAdjustment.notfound"));
+		if (deviceAdjustment.getDevice() == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("dvice.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(deviceAdjustment.getDevice().getDepart()))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		model.addAttribute("deviceAdjustment", deviceAdjustment);
+		return templatePrefix() + "detail";
+	}
 
 	@ModelAttribute(name = "deviceAdjustment")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {

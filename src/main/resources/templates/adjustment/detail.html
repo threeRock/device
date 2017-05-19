@@ -1,0 +1,32 @@
+<div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<span th:text="${deviceAdjustment.device.toString()}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x95">名称：</label> <span
+					th:text="${deviceAdjustment.name}"></span></td>
+				<td><label class="control-label x95">调整时间：</label> <span
+					th:text="${#temporals.format(deviceAdjustment.adjustDate, 'yyyy-MM-dd')}"></span></td>
+
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">实施单位/人：</label>
+					<span th:text="${deviceAdjustment.implementation}"></span></td>
+
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">内容：</label> <textarea
+						th:text="${deviceAdjustment.content}" data-toggle="autoheight"
+						readonly="readonly"  cols="60" rows="6"></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+						th:text="${deviceAdjustment.description}" data-toggle="autoheight"
+						readonly="readonly"  cols="60" rows="6"></textarea></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

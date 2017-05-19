@@ -20,6 +20,10 @@
 			sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTCREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-adjustment-form-new"
 			data-url="device/adjustment/create/">新增调整信息</button>
+			<button 
+			sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTLIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-adjustment-detail"
+			data-url="device/adjustment/detail/{#bjui-selected}">详细信息</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -46,7 +50,7 @@
 					 -->
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${#temporals.format(e.adjustDate, 'yyyy-MM-dd')}">调整时间</td>
-				<td th:text="${e.content}">内容</td>
+				<td th:text="${#strings.substring(e.content,0,30)}">内容</td>
 				<td th:text="${e.implementation}">实施单位/人</td>
 				<td ><a sec:authorize="hasAnyAuthority('DEVICEADJUSTMENTMODIFY')"
 					th:href="@{/device/adjustment/modify/{id}(id=${e.id})}" href="#"
