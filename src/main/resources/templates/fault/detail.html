@@ -1,0 +1,50 @@
+<div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<span th:text="${deviceFault.device.toString()}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x95">发生时间：</label> <span
+					th:text="${#temporals.format(deviceFault.occurrenceDate, 'yyyy-MM-dd')}"></span>
+				</td>
+				<td><label class="control-label x95">停机时间：</label> <span
+					th:text="${deviceFault.duration}"></span></td>
+
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">原因分析：</label>
+					<textarea th:text="${deviceFault.reason}" data-toggle="autoheight"
+						readonly="readonly" cols="60" rows="6"></textarea></td>
+			</tr>
+
+			<tr>
+
+				<td colspan="2"><label class="control-label x95">纠正预防措施：</label>
+					<textarea th:text="${deviceFault.measures}"
+						data-toggle="autoheight" readonly="readonly" cols="60" rows="6"></textarea></td>
+
+			</tr>
+			<tr>
+				<td><label class="control-label x95">实施单位/人：</label> <span
+					th:text="${deviceFault.implementation}"></span></td>
+				<td><label class="control-label x95">验证结果：</label> <span
+					th:text="${deviceFault.effect}"></span></td>
+
+			</tr>
+
+			<tr>
+				<td><label class="control-label x95">事故性质：</label> <span
+					th:text="${deviceFault.nature}"></span></td>
+
+			</tr>
+
+			<tr>
+				<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+						th:text="${deviceFault.description}" data-toggle="autoheight"
+						readonly="readonly" cols="60" rows="6"></textarea></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

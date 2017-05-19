@@ -143,6 +143,20 @@ public class DeivceFaultController {
 		deviceFaultService.delete(id);
 		return ReturnDto.ok(localeMessageSourceService.getMessage("device.checkinfo.remove.successd"));
 	}
+	
+	@GetMapping("detail/{id}")
+	@PreAuthorize("hasAuthority('DEVICECHECKINFOLIST')")
+	public String detail(@PathVariable("id") Long id, Model model) {
+		DeviceFault deviceFault = deviceFaultService.findActiveOne(id);
+		if (deviceFault == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("deviceFault.notfound"));
+		if (deviceFault.getDevice() == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("dvice.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(deviceFault.getDevice().getDepart()))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		model.addAttribute("deviceFault", deviceFault);
+		return templatePrefix() + "detail";
+	}
 
 	@ModelAttribute(name = "deviceFault")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
