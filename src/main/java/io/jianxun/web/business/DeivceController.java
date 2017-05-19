@@ -404,6 +404,15 @@ public class DeivceController {
 		return templatePrefix() + "parts";
 	}
 
+	@GetMapping("detail/{id}")
+	public String detail(@PathVariable("id") Long id, Model model) {
+		Device device = deviceService.findActiveOne(id);
+		if (!currentLoginInfo.validateCurrentUserDepart(device.getDepart()))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		model.addAttribute("device", device);
+		return templatePrefix() + "detail";
+	}
+
 	@ModelAttribute(name = "device")
 	public void getMode(@RequestParam(value = "id", defaultValue = "-1") Long id, Model model) {
 		if (id != null && id != -1L) {

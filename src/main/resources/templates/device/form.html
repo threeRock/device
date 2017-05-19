@@ -39,7 +39,7 @@
 						</div></td>
 					<td><input type="hidden" th:field="*{mainPic}" value=""
 						id="device_pic" /> <span id="device_pic_span"></span><span id="device_pic_showspan"
-						th:if="${device.mainPic!=null}"><img
+						th:if="${device.mainPic!=null}"><img th:if="${!#strings.isEmpty(device.mainPic)}"
 							th:src="@{/device/pic/{path}(path=${device.mainPic})}" width="300" /></span></td>
 				</tr>
 				<tr>

@@ -1,0 +1,58 @@
+<div class="bjui-pageContent">
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<tr>
+					<td colspan="2"><label class="control-label x105">生产线：</label>
+						<span th:text="${device.productionLine.name}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">设备照片：</label>
+					<span id="device_pic_showspan"
+						th:if="${device.mainPic!=null}"><img th:if="${!#strings.isEmpty(device.mainPic)}"
+							th:src="@{/device/pic/{path}(path=${device.mainPic})}" width="300" /></span>
+						</td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">设备名称：</label> 
+						<span th:text="${device.name}"></span>
+					</td>
+					<td><label class="control-label x105">规格型号：</label> 
+						<span th:text="${device.typeInfo}"></span> 
+					</td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">设备编号：</label>
+						<span th:text="${device.code}"></span> 
+					 </td>
+					<td><label class="control-label x105">设备类别：</label>
+						<span th:text="${device.mainType}"></span> 
+					 </td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">制造厂家：</label>
+					
+						<span th:text="${device.manufacturer}"></span> 
+					 </td>
+					<td><label class="control-label x105">出厂编号：</label>
+						<span th:text="${device.serialNumber}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">出厂 / 投产年月：</label> 
+					
+					<span th:text="${device.dateInfo}"></span>
+						
+					</td>
+					<td><label class="control-label x105">总重量：</label>
+						<span th:text="${device.weightInfo}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><label class="control-label x105">主要技术参数：</label>
+						<textarea th:text="${device.description}" readonly="readonly"
+							data-toggle="autoheight" cols="80" rows="10"></textarea></td>
+				</tr>
+			</tbody>
+		</table>
+</div>

@@ -33,6 +33,10 @@
 			sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-new"
 			data-url="device/create/{#devicedepart}">新增设备</button>
+		<button 
+			sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-detail"
+			data-url="device/detail/{#bjui-selected}">详细信息</button>
 		<button th:if="${createable}"
 			sec:authorize="hasAnyAuthority('DEVICEDISCARD')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-discard"
@@ -52,7 +56,7 @@
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
-	<table data-toggle="tablefixed" data-width="120%" data-nowrap="true">
+	<table data-toggle="tablefixed" data-width="140%" data-nowrap="true">
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
@@ -68,8 +72,8 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td width="300"><img th:if="${!#strings.isEmpty(e.mainPic)}"
-					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="300" /></td>
+				<td width="180"><img th:if="${!#strings.isEmpty(e.mainPic)}"
+					th:src="@{/device/pic/{path}(path=${e.mainPic})}" width="180" heigth="60" /></td>
 				<td th:text="${e.productionLine.name}">生产线</td>
 				<td th:text="${e.name}">装备名称</td>
 				<td th:text="${e.typeInfo}">型号</td>
@@ -82,7 +86,8 @@
 					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
 					sec:authorize="hasAnyAuthority('DEVICEREMOVE')"
 					th:href="@{/device/remove/{id}(id=${e.id})}" href="#"
-					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a>
+					</td>
 			</tr>
 		</tbody>
 	</table>
