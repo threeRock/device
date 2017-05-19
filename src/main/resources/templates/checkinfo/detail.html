@@ -1,0 +1,48 @@
+<div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<span th:text="${deviceCheckInfo.device.toString()}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x95">检修时间：</label> <span
+					th:text="${#temporals.format(deviceCheckInfo.checkDate, 'yyyy-MM-dd')}"></span>
+				</td>
+				<td><label class="control-label x95">检修性质：</label> <span
+					th:text="${deviceCheckInfo.nature}"></span></td>
+
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">项目编号：</label>
+					<span th:text="${deviceCheckInfo.projectCode}"></span></td>
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x95">内容：</label> <textarea
+						th:text="${deviceCheckInfo.content}" data-toggle="autoheight"
+						readonly="readonly" cols="60" rows="6"></textarea></td>
+			</tr>
+
+			<tr>
+
+				<td colspan="2"><label class="control-label x95">备件更换情况：</label>
+					<textarea th:text="${deviceCheckInfo.replacement}"
+						data-toggle="autoheight" readonly="readonly" cols="60" rows="6"></textarea></td>
+
+			</tr>
+			<tr>
+				<td><label class="control-label x95">施工单位：</label> <span
+					th:text="${deviceCheckInfo.implementation}"></span></td>
+				<td><label class="control-label x95">质量评价：</label> <span
+					th:text="${deviceCheckInfo.evaluation}"></span></td>
+
+			</tr>
+
+			<tr>
+				<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+						th:text="${deviceCheckInfo.description}" data-toggle="autoheight"
+						readonly="readonly" cols="60" rows="6"></textarea></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

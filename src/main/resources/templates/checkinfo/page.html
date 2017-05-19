@@ -20,6 +20,10 @@
 			sec:authorize="hasAnyAuthority('DEVICECHECKINFOCREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-checkInfo-form-new"
 			data-url="device/checkInfo/create/">新增检修（技改）信息</button>
+			<button 
+			sec:authorize="hasAnyAuthority('DEVICECHECKINFOLIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="device-adjustment-detail"
+			data-url="device/checkInfo/detail/{#bjui-selected}">详细信息</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -47,7 +51,7 @@
 				<td th:text="${#temporals.format(e.checkDate, 'yyyy-MM-dd')}">检修日期</td>
 				<td th:text="${e.nature}">性质</td>
 				<td th:text="${e.projectCode}">项目编号</td>
-				<td th:text="${e.content}">项目内容</td>
+				<td th:text="${#strings.substring(e.content,0,30)}">项目内容</td>
 				<td th:text="${e.evaluation}">质量评价</td>
 				<td th:text="${e.implementation}">实施单位/人</td>
 				<td ><a sec:authorize="hasAnyAuthority('DEVICECHECKINFOMODIFY')"
