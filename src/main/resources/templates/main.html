@@ -290,9 +290,11 @@
 		var $a = $(this), $tr = $a.parent().parent();
 		var $img = $tr.find('td[img-id]').html();
 		myDialog=art.dialog({
+			title:'预览',
 			follow: document.getElementById('showimge'),
 			content: $img,
-			time: 2
+			time: 2,
+			padding: 0
 			});   
 		e.preventDefault();
 	});

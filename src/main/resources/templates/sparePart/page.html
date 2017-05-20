@@ -49,7 +49,8 @@
 		<thead>
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
-				<!-- <th>示意图</th> -->
+				<th width="60">图片预览</th>
+				<th style="display:none">示意图</th>
 				<th data-order-field="storehouse.name">仓库</th>
 				<th>当前库存</th>
 				<th data-order-field="device.name">所属设备</th>
@@ -65,9 +66,10 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<!-- <td><img th:if="${!#strings.isEmpty(e.mainPic)}"
+				<td ><i class="fa fa-2x" th:classappend="${#strings.isEmpty(e.mainPic)}? fa-eye-slash : fa-eye"></i></td>
+				<td th:attr="img-id=${e.id}" style="display:none"><img th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
-					width="180" height="100" /></td> -->
+					width="300" height="120" /></td>
 				<td th:text="${e.storehouse.name}">仓库</td>
 				<td th:text="${e.stock}">库存</td>
 				<td th:text="${e.device != null?e.device.name:''}">设备</td>
