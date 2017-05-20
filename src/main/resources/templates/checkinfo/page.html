@@ -51,7 +51,7 @@
 				<td th:text="${#temporals.format(e.checkDate, 'yyyy-MM-dd')}">检修日期</td>
 				<td th:text="${e.nature}">性质</td>
 				<td th:text="${e.projectCode}">项目编号</td>
-				<td th:text="${#strings.substring(e.content,0,30)}">项目内容</td>
+				<td th:text="${#strings.abbreviate(e.content,30)}">项目内容</td>
 				<td th:text="${e.evaluation}">质量评价</td>
 				<td th:text="${e.implementation}">实施单位/人</td>
 				<td ><a sec:authorize="hasAnyAuthority('DEVICECHECKINFOMODIFY')"

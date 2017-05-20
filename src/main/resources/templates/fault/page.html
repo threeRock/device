@@ -47,8 +47,8 @@
 					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td> -->
 				<td th:text="${#temporals.format(e.occurrenceDate, 'yyyy-MM-dd')}">发生日期</td>
 				<td th:text="${e.duration}">停机时间</td>
-				<td th:text="${#strings.substring(e.reason,0,30)}">原因分析</td>
-				<td th:text="${#strings.substring(e.measures,0,30)}">纠正预防措施</td>
+				<td th:text="${#strings.abbreviate(e.reason,30)}">原因分析</td>
+				<td th:text="${#strings.abbreviate(e.measures,30)}">纠正预防措施</td>
 				<td th:text="${e.effect}">验证结果</td>
 				<td th:text="${e.nature}">事故性质</td>
 				<td th:text="${e.implementation}">实施单位/人</td>

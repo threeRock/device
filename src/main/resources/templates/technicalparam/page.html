@@ -42,7 +42,7 @@
 				<!-- <td ><img th:if="${!#strings.isEmpty(e.device.mainPic)}"
 					th:src="@{/device/pic/{path}(path=${e.device.mainPic})}" width="180" height="100" /></td> -->
 				<td th:text="${e.name}">装备名称</td>
-				<td th:text="${#strings.substring(e.params,0,30)}">相关参数</td>
+				<td th:text="${#strings.abbreviate(e.params,30)}">相关参数</td>
 				<td><a
 					sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMMODIFY')"
 					th:href="@{/device/technicalParam/modify/{id}(id=${e.id})}"

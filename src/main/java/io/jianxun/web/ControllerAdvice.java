@@ -47,7 +47,7 @@ public class ControllerAdvice {
 			StringBuilder sb = new StringBuilder();
 			for (FieldError error : errors) {
 				String msg = error.getDefaultMessage();
-				sb.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + msg + "<br />");
+				sb.append(msg);
 
 			}
 			re = ReturnDto.error(sb.toString());

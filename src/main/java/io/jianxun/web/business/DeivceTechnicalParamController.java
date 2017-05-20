@@ -43,7 +43,7 @@ import io.jianxun.web.utils.Utils;
 @RequestMapping("device/technicalParam")
 public class DeivceTechnicalParamController {
 
-	@InitBinder("technicalParam")
+	@InitBinder("deviceTechnicalParam")
 	public void initBinder(WebDataBinder webDataBinder) {
 		webDataBinder.addValidators(deviceTechnicalParamValidator);
 
@@ -164,10 +164,10 @@ public class DeivceTechnicalParamController {
 	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("device.id") Long deviceId,
 			@RequestParam("id") Long id) {
 		if (deviceId == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.technical.param.device.notnull"));
+			return localeMessageSourceService.getMessage("device.technical.param.device.notnull");
 		Device device = this.deviceService.findActiveOne(deviceId);
 		if (device == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.technical.param.device.notnull"));
+			return localeMessageSourceService.getMessage("device.technical.param.device.notnull");
 		if (!this.deviceTechnicalParamService.validateNameUnique(device, name, id))
 			return localeMessageSourceService.getMessage("device.technical.param.name.isUsed", new Object[] { name });
 		return "";

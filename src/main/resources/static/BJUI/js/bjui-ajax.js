@@ -122,7 +122,7 @@
     }
     
     Bjuiajax.prototype.ajaxError = function(xhr, ajaxOptions, thrownError) {
-        var msg = xhr.responseText.trim()
+        var msg = xhr.responseText.trim();
         
         if (msg.startsWith('{')) {
             this.ajaxDone(msg.toObj())

@@ -1,23 +1,50 @@
+<script type="text/javascript">
+	/*<![CDATA[*/
+	function myCallback(json) {
+		alert(111);
+		var that = this;
+		var $element = that.$element;
+		that.ajaxDone(json);
+		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
+			if (json.tabid)
+				setTimeout(function() {
+					that.$element.navtab('reloadFlag', json.tabid)
+				}, 100);
+			if (json.closeCurrent && !json.forward)
+				that.$element.navtab('closeCurrentTab');
+			//为保证新增操作连续性操作完成后保留所属设备相关信息,清空name 及 参数 输入空间
+			var $id = $element.find("input[name=id]").val();
+			if (!$id) {
+				//清空name
+				$element.find("input[name=name]").val("");
+				//清空参数
+				$element.find("textarea[name=params]").val("");
+			}
+		}
+	}/*]]>*/
+</script>
 <div class="bjui-pageContent">
 	<form action="#" id="technicalParam_form"
 		th:action="@{/device/technicalParam/{path}(path=${action})}"
 		method="POST" th:object="${deviceTechnicalParam}"
-		data-toggle="validate" data-alertmsg="false">
+		data-toggle="validate" data-alertmsg="false" data-reload="false"
+		data-callback="myCallback">
 		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<td colspan="2"><label class="control-label x95">所属设备信息：</label>
 						<input th:if="${'create'.equals(action)}" type="text"
 						data-toggle="tags" data-tagname="device.id" data-width="700"
 						data-url="device/search/" data-max="1" size="40"> </input> <label
 						th:if="${!'create'.equals(action)}" class="control-label"
-						th:text="${deviceinfo}"></label> 
-						<input th:if="${!'create'.equals(action)}" type="hidden" name="device.id" th:value="${deviceTechnicalParam.device.id}" /></td>
+						th:text="${deviceinfo}"></label> <input
+						th:if="${!'create'.equals(action)}" type="hidden" name="device.id"
+						th:value="${deviceTechnicalParam.device.id}" /></td>
 				</tr>
 				<tr>
-					<td colspan="2"><label class="control-label x95">名称：</label> <input
-						th:field="*{name}" name="name"
+					<td colspan="2"><label class="control-label x95">附属设备名称：</label>
+						<input th:field="*{name}" name="name" data-must="true"
 						data-rule="required;remote[device/technicalParam/check/nameunique, id, device.id]"></input></td>
 
 
@@ -25,7 +52,7 @@
 				<tr>
 					<td colspan="2"><label class="control-label x95">参数：</label> <textarea
 							th:field="*{params}" name="params" data-toggle="autoheight"
-							cols="60" rows="10"></textarea></td>
+							data-rule="required" cols="60" rows="10"></textarea></td>
 				</tr>
 			</tbody>
 		</table>
