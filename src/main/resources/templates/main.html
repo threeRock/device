@@ -29,7 +29,6 @@
 	rel="stylesheet" />
 	
 <link th:href="@{css/demo.css}" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" th:href="@{css/font-awesome/font-awesome.min.css}" />
 
 <!--[if lte IE 7]>
 <link th:href="@{BJUI/themes/css/ie7.css" rel="stylesheet" />
@@ -41,7 +40,7 @@
     <script th:th:src="@{BJUI/other/respond.min.js}"></script>
 <![endif]-->
 <!-- jquery -->
-<script th:src="@{BJUI/js/jquery-1.7.2.min.js}"></script>
+<script th:src="@{BJUI/js/jquery-1.9.1.min.js}"></script>
 <script th:src="@{BJUI/js/jquery.cookie.js}"></script>
 <!--[if lte IE 9]>
 <script th:src="@{BJUI/other/jquery.iframe-transport.js}"></script>    
@@ -285,13 +284,15 @@
 			})
 	}
 	
+	//列表滑动获取图片信息
 	$(document).on('mouseenter','.fa-eye',function(e){
 		var myDialog;
-		var $a = $(this), $table = $a.parent().parent().parent();
-		var $img = $table.find('td[img-id]').html();
+		var $a = $(this), $tr = $a.parent().parent();
+		var $img = $tr.find('td[img-id]').html();
 		myDialog=art.dialog({
 			follow: document.getElementById('showimge'),
-			content: $img
+			content: $img,
+			time: 2
 			});   
 		e.preventDefault();
 	});

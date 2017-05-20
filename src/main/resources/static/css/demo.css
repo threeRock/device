@@ -48,14 +48,6 @@ table.aui_border, table.aui_dialog {
     padding: 0;
     width: 100%;
 }
-.aui_loading {
-    background: rgba(0, 0, 0, 0) url("icons/loading.gif") no-repeat scroll center center;
-    height: 32px;
-    overflow: hidden;
-    text-align: left;
-    text-indent: -999em;
-    width: 96px;
-}
 .aui_icon {
     vertical-align: middle;
 }
