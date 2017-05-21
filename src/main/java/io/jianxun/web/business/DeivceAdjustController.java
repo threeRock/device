@@ -160,10 +160,10 @@ public class DeivceAdjustController {
 	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("device.id") Long deviceId,
 			@RequestParam("id") Long id) {
 		if (deviceId == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.adjustment.device.notnull"));
+			return localeMessageSourceService.getMessage("device.adjustment.device.notnull");
 		Device device = this.deviceService.findActiveOne(deviceId);
 		if (device == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("device.adjustment.device.notnull"));
+			return localeMessageSourceService.getMessage("device.adjustment.device.notnull");
 		if (!this.deviceAdjustmentService.validateNameUnique(device, name, id))
 			return localeMessageSourceService.getMessage("device.adjustment.name.isUsed", new Object[] { name });
 		return "";

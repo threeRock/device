@@ -1,13 +1,43 @@
+<script type="text/javascript">
+	/*<![CDATA[*/
+	function myAdjustmentCallback(json) {
+		var that = this;
+		var $element = that.$element;
+		that.ajaxDone(json);
+		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
+			if (json.tabid)
+				setTimeout(function() {
+					that.$element.navtab('reloadFlag', json.tabid)
+				}, 100);
+			if (json.closeCurrent && !json.forward)
+				that.$element.navtab('closeCurrentTab');
+			//为保证新增操作连续性操作完成后保留所属设备相关信息,清空name 及 参数 输入空间
+			var $id = $element.find("input[name=id]").val();
+			if (!$id) {
+				//清空name
+				$element.find("input[name=name]").val("");
+				//清空adjustDate
+				$element.find("input[name=adjustDate]").val("");
+				//清空implementation
+				$element.find("input[name=implementation]").val("");
+				//清空content
+				$element.find("textarea[name=content]").val("");
+				//清空description
+				$element.find("textarea[name=description]").val("");
+			}
+		}
+	}/*]]>*/
+</script>
 <div class="bjui-pageContent">
 	<form action="#" id="adjustment_form"
 		th:action="@{/device/adjustment/{path}(path=${action})}" method="POST"
-		th:object="${deviceAdjustment}" data-toggle="validate"
+		th:object="${deviceAdjustment}" data-toggle="validate" data-reload="false" data-callback="myAdjustmentCallback"
 		data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<td colspan="2"><label class="control-label x105">所属设备信息：</label>
 						<input th:if="${'create'.equals(action)}" type="text"
 						data-toggle="tags" data-tagname="device.id" data-width="700"
 						data-url="device/search/" data-max="1" size="40"> </input> <label
@@ -17,26 +47,26 @@
 						th:value="${deviceAdjustment.device.id}" /></td>
 				</tr>
 				<tr>
-					<td><label class="control-label x95">名称：</label> <input
-						th:field="*{name}" name="name"
+					<td><label class="control-label x105">技术参数调整名称：</label> <input
+						th:field="*{name}" name="name" data-must="true"
 						data-rule="required;remote[device/adjustment/check/nameunique, id, device.id]"></input></td>
-					<td><label class="control-label x95">调整时间：</label> <input
+					<td><label class="control-label x105">调整时间：</label> <input
 						th:field="*{adjustDate}" name="adjustDate"
 						data-toggle="datepicker" data-rule="date" size="20" /></td>
 
 				</tr>
 				<tr>
-					<td colspan="2"><label class="control-label x95">实施单位/人：</label> <input
+					<td colspan="2"><label class="control-label x105">实施单位/人：</label> <input
 						th:field="*{implementation}" name="implementation"></input></td>
 
 				</tr>
 				<tr>
-					<td colspan="2"><label class="control-label x95">内容：</label> <textarea
+					<td colspan="2"><label class="control-label x105">内容：</label> <textarea
 							th:field="*{content}" name="content" data-toggle="autoheight"
 							data-rule="required;" cols="60" rows="6"></textarea></td>
 				</tr>
 				<tr>
-					<td colspan="2"><label class="control-label x95">备注：</label> <textarea
+					<td colspan="2"><label class="control-label x105">备注：</label> <textarea
 							th:field="*{description}" name="description"
 							data-toggle="autoheight" cols="60" rows="6"></textarea></td>
 				</tr>
