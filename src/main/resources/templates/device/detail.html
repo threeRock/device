@@ -1,58 +1,190 @@
 <div class="bjui-pageContent">
+	<table class="table table-condensed table-hover" width="100%">
+		<tbody>
+			<tr>
+				<td colspan="2"><label class="control-label x105">生产线：</label>
+					<span th:text="${device.productionLine.name}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">设备照片：</label> <span
+					id="device_pic_showspan" th:if="${device.mainPic!=null}"><img
+						th:if="${!#strings.isEmpty(device.mainPic)}"
+						th:src="@{/device/pic/{path}(path=${device.mainPic})}" width="300" /></span>
+				</td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">设备名称：</label> <span
+					th:text="${device.name}"></span></td>
+				<td><label class="control-label x105">规格型号：</label> <span
+					th:text="${device.typeInfo}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">设备编号：</label> <span
+					th:text="${device.code}"></span></td>
+				<td><label class="control-label x105">设备类别：</label> <span
+					th:text="${device.mainType}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">制造厂家：</label> <span
+					th:text="${device.manufacturer}"></span></td>
+				<td><label class="control-label x105">出厂编号：</label> <span
+					th:text="${device.serialNumber}"></span></td>
+			</tr>
+			<tr>
+				<td><label class="control-label x105">出厂 / 投产年月：</label> <span
+					th:text="${device.dateInfo}"></span></td>
+				<td><label class="control-label x105">总重量：</label> <span
+					th:text="${device.weightInfo}"></span></td>
+			</tr>
+			<tr>
+				<td colspan="2"><label class="control-label x105">主要技术参数：</label>
+					<textarea th:text="${device.description}" readonly="readonly"
+						data-toggle="autoheight" cols="80" rows="10"></textarea></td>
+			</tr>
+		</tbody>
+	</table>
+	<fieldset>
+		<legend>附属设备技术参数</legend>
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
-				<tr>
-					<td colspan="2"><label class="control-label x105">生产线：</label>
-						<span th:text="${device.productionLine.name}"></span>
-					</td>
-				</tr>
-				<tr>
-					<td><label class="control-label x105">设备照片：</label>
-					<span id="device_pic_showspan"
-						th:if="${device.mainPic!=null}"><img th:if="${!#strings.isEmpty(device.mainPic)}"
-							th:src="@{/device/pic/{path}(path=${device.mainPic})}" width="300" /></span>
-						</td>
-				</tr>
-				<tr>
-					<td><label class="control-label x105">设备名称：</label> 
-						<span th:text="${device.name}"></span>
-					</td>
-					<td><label class="control-label x105">规格型号：</label> 
-						<span th:text="${device.typeInfo}"></span> 
-					</td>
-				</tr>
-				<tr>
-					<td><label class="control-label x105">设备编号：</label>
-						<span th:text="${device.code}"></span> 
-					 </td>
-					<td><label class="control-label x105">设备类别：</label>
-						<span th:text="${device.mainType}"></span> 
-					 </td>
-				</tr>
-				<tr>
-					<td><label class="control-label x105">制造厂家：</label>
-					
-						<span th:text="${device.manufacturer}"></span> 
-					 </td>
-					<td><label class="control-label x105">出厂编号：</label>
-						<span th:text="${device.serialNumber}"></span>
-					</td>
-				</tr>
-				<tr>
-					<td><label class="control-label x105">出厂 / 投产年月：</label> 
-					
-					<span th:text="${device.dateInfo}"></span>
-						
-					</td>
-					<td><label class="control-label x105">总重量：</label>
-						<span th:text="${device.weightInfo}"></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2"><label class="control-label x105">主要技术参数：</label>
-						<textarea th:text="${device.description}" readonly="readonly"
-							data-toggle="autoheight" cols="80" rows="10"></textarea></td>
-				</tr>
+				<div th:each="tp : ${tps}">
+					<tr>
+						<td><label class="control-label x125">附属设备名称：</label> <span
+							th:text="${tp.name}"></span></td>
+					</tr>
+					<tr>
+						<td><label class="control-label x125">附属设备参数：</label> <textarea
+								th:text="${tp.params}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="10"></textarea></td>
+					</tr>
+				</div>
 			</tbody>
 		</table>
+	</fieldset>
+	<fieldset>
+		<legend>设备技术调整记录</legend>
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<div th:each="ad : ${ads}">
+					<tr>
+						<td><label class="control-label x125">名称：</label> <span
+							th:text="${ad.name}"></span></td>
+						<td><label class="control-label x125">调整时间：</label> <span
+							th:text="${#temporals.format(ad.adjustDate, 'yyyy-MM-dd')}"></span></td>
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">实施单位/人：</label>
+							<span th:text="${ad.implementation}"></span></td>
+
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">内容：</label>
+							<textarea th:text="${ad.content}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">备注：</label>
+							<textarea th:text="${ad.description}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+				</div>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>设备检修(技改)履历</legend>
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<div th:each="c : ${cs}">
+					<tr>
+						<td><label class="control-label x125">检修时间：</label> <span
+							th:text="${#temporals.format(c.checkDate, 'yyyy-MM-dd')}"></span>
+						</td>
+						<td><label class="control-label x125">检修性质：</label> <span
+							th:text="${c.nature}"></span></td>
+
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">项目编号：</label>
+							<span th:text="${c.projectCode}"></span></td>
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">内容：</label>
+							<textarea th:text="${c.content}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+
+					<tr>
+
+						<td colspan="2"><label class="control-label x125">备件更换情况：</label>
+							<textarea th:text="${c.replacement}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+
+					</tr>
+					<tr>
+						<td><label class="control-label x125">施工单位：</label> <span
+							th:text="${c.implementation}"></span></td>
+						<td><label class="control-label x125">质量评价：</label> <span
+							th:text="${c.evaluation}"></span></td>
+
+					</tr>
+
+					<tr>
+						<td colspan="2"><label class="control-label x125">备注：</label>
+							<textarea th:text="${c.description}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+				</div>
+			</tbody>
+		</table>
+	</fieldset>
+	<fieldset>
+		<legend>设备事故(故障)记录</legend>
+		<table class="table table-condensed table-hover" width="100%">
+			<tbody>
+				<div th:each="f : ${fs}">
+					<tr>
+						<td><label class="control-label x125">发生时间：</label> <span
+							th:text="${#temporals.format(f.occurrenceDate, 'yyyy-MM-dd')}"></span>
+						</td>
+						<td><label class="control-label x125">停机时间：</label> <span
+							th:text="${f.duration}"></span></td>
+
+					</tr>
+					<tr>
+						<td colspan="2"><label class="control-label x125">原因分析：</label>
+							<textarea th:text="${f.reason}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+
+					<tr>
+
+						<td colspan="2"><label class="control-label x125">纠正预防措施：</label>
+							<textarea th:text="${f.measures}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+
+					</tr>
+					<tr>
+						<td><label class="control-label x125">实施单位/人：</label> <span
+							th:text="${f.implementation}"></span></td>
+						<td><label class="control-label x125">验证结果：</label> <span
+							th:text="${f.effect}"></span></td>
+
+					</tr>
+
+					<tr>
+						<td colspan="2"><label class="control-label x125">事故性质：</label>
+							<span th:text="${f.nature}"></span></td>
+
+					</tr>
+
+					<tr>
+						<td colspan="2"><label class="control-label x125">备注：</label>
+							<textarea th:text="${f.description}" data-toggle="autoheight"
+								readonly="readonly" cols="60" rows="6"></textarea></td>
+					</tr>
+				</div>
+			</tbody>
+		</table>
+	</fieldset>
 </div>

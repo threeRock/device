@@ -47,9 +47,17 @@ import io.jianxun.domain.business.SparePart;
 import io.jianxun.service.BusinessException;
 import io.jianxun.service.LocaleMessageSourceService;
 import io.jianxun.service.business.DepartService;
+import io.jianxun.service.business.DeviceAdjustmentPredicates;
+import io.jianxun.service.business.DeviceAdjustmentService;
+import io.jianxun.service.business.DeviceCheckInfoPredicates;
+import io.jianxun.service.business.DeviceCheckInfoService;
+import io.jianxun.service.business.DeviceFaultPredicates;
+import io.jianxun.service.business.DeviceFaultService;
 import io.jianxun.service.business.DevicePredicates;
 import io.jianxun.service.business.DeviceService;
 import io.jianxun.service.business.DeviceStorageService;
+import io.jianxun.service.business.DeviceTechnicalParamPredicates;
+import io.jianxun.service.business.DeviceTechnicalParamService;
 import io.jianxun.service.business.ProductionLinePredicates;
 import io.jianxun.service.business.ProductionLineService;
 import io.jianxun.service.business.SparePartMainTypeService;
@@ -418,6 +426,18 @@ public class DeivceController {
 		if (!currentLoginInfo.validateCurrentUserDepart(device.getDepart()))
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
 		model.addAttribute("device", device);
+		// 附属设备技术参数
+		model.addAttribute("tps", deviceTechnicalParamService
+				.findActiveAll(DeviceTechnicalParamPredicates.devicePredicate(device), new Sort("id")));
+		//调整履历
+		model.addAttribute("ads", deviceAdjustmentService
+				.findActiveAll(DeviceAdjustmentPredicates.devicePredicate(device), new Sort("id")));
+		//检修履历
+		model.addAttribute("cs", deviceCheckInfoService
+				.findActiveAll(DeviceCheckInfoPredicates.devicePredicate(device), new Sort("id")));
+		//事故履历
+		model.addAttribute("fs",
+				deviceFaultService.findActiveAll(DeviceFaultPredicates.devicePredicate(device), new Sort("id")));
 		return templatePrefix() + "detail";
 	}
 
@@ -461,6 +481,14 @@ public class DeivceController {
 	private SparePartMainTypeService sparePartMainTypeService;
 	@Autowired
 	private SparePartService sparePartService;
+	@Autowired
+	private DeviceTechnicalParamService deviceTechnicalParamService;
+	@Autowired
+	private DeviceAdjustmentService deviceAdjustmentService;
+	@Autowired
+	private DeviceCheckInfoService deviceCheckInfoService;
+	@Autowired
+	private DeviceFaultService deviceFaultService;
 
 	@Autowired
 	private Utils util;
