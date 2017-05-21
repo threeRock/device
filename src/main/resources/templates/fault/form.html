@@ -1,13 +1,49 @@
+<script type="text/javascript">
+	/*<![CDATA[*/
+	function myFaultCallback(json) {
+		var that = this;
+		var $element = that.$element;
+		that.ajaxDone(json);
+		if (json[BJUI.keys.statusCode] == BJUI.statusCode.ok) {
+			if (json.tabid)
+				setTimeout(function() {
+					that.$element.navtab('reloadFlag', json.tabid)
+				}, 100);
+			if (json.closeCurrent && !json.forward)
+				that.$element.navtab('closeCurrentTab');
+			//为保证新增操作连续性操作完成后保留所属设备相关信息,清空name 及 参数 输入空间
+			var $id = $element.find("input[name=id]").val();
+			if (!$id) {
+				//清空occurrenceDate
+				$element.find("input[name=occurrenceDate]").val("");
+				//清空duration
+				$element.find("input[name=duration]").val("");
+				//清空reason
+				$element.find("textarea[name=reason]").val("");
+				//清空measures
+				$element.find("textarea[name=measures]").val("");
+				//清空implementation
+				$element.find("input[name=implementation]").val("");
+				//清空effect
+				$element.find("input[name=effect]").val("");
+				//清空nature
+				$element.find("input[name=nature]").val("");
+				//清空description
+				$element.find("textarea[name=description]").val("");
+			}
+		}
+	}/*]]>*/
+</script>
 <div class="bjui-pageContent">
 	<form action="#" id="fault_form"
 		th:action="@{/device/fault/{path}(path=${action})}" method="POST"
-		th:object="${deviceFault}" data-toggle="validate"
+		th:object="${deviceFault}" data-toggle="validate" data-callback="myFaultCallback" data-reload="false"
 		data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td colspan="2"><label class="control-label x95">设备信息：</label>
+					<td colspan="2"><label class="control-label x95">所属设备信息：</label>
 						<input th:if="${'create'.equals(action)}" type="text"
 						data-toggle="tags" data-tagname="device.id" data-width="700"
 						data-url="device/search/" data-max="1" size="40"> </input> <label
