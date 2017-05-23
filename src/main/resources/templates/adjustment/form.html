@@ -51,8 +51,8 @@
 						th:field="*{name}" name="name" data-must="true"
 						data-rule="required;remote[device/adjustment/check/nameunique, id, device.id]"></input></td>
 					<td><label class="control-label x105">调整时间：</label> <input
-						th:field="*{adjustDate}" name="adjustDate"
-						data-toggle="datepicker" data-rule="date" size="20" /></td>
+						th:field="*{adjustDate}" data-pattern="yyyy-MM" name="adjustDate"
+						data-toggle="datepicker"  size="20" /></td>
 
 				</tr>
 				<tr>

@@ -27,7 +27,7 @@ public class QDeviceAdjustment extends EntityPathBase<DeviceAdjustment> {
     //inherited
     public final BooleanPath active;
 
-    public final DatePath<java.time.LocalDate> adjustDate = createDate("adjustDate", java.time.LocalDate.class);
+    public final StringPath adjustDate = createString("adjustDate");
 
     public final StringPath content = createString("content");
 

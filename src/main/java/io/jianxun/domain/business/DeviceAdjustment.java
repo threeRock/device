@@ -1,7 +1,5 @@
 package io.jianxun.domain.business;
 
-import java.time.LocalDate;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -9,7 +7,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import io.jianxun.domain.AbstractBusinessEntity;
 
@@ -33,16 +30,15 @@ public class DeviceAdjustment extends AbstractBusinessEntity {
 	private Device device;
 
 	// 名称
-	@NotBlank(message="{device.adjustment.name.notblank}")
+	@NotBlank(message = "{device.adjustment.name.notblank}")
 	private String name;
 
 	// 日期
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate adjustDate = LocalDate.now();
+	private String adjustDate;
 
 	// 内容
 	@Column(length = 1000)
-	@NotBlank(message="{device.adjustment.content.notblank}")
+	@NotBlank(message = "{device.adjustment.content.notblank}")
 	private String content;
 
 	// 实施人或单位
@@ -68,11 +64,11 @@ public class DeviceAdjustment extends AbstractBusinessEntity {
 		this.name = name;
 	}
 
-	public LocalDate getAdjustDate() {
+	public String getAdjustDate() {
 		return adjustDate;
 	}
 
-	public void setAdjustDate(LocalDate adjustDate) {
+	public void setAdjustDate(String adjustDate) {
 		this.adjustDate = adjustDate;
 	}
 
@@ -99,7 +95,5 @@ public class DeviceAdjustment extends AbstractBusinessEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
 
 }
