@@ -47,7 +47,7 @@ public class SparePartMainTypeController {
 	@RequestMapping(value = { "", "/page" })
 	@PreAuthorize("hasAuthority('MAINTYPELIST')")
 	String page(Model model, @QuerydslPredicate(root = SparePartMainType.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<SparePartMainType> page = maintypeService.findActivePage(predicate, pageable);
 		util.addPageInfo(model, parameters, page);

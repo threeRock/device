@@ -52,7 +52,7 @@ public class DeivceFaultController {
 	@RequestMapping(value = { "/page" })
 	@PreAuthorize("hasAuthority('DEVICEFAULTLIST')")
 	String page(Model model, @QuerydslPredicate(root = DeviceFault.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
 		if (depart == null)

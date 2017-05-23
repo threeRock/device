@@ -52,7 +52,7 @@ public class DeivceCheckInfoController {
 	@RequestMapping(value = { "/page" })
 	@PreAuthorize("hasAuthority('DEVICECHECKINFOLIST')")
 	String page(Model model, @QuerydslPredicate(root = DeviceCheckInfo.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(this.currentLoginInfo.currentLoginUser().getDepart().getId());
 		if (depart == null)

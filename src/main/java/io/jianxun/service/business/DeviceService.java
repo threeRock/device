@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
 import io.jianxun.domain.business.Device;
@@ -40,6 +41,14 @@ public class DeviceService extends AbstractBaseService<Device> {
 	public boolean validateCodeUnique(String code, Depart depart, Long id) {
 		return 0 == countActiveAll(ExpressionUtils.and(DevicePredicates.departPredicate(depart),
 				DevicePredicates.codeAndIdNotPredicate(code, id)));
+	}
+
+	public boolean validateNameCodeUnique(String name, String code, Depart depart, Long id) {
+		Predicate predicate = DevicePredicates.departPredicate(depart);
+		predicate = ExpressionUtils.and(
+				ExpressionUtils.and(predicate, DevicePredicates.nameAndIdNotPredicate(name, id)),
+				DevicePredicates.codeAndIdNotPredicate(code, id));
+		return 0 == countActiveAll(predicate);
 	}
 
 	public List<DepartTree> getDeviceTree() {

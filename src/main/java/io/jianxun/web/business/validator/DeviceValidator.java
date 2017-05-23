@@ -1,5 +1,6 @@
 package io.jianxun.web.business.validator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -36,12 +37,22 @@ public class DeviceValidator implements Validator {
 		if (device.getProductionLine() == null || device.getProductionLine().getId() == null)
 			errors.rejectValue("productionLine", "productionLine.notnull",
 					localeMessageSourceService.getMessage("device.productionLine.notnull"));
-		if (!deviceService.validateNameUnique(name, depart, id))
+		if(StringUtils.isBlank(name))
+			errors.rejectValue("name", "name.notblank",
+					localeMessageSourceService.getMessage("device.name.notblank"));
+		if(StringUtils.isBlank(code))
+			errors.rejectValue("code", "code.notblank",
+					localeMessageSourceService.getMessage("device.code.notblank"));
+		if (!deviceService.validateNameCodeUnique(name, code, depart, id))
 			errors.rejectValue("name", "name.unique",
-					localeMessageSourceService.getMessage("device.name.isUsed", new Object[] { name }));
-		if (!deviceService.validateCodeUnique(code, depart, id))
-			errors.rejectValue("code", "code.unique",
-					localeMessageSourceService.getMessage("device.code.isUsed", new Object[] { code }));
+					localeMessageSourceService.getMessage("device.name.code.isUsed", new Object[] { name,code }));
+		//注释修改为同时判断名称及编码
+//		if (!deviceService.validateNameUnique(name, depart, id))
+//			errors.rejectValue("name", "name.unique",
+//					localeMessageSourceService.getMessage("device.name.isUsed", new Object[] { name }));
+//		if (!deviceService.validateCodeUnique(code, depart, id))
+//			errors.rejectValue("code", "code.unique",
+//					localeMessageSourceService.getMessage("device.code.isUsed", new Object[] { code }));
 
 	}
 

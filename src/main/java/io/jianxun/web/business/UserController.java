@@ -75,7 +75,7 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USERLIST')")
 	String page(@PathVariable("depart") long departId, Model model,
 			@QuerydslPredicate(root = User.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)

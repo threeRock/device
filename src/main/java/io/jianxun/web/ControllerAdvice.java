@@ -17,7 +17,7 @@ import io.jianxun.web.dto.ReturnDto;
 public class ControllerAdvice {
 
 	@ExceptionHandler(BindException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public ReturnDto processValidationError(BindException ex) {
 		ex.printStackTrace();

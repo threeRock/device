@@ -68,7 +68,7 @@ public class DepartController {
 	@PreAuthorize("hasAuthority('DEPARTLIST')")
 	String page(@PathVariable("parent") Long departId, Model model,
 			@QuerydslPredicate(root = Depart.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart parent = this.departService.findActiveOne(departId);
 		if (parent == null)

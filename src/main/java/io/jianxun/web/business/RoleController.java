@@ -48,7 +48,7 @@ public class RoleController {
 	@RequestMapping(value = { "/", "/page" })
 	@PreAuthorize("hasAuthority('ROLELIST')")
 	String page(Model model, @QuerydslPredicate(root = Role.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<Role> page = roleService.findActivePage(predicate, pageable);
 		util.addPageInfo(model, parameters, page);

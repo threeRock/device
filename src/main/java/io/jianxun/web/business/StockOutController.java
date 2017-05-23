@@ -68,7 +68,7 @@ public class StockOutController {
 	@PreAuthorize("hasAuthority('STOCKOUTLIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
 			@QuerydslPredicate(root = Depart.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)

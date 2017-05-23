@@ -49,7 +49,7 @@ public class SparePartSubTypeController {
 	@RequestMapping(value = { "", "/page" })
 	@PreAuthorize("hasAuthority('SUBTYPELIST')")
 	String page(Model model, @QuerydslPredicate(root = SparePartSubType.class) Predicate predicate,
-			@PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Page<SparePartSubType> page = subtypeService.findActivePage(predicate, pageable);
 		util.addPageInfo(model, parameters, page);
