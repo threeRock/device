@@ -17,7 +17,7 @@
 		th:action="@{/device/sparepart/{path}(path=${action})}" method="POST"
 		th:object="${sparePart}" data-toggle="validate" data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" /> <input
-			type="hidden" name="depart.id" th:value="${departId}" />
+			type="hidden" name="departId" th:value="${departId}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>

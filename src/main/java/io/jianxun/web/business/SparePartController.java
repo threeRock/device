@@ -85,36 +85,68 @@ public class SparePartController {
 	/**
 	 * 分页列表 支持 查询 分页 及 排序
 	 */
-	@RequestMapping(value = { "/page/{depart}" })
+	@RequestMapping(value = { "/page/{departId}" })
 	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
-	String page(@PathVariable("depart") Long departId, Model model,
+	String page(@PathVariable("departId") Long departId, Model model,
 			@QuerydslPredicate(root = SparePart.class) Predicate predicate,
-			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		if (!currentLoginInfo.validateCurrentUserDepart(depart))
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
-		Predicate searchPredicate = null;
 		Page<SparePart> page = null;
 		if (predicate == null && depart.isRoot()) {
 			page = sparePartService.findActivePage(pageable);
 		} else {
-			searchPredicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
-			page = sparePartService.findActivePage(searchPredicate, pageable);
+			if (!depart.isRoot())
+				predicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
+			page = sparePartService.findActivePage(predicate, pageable);
 		}
 		// 计算库存
 		sparePartService.getStock(page.getContent());
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addParentSparePartInfo(model, depart);
+		model.addAttribute("url", "page/" + departId);
+		addStorehouseAndTypeInfo(model, depart);
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 分页列表 支持 查询 分页 及 排序
+	 */
+	@RequestMapping(value = { "/page" })
+	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
+	String page(Model model, @QuerydslPredicate(root = SparePart.class) Predicate predicate,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Page<SparePart> page = null;
+		if (predicate == null && depart.isRoot()) {
+			page = sparePartService.findActivePage(pageable);
+		} else {
+			if (!depart.isRoot())
+				predicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
+			page = sparePartService.findActivePage(predicate, pageable);
+		}
+		// 计算库存
+		sparePartService.getStock(page.getContent());
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page");
+		addParentSparePartInfo(model, depart);
 		addStorehouseAndTypeInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	private void addParentSparePartInfo(Model model, Depart depart) {
-		model.addAttribute("depart", depart);
+		model.addAttribute("departId", depart.getId());
 	}
 
 	/**
@@ -135,11 +167,19 @@ public class SparePartController {
 	}
 
 	private void addStorehouseAndTypeInfo(Model model, Depart depart) {
-		model.addAttribute("storehouses",
-				storehouseService.findActiveAll(StorehousePredicates.departPredicate(depart), new Sort("name")));
+		if (depart.isRoot())
+			model.addAttribute("storehouses", storehouseService.findActiveAll(new Sort("name")));
+		else
+			model.addAttribute("storehouses",
+					storehouseService.findActiveAll(StorehousePredicates.departPredicate(depart), new Sort("name")));
 		model.addAttribute("types", sparePartSubTypeService.findActiveAll(new Sort("name")));
-		model.addAttribute("devices",
-				deviceService.findActiveAll(DevicePredicates.departPredicate(depart), new Sort("name")));
+
+		if (depart.isRoot())
+			model.addAttribute("devices", deviceService.findActiveAll(new Sort("name")));
+		else
+			model.addAttribute("devices",
+					deviceService.findActiveAll(DevicePredicates.departPredicate(depart), new Sort("name")));
+
 	}
 
 	/**
@@ -217,7 +257,7 @@ public class SparePartController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart.id") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("departId") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -245,7 +285,7 @@ public class SparePartController {
 
 	@RequestMapping("export")
 	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
-	public void export(@RequestParam("depart.id") Long departId, Model model,
+	public void export(@RequestParam("d.id") Long departId, Model model,
 			@QuerydslPredicate(root = SparePart.class) Predicate predicate, HttpServletResponse response)
 			throws Exception {
 		// 告诉浏览器用什么软件可以打开此文件
@@ -294,7 +334,7 @@ public class SparePartController {
 		return templatePrefix() + "uselist";
 
 	}
-	
+
 	@GetMapping("detail/{id}")
 	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
 	public String detail(@PathVariable("id") Long id, Model model) {

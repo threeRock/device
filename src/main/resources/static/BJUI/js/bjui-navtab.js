@@ -602,6 +602,7 @@
         }
     }
     
+    
     Navtab.prototype.getCurrentPanel = function() {
         return this.tools.getPanels().eq(currentIndex)
     }

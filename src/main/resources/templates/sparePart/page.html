@@ -1,9 +1,9 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/device/sparepart/page/{path}(path=${depart.id})}"
+		th:action="@{/device/sparepart/{path}(path=${url})}"
 		action="#" method="POST">
-		<input id="sparePartdepart" name="depart.id" type="hidden"
-			th:value="${depart.id}" value="10" /> <input type="hidden"
+		<input id="sparePartdepart" name="d.id" type="hidden"
+			th:value="${departId}" value="10" /> <input type="hidden"
 			name="size" th:value="${size}" value="20" /> <input type="hidden"
 			name="page" th:value="${page}" value="0" /><input type="hidden"
 			name="orderField" th:value="${orderField}" /> <input type="hidden"
@@ -17,11 +17,11 @@
 				class="form-control" size="10" />&nbsp;<label>规格型号</label><input
 				type="text" th:value="${specification}" value=""
 				name="specification" class="form-control" size="10" />&nbsp;<label>仓库:
-			</label><select data-toggle="selectpicker" data-width="150" name="mainType">
+			</label><select data-toggle="selectpicker" data-width="150" name="storehouse">
 				<option value="">请选择所属仓库</option>
 				<option th:each="item : ${storehouses}" th:value="${item.id}"
 					th:text="${item.name}"
-					th:selected="${item.id.toString() == mainType}">所属仓库</option>
+					th:selected="${item.id.toString() == storehouse}">所属仓库</option>
 			</select>&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
@@ -32,9 +32,8 @@
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="sparepart-form-new"
 			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
-		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')"
-			type="button" data-toggle="navtab" class="btn-red"
-			data-id="sparepart-detail"
+		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
+			data-toggle="navtab" class="btn-red" data-id="sparepart-detail"
 			data-url="device/sparepart/detail/{#bjui-selected}">详细信息</button>
 		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="sparepart-user-list"
@@ -50,7 +49,7 @@
 			<tr>
 				<th data-order-field="e.depart.name">所属机构</th>
 				<th width="60">图片预览</th>
-				<th style="display:none">示意图</th>
+				<th style="display: none">示意图</th>
 				<th data-order-field="storehouse.name">仓库</th>
 				<th>当前库存</th>
 				<th data-order-field="device.name">所属设备</th>
@@ -66,8 +65,10 @@
 		<tbody>
 			<tr th:each="e : ${content}" th:attr="data-id=${e.id}">
 				<td th:text="${e.depart.name}">所属机构</td>
-				<td ><i class="fa fa-2x" th:classappend="${#strings.isEmpty(e.mainPic)}? fa-eye-slash : fa-eye"></i></td>
-				<td th:attr="img-id=${e.id}" style="display:none"><img th:if="${!#strings.isEmpty(e.mainPic)}"
+				<td><i class="fa fa-2x"
+					th:classappend="${#strings.isEmpty(e.mainPic)}? fa-eye-slash : fa-eye"></i></td>
+				<td th:attr="img-id=${e.id}" style="display: none"><img
+					th:if="${!#strings.isEmpty(e.mainPic)}"
 					th:src="@{/device/sparepart/pic/{path}(path=${e.mainPic})}"
 					width="300" height="120" /></td>
 				<td th:text="${e.storehouse.name}">仓库</td>

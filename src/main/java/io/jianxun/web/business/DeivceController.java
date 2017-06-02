@@ -100,7 +100,7 @@ public class DeivceController {
 	@PreAuthorize("hasAuthority('DEVICELIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
 			@QuerydslPredicate(root = Device.class) Predicate predicate,
-			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -120,6 +120,31 @@ public class DeivceController {
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
 		addUrl(model, "page/" + departId);
+		addLineAndTypeInfo(model, depart);
+		addCreateable(model);
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	@RequestMapping(value = { "/page" })
+	@PreAuthorize("hasAuthority('DEVICELIST')")
+	String page(Model model, @QuerydslPredicate(root = Device.class) Predicate predicate,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		Predicate searchPredicate = DevicePredicates.statusPredicate(null);
+		Page<Device> page = null;
+		if (predicate != null) {
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		}
+		if (!depart.isRoot())
+			searchPredicate = ExpressionUtils.and(searchPredicate, DevicePredicates.departSubPredicate(depart));
+		page = deviceService.findActivePage(searchPredicate, pageable);
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		addUrl(model, "page/");
+		addParentDeviceInfo(model, depart);
 		addLineAndTypeInfo(model, depart);
 		addCreateable(model);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
@@ -155,8 +180,11 @@ public class DeivceController {
 	}
 
 	private void addLineAndTypeInfo(Model model, Depart depart) {
-		model.addAttribute("lines", productionLineService
-				.findActiveAll(ProductionLinePredicates.departPredicate(depart), new Sort("name")));
+		if (depart.isRoot())
+			model.addAttribute("lines", productionLineService.findActiveAll(new Sort("name")));
+		else
+			model.addAttribute("lines", productionLineService
+					.findActiveAll(ProductionLinePredicates.departPredicate(depart), new Sort("name")));
 		model.addAttribute("types", sparePartMainTypeService.findActiveAll(new Sort("name")));
 	}
 
@@ -429,13 +457,13 @@ public class DeivceController {
 		// 附属设备技术参数
 		model.addAttribute("tps", deviceTechnicalParamService
 				.findActiveAll(DeviceTechnicalParamPredicates.devicePredicate(device), new Sort("id")));
-		//调整履历
+		// 调整履历
 		model.addAttribute("ads", deviceAdjustmentService
 				.findActiveAll(DeviceAdjustmentPredicates.devicePredicate(device), new Sort("id")));
-		//检修履历
-		model.addAttribute("cs", deviceCheckInfoService
-				.findActiveAll(DeviceCheckInfoPredicates.devicePredicate(device), new Sort("id")));
-		//事故履历
+		// 检修履历
+		model.addAttribute("cs", deviceCheckInfoService.findActiveAll(DeviceCheckInfoPredicates.devicePredicate(device),
+				new Sort("id")));
+		// 事故履历
 		model.addAttribute("fs",
 				deviceFaultService.findActiveAll(DeviceFaultPredicates.devicePredicate(device), new Sort("id")));
 		return templatePrefix() + "detail";

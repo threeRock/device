@@ -64,6 +64,29 @@
                 
                 return form
             },
+            
+            getPagerForm1: function($parent, args) {
+                var form     = $parent.isTag('form') ? $parent[0] : $parent.find('#pagerForm1:first')[0]
+                var pageInfo = $.extend({}, BJUI.pageInfo)
+                
+                if ($parent.data('bjui.clientPaging')) {
+                    args = $.extend({}, $parent.data('bjui.clientPaging'), args)
+                    $parent.data('bjui.clientPaging', args)
+                }
+                
+                if (form) {
+                    for (var key in pageInfo) {
+                        var val = ''
+                        
+                        if (args && args[key]) val = args[key]
+                        if (!form[pageInfo[key]]) $('<input type="hidden" name="'+ pageInfo[key] +'" value="'+ val +'">').appendTo($(form))
+                        else if (val) form[pageInfo[key]].value = val
+                    }
+                }
+                
+                return form
+            },
+            
             getTarget: function() {
                 if (that.$element.closest('.navtab-panel').length) return Bjuiajax.NAVTAB
                 else return 'dialog'
@@ -347,6 +370,179 @@
             search()
         }
     }
+    
+    Bjuiajax.prototype.doSearch1 = function(options) {
+        var that = this, $element = that.$element, form = null, op = {pageCurrent:0}, $target = $element.closest('.bjui-layout'), isValid = options.isValid
+        
+        options = $.extend({}, Bjuiajax.DEFAULTS, typeof options == 'object' && options)
+        if (!options.url) options.url = $element.attr('action')
+        if (!options.url) {
+            BJUI.debug('Error trying to submit form action: action url is undefined!')
+            return
+        } else {
+            options.url = decodeURI(options.url).replacePlh($element.closest('.unitBox'))
+            
+            if (!options.url.isFinishedTm()) {
+                $element.alertmsg('error', (options.warn || FRAG.alertPlhMsg.replace('#plhmsg#', BJUI.regional.plhmsg)))
+                BJUI.debug('The submit form action is incorrect: '+ options.url)
+                return
+            }
+            
+            options.url = encodeURI(options.url)
+        }
+        
+       
+        var search1 = function() {
+            if ($target && $target.length) {
+                form = that.tools.getPagerForm($target, op)
+                
+                var data = $element.serializeJson(), _data = {}
+                
+                if (options.clearQuery) {
+                    var pageInfo = BJUI.pageInfo
+                    
+                    for (var key in pageInfo) {
+                        _data[pageInfo[key]] = data[pageInfo[key]]
+                    }
+                    data = _data
+                }
+                that.reloadDiv($target, {type:$element.attr('method') || 'POST', url:options.url, data:data, loadingmask:options.loadingmask})
+            } else {
+                if (that.tools.getTarget() == Bjuiajax.NAVTAB) {
+                    $target = $.CurrentNavtab
+                    form    = that.tools.getPagerForm1($target, op)
+                    options.url =  $(form).attr('action');
+                    if ($(form) && $(form).length) {
+                        var pageData = $(form).serializeJson()
+                        options.type = 'POST'
+                        var data = pageData
+                        /**
+						 * 处理sort参数
+						 */
+                        var pageInfo = BJUI.pageInfo;
+                        var orderProperty = data[pageInfo["orderField"]];
+                        var orderDes = data[pageInfo["orderDirection"]];
+                        if(!orderProperty){
+                        	data["sort"] = "id,desc";
+                        }else{
+                        	if(orderDes){
+                        		data["sort"] = orderProperty +","+orderDes;
+                        	}
+                        }
+                        // end
+                        
+                        options.data = $.extend({}, options.data || {}, data)
+                    }
+                    options.id="sparepart-page";
+                    options.title="备件查询";
+                    $element.navtab({id:'mynavtab', url:options.url, type:options.type, title:'备件查询',data:options.data})
+                } else {
+                    $target = $.CurrentDialog
+                    form    = that.tools.getPagerForm($target, op)
+                    $element.dialog('reloadForm', options.clearQuery, options)
+                }
+            }
+        }
+        
+        if (!isValid) {
+            if ($.validator) {
+                $element.isValid(function(v) {
+                    if (v) search1()
+                })
+            } else {
+            	search1()
+            }
+        } else {
+        	search1()
+        }
+    }
+    
+    Bjuiajax.prototype.doSearch2 = function(options) {
+        var that = this, $element = that.$element, form = null, op = {pageCurrent:0}, $target = $element.closest('.bjui-layout'), isValid = options.isValid
+        
+        options = $.extend({}, Bjuiajax.DEFAULTS, typeof options == 'object' && options)
+        if (!options.url) options.url = $element.attr('action')
+        if (!options.url) {
+            BJUI.debug('Error trying to submit form action: action url is undefined!')
+            return
+        } else {
+            options.url = decodeURI(options.url).replacePlh($element.closest('.unitBox'))
+            
+            if (!options.url.isFinishedTm()) {
+                $element.alertmsg('error', (options.warn || FRAG.alertPlhMsg.replace('#plhmsg#', BJUI.regional.plhmsg)))
+                BJUI.debug('The submit form action is incorrect: '+ options.url)
+                return
+            }
+            
+            options.url = encodeURI(options.url)
+        }
+        
+       
+        var search2 = function() {
+            if ($target && $target.length) {
+                form = that.tools.getPagerForm($target, op)
+                
+                var data = $element.serializeJson(), _data = {}
+                
+                if (options.clearQuery) {
+                    var pageInfo = BJUI.pageInfo
+                    
+                    for (var key in pageInfo) {
+                        _data[pageInfo[key]] = data[pageInfo[key]]
+                    }
+                    data = _data
+                }
+                that.reloadDiv($target, {type:$element.attr('method') || 'POST', url:options.url, data:data, loadingmask:options.loadingmask})
+            } else {
+                if (that.tools.getTarget() == Bjuiajax.NAVTAB) {
+                    $target = $.CurrentNavtab
+                    form    = that.tools.getPagerForm($target, op)
+                    options.url =  $(form).attr('action');
+                    if ($(form) && $(form).length) {
+                        var pageData = $(form).serializeJson()
+                        options.type = 'POST'
+                        var data = pageData
+                        /**
+						 * 处理sort参数
+						 */
+                        var pageInfo = BJUI.pageInfo;
+                        var orderProperty = data[pageInfo["orderField"]];
+                        var orderDes = data[pageInfo["orderDirection"]];
+                        if(!orderProperty){
+                        	data["sort"] = "id,desc";
+                        }else{
+                        	if(orderDes){
+                        		data["sort"] = orderProperty +","+orderDes;
+                        	}
+                        }
+                        // end
+                        
+                        options.data = $.extend({}, options.data || {}, data)
+                    }
+                    options.id="device-page";
+                    options.title="设备查询";
+                    $element.navtab({id:options.id, url:options.url, type:options.type, title:options.title,data:options.data})
+                } else {
+                    $target = $.CurrentDialog
+                    form    = that.tools.getPagerForm($target, op)
+                    $element.dialog('reloadForm', options.clearQuery, options)
+                }
+            }
+        }
+        
+        if (!isValid) {
+            if ($.validator) {
+                $element.isValid(function(v) {
+                    if (v) search2()
+                })
+            } else {
+            	search2()
+            }
+        } else {
+        	search2()
+        }
+    }
+    
     
     Bjuiajax.prototype.doLoad = function(options) {
         var that = this, $element = that.$element, $target = options.target ? $(options.target) : null
@@ -684,6 +880,26 @@
                     $form.validator({
                         valid: function(form) {
                             Plugin.call($form, 'doSearch', options)
+                        }
+                    })
+                });
+                $(e.target).find('form[data-toggle="ajaxsearch1"]').each(function() {
+                    var $form = $(this), options = $form.data()
+                    
+                    options.isValid = true
+                    $form.validator({
+                        valid: function(form) {
+                            Plugin.call($form, 'doSearch1', options)
+                        }
+                    })
+                });
+                $(e.target).find('form[data-toggle="ajaxsearch2"]').each(function() {
+                    var $form = $(this), options = $form.data()
+                    
+                    options.isValid = true
+                    $form.validator({
+                        valid: function(form) {
+                            Plugin.call($form, 'doSearch2', options)
                         }
                     })
                 })

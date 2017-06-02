@@ -1,0 +1,95 @@
+
+<div class="row" style="padding: 0 15px;">
+	<div class="col-md-6" style="padding: 5px;">
+		<div class="alert alert-success" role="alert"
+			style="margin: 0 0 5px; padding: 5px 15px;">
+			<h4>设备查询</h4>
+			<div class="bjui-pageHeader" style="background: #FFF;">
+				<form id="pagerForm" th:action="@{/device/page}"
+					data-toggle="ajaxsearch2" action="#" method="POST">
+					<table class="table table-condensed table-hover">
+						<tr>
+							<td><label for="device_name" class="control-label x85">设备名称：</label><input
+								id="device_name" type="text" 
+								placeholder="请输入设备名称" name="name" /></td>
+						</tr>
+						<tr>
+							<td><label for="device_code" class="control-label x85">设备编号：</label><input
+								id="device_code" type="text" 
+								placeholder="请输入设备编号" name="code" /></td>
+						</tr>
+						<tr>
+							<td><label for="device_pl" class="control-label x85">所属产线：</label><select
+								id="device_pl" data-toggle="selectpicker" data-width="110"
+								name="productionLine">
+									<option value="">请选择所属产线</option>
+									<option th:each="item : ${lines}" th:value="${item.id}"
+										th:text="${item.name}"
+										th:selected="${item.id.toString() == productionLine}">所属产线</option>
+							</select></td>
+
+						</tr>
+						<tr>
+							<td><label for="device_t" class="control-label x85">所属类别：</label><select
+								id="device_t" data-toggle="selectpicker" data-width="110"
+								name="productionLine">
+									<option value="">请选择所属类别</option>
+									<option th:each="item : ${types}" th:value="${item.id}"
+										th:text="${item.name}"
+										th:selected="${item.id.toString() == mainType}">所属类别</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td style="float: right;"><button type="submit"
+									class="btn-default btn-nm" data-icon="search">搜索</button></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6" style="padding: 5px;">
+		<div class="alert alert-info" role="alert"
+			style="margin: 0 0 5px; padding: 5px 15px;">
+			<h4>备件查询</h4>
+			<div class="bjui-pageHeader" style="background: #FFF;">
+				<form id="pagerForm1" th:action="@{/device/sparepart/page}"
+					data-toggle="ajaxsearch1" action="#" method="POST">
+					<table class="table table-condensed table-hover">
+						<tr>
+							<td><label for="s_name" class="control-label x85">备件名称：</label><input
+								id="s_name" type="text"  placeholder="请输入备件名称"
+								name="name" /></td>
+						</tr>
+						<tr>
+							<td><label for="s_partcode" class="control-label x85">备件编号：</label><input
+								id="s_partcode" type="text" 
+								placeholder="请输入备件编号" name="partcode" /></td>
+						</tr>
+						<tr>
+							<td><label for="s_partcode" class="control-label x85">备件编号：</label><input
+								id="s_partcode" type="text" 
+								placeholder="请输入备件编号" name="partcode" /></td>
+						</tr>
+						<tr>
+							<td><label for="s_partnumber" class="control-label x85">备件号：</label><input
+								id="s_partnumber" type="text" 
+								placeholder="请输入备件号" name="partnumber" /></td>
+						</tr>
+						<tr>
+							<td><label for="s_specification" class="control-label x85">规格型号：</label><input
+								id="s_specification" type="text" 
+								placeholder="请输入规格型号" name="specification" /></td>
+						</tr>
+						<tr>
+							<td style="float: right;"><button type="submit"
+									class="btn-default btn-nm" data-icon="search">搜索</button></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div>
