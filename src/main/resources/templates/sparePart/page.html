@@ -9,7 +9,13 @@
 			name="orderField" th:value="${orderField}" /> <input type="hidden"
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>备件名称</label><input type="text" th:value="${name}" value=""
+			<label>机构</label><select data-toggle="selectpicker" data-width="110"
+				name="searchDepart">
+				<option value="">请选择机构</option>
+				<option th:each="item : ${departs}" th:value="${item.id}"
+					th:text="${item.name}"
+					th:selected="${item.id.toString() == searchDepart}">机构信息</option>
+			</select>&nbsp;<label>备件名称</label><input type="text" th:value="${name}" value=""
 				name="name" class="form-control" size="10" />&nbsp;<label>备件编号</label><input
 				type="text" th:value="${partcode}" value="" name="partcode"
 				class="form-control" size="10" />&nbsp;<label>备件号</label><input
@@ -31,7 +37,7 @@
 		<button sec:authorize="hasAnyAuthority('SPAREPARTCREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="sparepart-form-new"
-			data-url="device/sparepart/create/{#sparePartdepart}">新增备件</button>
+			th:attr="data-url=${createUrl}">新增备件</button>
 		<button sec:authorize="hasAnyAuthority('SPAREPARTLIST')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="sparepart-detail"
 			data-url="device/sparepart/detail/{#bjui-selected}">详细信息</button>
@@ -86,7 +92,7 @@
 					class="btn btn-green" data-toggle="navtab"
 					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
 					sec:authorize="hasAnyAuthority('SPAREPARTREMOVE')"
-					th:href="@{/devicesparepart/remove/{id}(id=${e.id})}" href="#"
+					th:href="@{/device/sparepart/remove/{id}(id=${e.id})}" href="#"
 					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>

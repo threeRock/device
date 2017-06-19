@@ -423,8 +423,8 @@
 									class="menu-items" data-tit="备件管理" data-faicon="cog">
 									<li
 										sec:authorize="hasAnyAuthority('SPAREPARTLIST','SPAREPARTCREATE','SPAREPARTMODIFY','SPAREPARTREMOVE')"><a
-										href="#" th:href="@{/device/sparepart/tree/}"
-										data-options="{id:'sparepart-page', faicon:'devicet-right'}">备件基本信息</a></li>
+										href="#" th:href="@{/device/sparepart/page/}"
+										data-options="{id:'sparePart-page', faicon:'devicet-right'}">备件基本信息</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('SUBTYPELIST','SUBTYPECREATE','SUBTYPEMODIFY','SUBTYPEREMOVE')"><a
 										href="#" th:href="@{/device/subtype/page/}"

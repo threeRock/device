@@ -16,15 +16,21 @@
 	<form action="#" id="sparePart_form"
 		th:action="@{/device/sparepart/{path}(path=${action})}" method="POST"
 		th:object="${sparePart}" data-toggle="validate" data-alertmsg="false">
-		<input type="hidden" name="id" th:value="${id}" /> <input
-			type="hidden" name="departId" th:value="${departId}" />
+		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td ><label class="control-label x105">仓库：</label>
-						<select id="sparePart_form_productionLine"
-						data-toggle="selectpicker" data-width="150"
-						th:field="*{storehouse}">
+					<td><label class="control-label x95">所属机构：</label> <select
+						data-toggle="selectpicker" data-width="110" th:field="*{depart}">
+							<option value="">请选择机构</option>
+							<option th:each="item : ${departs}" th:value="${item.id}"
+								th:text="${item.name}">机构信息</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x105">仓库：</label> <select
+						id="sparePart_form_productionLine" data-toggle="selectpicker"
+						data-width="150" th:field="*{storehouse}">
 							<option th:each="item : ${storehouses}" th:value="${item.id}"
 								th:text="${item.name}">仓库</option>
 					</select></td>
@@ -60,7 +66,7 @@
 				<tr>
 					<td><label class="control-label x105">备件名称：</label> <input
 						type="text" th:field="*{name}" name="name"
-						data-rule="required;remote[device/sparepart/check/nameunique, id, depart.id]"
+						data-rule="required;remote[device/sparepart/check/nameunique, id, depart]"
 						size="15" /></td>
 					<td><label class="control-label x105">备件编码：</label> <input
 						type="text" th:field="*{partcode}" name="partcode" size="15" /></td>
@@ -72,8 +78,8 @@
 					<td><label class="control-label x105">规格型号：</label> <input
 						type="text" th:field="*{specification}" name="specification"
 						size="15" /></td>
-					<td><label class="control-label x105">备件类别：</label>
-						<select id="sparePart_form_subType" data-toggle="selectpicker"
+					<td><label class="control-label x105">备件类别：</label> <select
+						id="sparePart_form_subType" data-toggle="selectpicker"
 						data-width="150" th:field="*{subType}">
 							<option th:each="item : ${types}" th:value="${item.id}"
 								th:text="${item.name}">备件类别</option>

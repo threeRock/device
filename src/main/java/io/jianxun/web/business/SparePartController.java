@@ -110,6 +110,7 @@ public class SparePartController {
 		util.addSearchInfo(model, parameters);
 		addParentSparePartInfo(model, depart);
 		model.addAttribute("url", "page/" + departId);
+		model.addAttribute("createUrl", "device/sparepart/create/" + depart.getId());
 		addStorehouseAndTypeInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
@@ -121,25 +122,26 @@ public class SparePartController {
 	@PreAuthorize("hasAuthority('SPAREPARTLIST')")
 	String page(Model model, @QuerydslPredicate(root = SparePart.class) Predicate predicate,
 			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam(name = "searchDepart", required = false) Long searchDepart,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		if (!currentLoginInfo.validateCurrentUserDepart(depart))
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = SparePartPredicates.departSubPredicate(depart);
 		Page<SparePart> page = null;
-		if (predicate == null && depart.isRoot()) {
-			page = sparePartService.findActivePage(pageable);
-		} else {
-			if (!depart.isRoot())
-				predicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(depart), predicate);
-			page = sparePartService.findActivePage(predicate, pageable);
+		if (searchDepart != null) {
+			Depart search = departService.findActiveOne(searchDepart);
+			if (search != null)
+				searchPredicate = ExpressionUtils.and(SparePartPredicates.departSubPredicate(search), searchPredicate);
 		}
-		// 计算库存
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(predicate, searchPredicate);
+		page = sparePartService.findActivePage(searchPredicate, pageable);
 		sparePartService.getStock(page.getContent());
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		model.addAttribute("url", "page");
+		model.addAttribute("createUrl", "device/sparepart/create");
 		addParentSparePartInfo(model, depart);
 		addStorehouseAndTypeInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
@@ -147,6 +149,9 @@ public class SparePartController {
 
 	private void addParentSparePartInfo(Model model, Depart depart) {
 		model.addAttribute("departId", depart.getId());
+		List<Depart> departs = Lists.newArrayList(depart);
+		departService.getSubDeparts(departs, depart);
+		model.addAttribute("departs", departs);
 	}
 
 	/**
@@ -161,6 +166,19 @@ public class SparePartController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		model.addAttribute("sparePart", new SparePart());
 		model.addAttribute("departId", departId);
+		addStorehouseAndTypeInfo(model, depart);
+		util.addCreateFormAction(model);
+		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('SPAREPARTCREATE')")
+	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		model.addAttribute("sparePart", new SparePart());
+		addParentSparePartInfo(model, depart);
 		addStorehouseAndTypeInfo(model, depart);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
@@ -194,8 +212,7 @@ public class SparePartController {
 	@ResponseBody
 	ReturnDto createSave(@Valid SparePart sparePart, @RequestParam MultiValueMap<String, String> parameters) {
 		sparePartService.save(sparePart);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("sparePart.save.successd"), true, "",
-				"sparePart-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("sparepart.save.successd"), true, "sparePart-page");
 	}
 
 	/**
@@ -210,7 +227,7 @@ public class SparePartController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		SparePart sparePart = sparePartService.findActiveOne(id);
 		model.addAttribute("sparePart", sparePart);
-		model.addAttribute("departId", sparePart.getDepart() != null ? sparePart.getDepart().getId() : null);
+		addParentSparePartInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
 		util.addModifyFormAction(model);
 		addStorehouseAndTypeInfo(model, sparePart.getDepart());
 		return templatePrefix() + "form";
@@ -231,8 +248,7 @@ public class SparePartController {
 		if (!sparePartService.modifiable(sparePart))
 			throw new BusinessException(localeMessageSourceService.getMessage("sparePart.cannotmodify"));
 		sparePartService.save(sparePart);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("sparePart.save.successd"), true, "",
-				"sparePart-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("sparepart.save.successd"), true, "sparePart-page");
 	}
 
 	@PostMapping("remove/{id}")
@@ -245,7 +261,7 @@ public class SparePartController {
 		if (!sparePartService.modifiable(sparePart))
 			throw new BusinessException(localeMessageSourceService.getMessage("sparePart.cannotmodify"));
 		sparePartService.delete(id);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("sparePart.remove.successd"));
+		return ReturnDto.ok(localeMessageSourceService.getMessage("sparepart.remove.successd"));
 	}
 
 	/**
@@ -257,13 +273,13 @@ public class SparePartController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("departId") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		if (!this.sparePartService.validateNameUnique(name, depart, id))
-			return localeMessageSourceService.getMessage("sparePart.name.isUsed", new Object[] { name });
+			return localeMessageSourceService.getMessage("sparepart.name.isUsed", new Object[] { name });
 		return "";
 	}
 
