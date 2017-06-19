@@ -1,5 +1,7 @@
 package io.jianxun.web.business;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -68,7 +71,7 @@ public class StockInController {
 	@PreAuthorize("hasAuthority('STOCKINLIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
 			@QuerydslPredicate(root = StockIn.class) Predicate predicate,
-			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -82,12 +85,49 @@ public class StockInController {
 		Page<StockIn> page = stockInService.findActivePage(departPredicate, pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page/" + departId);
+		model.addAttribute("createUrl", "stockin/create/" + departId);
+		addDepartInfo(model, depart);
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 分页列表 支持 查询 分页 及 排序
+	 */
+	@RequestMapping(value = { "/page" })
+	@PreAuthorize("hasAuthority('STOCKINLIST')")
+	String page(Model model, @QuerydslPredicate(root = StockIn.class) Predicate predicate,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam(name = "searchDepart", required = false) Long searchDepart,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		// 查看仓库查询权限
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = StockInPredicates.departSubPredicate(depart);
+		if (searchDepart != null) {
+			Depart search = departService.findActiveOne(searchDepart);
+			if (search != null)
+				searchPredicate = ExpressionUtils.and(StockInPredicates.departSubPredicate(search), searchPredicate);
+		}
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		Page<StockIn> page = stockInService.findActivePage(searchPredicate, pageable);
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page");
+		model.addAttribute("createUrl", "stockin/create");
 		addDepartInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	private void addDepartInfo(Model model, Depart depart) {
 		model.addAttribute("depart", depart);
+		List<Depart> departs = Lists.newArrayList(depart);
+		departService.getSubDeparts(departs, depart);
+		model.addAttribute("departs", departs);
 	}
 
 	/**

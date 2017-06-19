@@ -431,7 +431,7 @@
 										data-options="{id:'subtype-page', faicon:'devicet-right'}">备件分类</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('STOCKINLIST','STOCKINCREATE','STOCKINMODIFY','STOCKINREMOVE')"><a
-										href="#" th:href="@{/stockin/tree/}"
+										href="#" th:href="@{/stockin/page/}"
 										data-options="{id:'stockin-page', faicon:'devicet-right'}">入库管理</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('STOCKOUTLIST','STOCKOUTCREATE','STOCKOUTMODIFY','STOCKOUTREMOVE')"><a
