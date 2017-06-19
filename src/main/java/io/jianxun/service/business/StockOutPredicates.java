@@ -3,6 +3,8 @@ package io.jianxun.service.business;
 import java.time.LocalDateTime;
 import java.time.Month;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.querydsl.core.types.Predicate;
 
 import io.jianxun.domain.business.Depart;
@@ -23,6 +25,13 @@ public class StockOutPredicates {
 	public static Predicate departPredicate(Depart depart) {
 		QStockOut stockOut = QStockOut.stockOut;
 		return stockOut.depart.eq(depart);
+	}
+	
+	public static Predicate departSubPredicate(Depart depart) {
+		QStockOut stockOut = QStockOut.stockOut;
+		if (StringUtils.isBlank(depart.getLevelCode()))
+			return null;
+		return stockOut.depart.levelCode.startsWith(depart.getLevelCode());
 	}
 
 	public static Predicate sparePartPredicate(Depart depart, SparePart sparePart) {

@@ -4,7 +4,7 @@
 		th:object="${stockOut}" data-toggle="validate" data-alertmsg="false">
 		<input type="hidden" name="id" th:value="${id}" /> <input
 			id="stockout_depart" type="hidden" name="depart.id"
-			th:value="${departId}" />
+			th:value="${depart.id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
@@ -16,7 +16,7 @@
 						<input th:if="${'create'.equals(action)}" type="text"
 						data-toggle="tags" data-tagname="sparePart" data-width="700"
 						data-url="device/sparepart/search/{#stockout_depart}" data-max="1"
-						size="40"> </input> <label th:if="${!'create'.equals(action)}"
+						size="40" /> <label th:if="${!'create'.equals(action)}"
 						class="control-label" th:text="${sparepartinfo}"></label></td>
 				</tr>
 				<tr>

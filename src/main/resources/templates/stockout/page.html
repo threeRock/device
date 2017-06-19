@@ -1,7 +1,6 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/stockout/page/{path}(path=${depart.id})}"
-		action="#" method="POST">
+		th:action="@{/stockout/{path}(path=${url})}" action="#" method="POST">
 		<input id="stockoutdepart" name="depart.id" type="hidden"
 			th:value="${depart.id}" value="10" /> <input type="hidden"
 			name="size" th:value="${size}" value="20" /> <input type="hidden"
@@ -9,7 +8,15 @@
 			name="orderField" th:value="${orderField}" /> <input type="hidden"
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>备件名称</label><input type="text" th:value="${sparePartname}" value="" name="sparePart.name" class="form-control" size="10" />&nbsp;
+			<label>机构</label><select data-toggle="selectpicker" data-width="110"
+				name="searchDepart">
+				<option value="">请选择机构</option>
+				<option th:each="item : ${departs}" th:value="${item.id}"
+					th:text="${item.name}"
+					th:selected="${item.id.toString() == searchDepart}">机构信息</option>
+			</select>&nbsp;<label>备件名称</label><input type="text"
+				th:value="${sparePartname}" value="" name="sparePart.name"
+				class="form-control" size="10" />&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
 	</form>
@@ -18,7 +25,7 @@
 		<button sec:authorize="hasAnyAuthority('STOCKOUTCREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="stockout-form-new"
-			data-url="stockout/create/{#stockoutdepart}">新增出库单</button>
+			th:attr="data-url=${createUrl}">新增出库单</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -47,7 +54,7 @@
 				<td><a sec:authorize="hasAnyAuthority('STOCKOUTMODIFY')"
 					th:href="@{/stockout/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
-					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
+					data-id="storehouse-modify-form" data-title="修改出库单">修改</a> <a
 					sec:authorize="hasAnyAuthority('STOCKOUTREMOVE')"
 					th:href="@{/stockout/remove/{id}(id=${e.id})}" href="#"
 					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
