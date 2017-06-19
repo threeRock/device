@@ -1,5 +1,7 @@
 package io.jianxun.web.business;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -75,7 +78,7 @@ public class StorehouseController {
 	@PreAuthorize("hasAuthority('STOREHOUSELIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
 			@QuerydslPredicate(root = Storehouse.class) Predicate predicate,
-			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
@@ -93,12 +96,44 @@ public class StorehouseController {
 
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page" + depart.getId());
+		addParentStorehouseInfo(model, depart);
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	@RequestMapping(value = { "/page" })
+	@PreAuthorize("hasAuthority('STOREHOUSELIST')")
+	String page(Model model, @QuerydslPredicate(root = Storehouse.class) Predicate predicate,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam(name = "searchDepart", required = false) Long searchDepart,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = StorehousePredicates.departSubPredicate(depart);
+		Page<Storehouse> page = null;
+		if (searchDepart != null) {
+			Depart search = departService.findActiveOne(searchDepart);
+			if (search != null)
+				searchPredicate = ExpressionUtils.and(StorehousePredicates.departSubPredicate(search), searchPredicate);
+		}
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(predicate, searchPredicate);
+		page = storehouseService.findActivePage(searchPredicate, pageable);
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page");
 		addParentStorehouseInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	private void addParentStorehouseInfo(Model model, Depart depart) {
 		model.addAttribute("depart", depart);
+		List<Depart> departs = Lists.newArrayList();
+		departService.getSubDeparts(departs, depart);
+		model.addAttribute("departs", departs);
 	}
 
 	/**
