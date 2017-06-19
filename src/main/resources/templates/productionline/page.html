@@ -1,22 +1,31 @@
 <div class="bjui-pageHeader">
 	<form id="pagerForm" data-toggle="ajaxsearch"
-		th:action="@{/device/productionline/page/{path}(path=${depart.id})}" action="#" method="POST">
-		<input id="productionlinedepart" type="hidden"  th:value="${depart.id}" value="10" />
-		<input type="hidden" name="size" th:value="${size}" value="20" /> <input
-			type="hidden" name="page" th:value="${page}" value="0" /><input
-			type="hidden" name="orderField" th:value="${orderField}" /> <input
-			type="hidden" name="orderDirection" th:value="${orderDirection}" />
+		th:action="@{/device/productionline/{path}(path=${url})}"
+		action="#" method="POST">
+		<input id="productionlinedepart" type="hidden" th:value="${depart.id}"
+			value="10" /> <input type="hidden" name="size" th:value="${size}"
+			value="20" /> <input type="hidden" name="page" th:value="${page}"
+			value="0" /><input type="hidden" name="orderField"
+			th:value="${orderField}" /> <input type="hidden"
+			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>产线名称</label><input type="text" th:value="${name}" value=""
-				name="name" class="form-control" size="10" />&nbsp;
+			<label>机构</label><select data-toggle="selectpicker" data-width="110"
+				name="searchDepart">
+				<option value="">请选择机构</option>
+				<option th:each="item : ${departs}" th:value="${item.id}"
+					th:text="${item.name}"
+					th:selected="${item.id.toString() == searchDepart}">机构信息</option>
+			</select>&nbsp;<label>产线名称</label><input type="text" th:value="${name}"
+				value="" name="name" class="form-control" size="10" />&nbsp;
 			<button type="submit" class="btn-default" data-icon="search">查询</button>
 		</div>
 	</form>
 	<hr style="margin: 5px 0" />
 	<div class="pull-left">
-		<button sec:authorize="hasAnyAuthority('PRODUCTIONLINECREATE')" type="button"
-			data-toggle="navtab" class="btn-red" data-id="productionline-form-new"
-			data-url="device/productionline/create/{#productionlinedepart}">新增生产线</button>
+		<button sec:authorize="hasAnyAuthority('PRODUCTIONLINECREATE')"
+			type="button" data-toggle="navtab" class="btn-red"
+			data-id="productionline-form-new"
+			th:attr="data-url=${createUrl}">新增生产线</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
@@ -33,12 +42,13 @@
 				<td th:text="${e.depart.name}">所属机构</td>
 				<td th:text="${e.name}">仓库名称</td>
 				<td><a sec:authorize="hasAnyAuthority('PRODUCTIONLINEMODIFY')"
-					th:href="@{/device/productionline/modify/{id}(id=${e.id})}" href="#"
-					class="btn btn-green" data-toggle="navtab"
+					th:href="@{/device/productionline/modify/{id}(id=${e.id})}"
+					href="#" class="btn btn-green" data-toggle="navtab"
 					data-id="productionline-modify-form" data-title="修改用户">修改</a> <a
 					sec:authorize="hasAnyAuthority('PRODUCTIONLINEREMOVE')"
-					th:href="@{/device/productionline/remove/{id}(id=${e.id})}" href="#"
-					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a></td>
+					th:href="@{/device/productionline/remove/{id}(id=${e.id})}"
+					href="#" class="btn btn-red" data-toggle="doajax"
+					data-confirm-msg="是否确定删除">删除</a></td>
 			</tr>
 		</tbody>
 	</table>

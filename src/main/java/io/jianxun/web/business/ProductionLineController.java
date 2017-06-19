@@ -1,5 +1,7 @@
 package io.jianxun.web.business;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 
@@ -69,12 +72,12 @@ public class ProductionLineController {
 	@PreAuthorize("hasAuthority('PRODUCTIONLINELIST')")
 	String page(@PathVariable("depart") Long departId, Model model,
 			@QuerydslPredicate(root = ProductionLine.class) Predicate predicate,
-			@PageableDefault(value = 20,sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		
+
 		if (!currentLoginInfo.validateCurrentUserDepart(depart))
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
 		Predicate searchPredicate = null;
@@ -87,12 +90,50 @@ public class ProductionLineController {
 		}
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page" + depart.getId());
+		model.addAttribute("createUrl", "device/productionline/create/" + depart.getId());
+		addParentProductionLineInfo(model, depart);
+		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 分页列表 支持 查询 分页 及 排序
+	 */
+	@RequestMapping(value = { "/page" })
+	@PreAuthorize("hasAuthority('PRODUCTIONLINELIST')")
+	String page(Model model, @QuerydslPredicate(root = ProductionLine.class) Predicate predicate,
+			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam(name = "searchDepart", required = false) Long searchDepart,
+			@RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		if (!currentLoginInfo.validateCurrentUserDepart(depart))
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notview"));
+		Predicate searchPredicate = ProductionLinePredicates.departSubPredicate(depart);
+		Page<ProductionLine> page = null;
+		if (searchDepart != null) {
+			Depart search = departService.findActiveOne(searchDepart);
+			if (search != null)
+				searchPredicate = ExpressionUtils.and(ProductionLinePredicates.departSubPredicate(search),
+						searchPredicate);
+		}
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(predicate, searchPredicate);
+		page = productionlineService.findActivePage(searchPredicate, pageable);
+		util.addPageInfo(model, parameters, page);
+		util.addSearchInfo(model, parameters);
+		model.addAttribute("url", "page");
+		model.addAttribute("createUrl", "device/productionline/create");
 		addParentProductionLineInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	private void addParentProductionLineInfo(Model model, Depart depart) {
 		model.addAttribute("depart", depart);
+		List<Depart> departs = Lists.newArrayList(depart);
+		departService.getSubDeparts(departs, depart);
+		model.addAttribute("departs", departs);
 	}
 
 	/**
@@ -109,6 +150,18 @@ public class ProductionLineController {
 	}
 
 	/**
+	 * 新增表单页面
+	 */
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('PRODUCTIONLINECREATE')")
+	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		model.addAttribute("productionLine", new ProductionLine());
+		addParentProductionLineInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
+		util.addCreateFormAction(model);
+		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
 	 * 新增保存
 	 * 
 	 * @param productionline
@@ -120,8 +173,8 @@ public class ProductionLineController {
 	@ResponseBody
 	ReturnDto createSave(@Valid ProductionLine productionline, @RequestParam MultiValueMap<String, String> parameters) {
 		productionlineService.save(productionline);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("productionline.save.successd"), true, "",
-				"productionline-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("productionline.save.successd"), true,
+				"productionline-page");
 	}
 
 	/**
@@ -136,7 +189,7 @@ public class ProductionLineController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		ProductionLine productionline = productionlineService.findActiveOne(id);
 		model.addAttribute("productionLine", productionline);
-		model.addAttribute("departId", productionline.getDepart() != null ? productionline.getDepart().getId() : null);
+		addParentProductionLineInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
@@ -152,10 +205,11 @@ public class ProductionLineController {
 	@PostMapping(value = "/modify")
 	@PreAuthorize("hasAuthority('PRODUCTIONLINEMODIFY')")
 	@ResponseBody
-	public ReturnDto modifySave(@Valid @ModelAttribute(name = "productionLine") ProductionLine productionline, Model model) {
+	public ReturnDto modifySave(@Valid @ModelAttribute(name = "productionLine") ProductionLine productionline,
+			Model model) {
 		productionlineService.save(productionline);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("productionline.save.successd"), true, "",
-				"productionline-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("productionline.save.successd"), true,
+				"productionline-page");
 	}
 
 	@PostMapping("remove/{id}")
@@ -175,11 +229,11 @@ public class ProductionLineController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart.id") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+			return localeMessageSourceService.getMessage("depart.notfound");
 		if (!this.productionlineService.validateNameUnique(name, depart, id))
 			return localeMessageSourceService.getMessage("productionline.name.isUsed", new Object[] { name });
 		return "";

@@ -1,15 +1,23 @@
 <div class="bjui-pageContent">
 	<form action="#" id="productionline_form"
-		th:action="@{/device/productionline/{path}(path=${action})}" method="POST"
-		th:object="${productionLine}" data-toggle="validate" data-alertmsg="false">
-		<input type="hidden" name="id" th:value="${id}" /> <input
-			type="hidden" name="depart.id" th:value="${departId}" />
+		th:action="@{/device/productionline/{path}(path=${action})}"
+		method="POST" th:object="${productionLine}" data-toggle="validate"
+		data-alertmsg="false">
+		<input type="hidden" name="id" th:value="${id}" />
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
 				<tr>
-					<td><label class="control-label x95">生产线名称：</label>  <input
+					<td><label class="control-label x95">所属机构：</label> <select
+						data-toggle="selectpicker" data-width="110" th:field="*{depart}">
+							<option value="">请选择机构</option>
+							<option th:each="item : ${departs}" th:value="${item.id}"
+								th:text="${item.name}">机构信息</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td><label class="control-label x95">生产线名称：</label> <input
 						type="text" th:field="*{name}" name="name"
-						data-rule="required;remote[device/productionline/check/nameunique, id, depart.id]"
+						data-rule="required;remote[device/productionline/check/nameunique, id, depart]"
 						size="15" /></td>
 				</tr>
 			</tbody>
