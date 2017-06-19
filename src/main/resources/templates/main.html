@@ -392,7 +392,7 @@
 									class="menu-items" data-tit="设备管理" data-faicon="cog">
 									<li
 										sec:authorize="hasAnyAuthority('DEVICELIST','DEVICECREATE','DEVICEMODIFY','DEVICEREMOVE','DEVICEDISCARD')"><a
-										href="#" th:href="@{/device/tree/}"
+										href="#" th:href="@{/device/page/}"
 										data-options="{id:'device-page', faicon:'devicet-right'}">设备基本信息</a></li>
 									<li
 										sec:authorize="hasAnyAuthority('DEVICETECHNICALPARAMLIST','DEVICETECHNICALPARAMCREATE','DEVICETECHNICALPARAMMODIFY','DEVICETECHNICALPARAMREMOVE')"><a

@@ -120,6 +120,7 @@ public class DeivceController {
 		util.addSearchInfo(model, parameters);
 		addParentDeviceInfo(model, depart);
 		addUrl(model, "page/" + departId);
+		model.addAttribute("createUrl", "device/create/" + depart.getId());
 		addLineAndTypeInfo(model, depart);
 		addCreateable(model);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
@@ -129,21 +130,26 @@ public class DeivceController {
 	@PreAuthorize("hasAuthority('DEVICELIST')")
 	String page(Model model, @QuerydslPredicate(root = Device.class) Predicate predicate,
 			@PageableDefault(value = 20, sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable,
+			@RequestParam(name = "searchDepart", required = false) Long searchDepart,
 			@RequestParam MultiValueMap<String, String> parameters) {
 		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
 		if (depart == null)
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
-		Predicate searchPredicate = DevicePredicates.statusPredicate(null);
+		Predicate searchPredicate = ExpressionUtils.and(DevicePredicates.statusPredicate(null),
+				DevicePredicates.departSubPredicate(depart));
 		Page<Device> page = null;
-		if (predicate != null) {
-			searchPredicate = ExpressionUtils.and(searchPredicate, predicate);
+		if (searchDepart != null) {
+			Depart search = departService.findActiveOne(searchDepart);
+			if (search != null)
+				searchPredicate = ExpressionUtils.and(DevicePredicates.departSubPredicate(search), searchPredicate);
 		}
-		if (!depart.isRoot())
-			searchPredicate = ExpressionUtils.and(searchPredicate, DevicePredicates.departSubPredicate(depart));
+		if (predicate != null)
+			searchPredicate = ExpressionUtils.and(predicate, searchPredicate);
 		page = deviceService.findActivePage(searchPredicate, pageable);
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		addUrl(model, "page/");
+		model.addAttribute("createUrl", "device/create");
 		addParentDeviceInfo(model, depart);
 		addLineAndTypeInfo(model, depart);
 		addCreateable(model);
@@ -160,6 +166,9 @@ public class DeivceController {
 
 	private void addParentDeviceInfo(Model model, Depart depart) {
 		model.addAttribute("depart", depart);
+		List<Depart> departs = Lists.newArrayList(depart);
+		departService.getSubDeparts(departs, depart);
+		model.addAttribute("departs", departs);
 	}
 
 	/**
@@ -174,6 +183,22 @@ public class DeivceController {
 			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
 		model.addAttribute("device", new Device());
 		model.addAttribute("departId", departId);
+		addLineAndTypeInfo(model, depart);
+		util.addCreateFormAction(model);
+		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
+	 * 新增表单页面
+	 */
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('DEVICECREATE')")
+	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		model.addAttribute("device", new Device());
+		addParentDeviceInfo(model, depart);
 		addLineAndTypeInfo(model, depart);
 		util.addCreateFormAction(model);
 		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
@@ -200,8 +225,7 @@ public class DeivceController {
 	@ResponseBody
 	ReturnDto createSave(@Valid Device device, @RequestParam MultiValueMap<String, String> parameters) {
 		deviceService.save(device);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.save.successd"), true, "",
-				"device-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.save.successd"), true, "device-page");
 	}
 
 	/**
@@ -216,7 +240,7 @@ public class DeivceController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		Device device = deviceService.findActiveOne(id);
 		model.addAttribute("device", device);
-		model.addAttribute("departId", device.getDepart() != null ? device.getDepart().getId() : null);
+		addParentDeviceInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
 		util.addModifyFormAction(model);
 		addLineAndTypeInfo(model, device.getDepart());
 		return templatePrefix() + "form";
@@ -237,8 +261,7 @@ public class DeivceController {
 		if (!deviceService.modifiable(device))
 			throw new BusinessException(localeMessageSourceService.getMessage("device.cannotmodify"));
 		deviceService.save(device);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("device.save.successd"), true, "",
-				"device-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("device.save.successd"), true, "device-page");
 	}
 
 	@PostMapping("remove/{id}")
@@ -267,7 +290,7 @@ public class DeivceController {
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+			return localeMessageSourceService.getMessage("depart.notfound");
 		if (!this.deviceService.validateNameUnique(name, depart, id))
 			return localeMessageSourceService.getMessage("device.name.isUsed", new Object[] { name });
 		return "";
@@ -279,7 +302,7 @@ public class DeivceController {
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+			return localeMessageSourceService.getMessage("depart.notfound");
 		if (!this.deviceService.validateCodeUnique(code, depart, id))
 			return localeMessageSourceService.getMessage("device.code.isUsed", new Object[] { code });
 		return "";

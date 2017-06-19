@@ -15,10 +15,17 @@
 	<form action="#" id="device_form"
 		th:action="@{/device/{path}(path=${action})}" method="POST"
 		th:object="${device}" data-toggle="validate" data-alertmsg="false">
-		<input type="hidden" name="id" th:value="${id}" /> <input
-			type="hidden" name="depart.id" th:value="${departId}" />
+		<input type="hidden" name="id" th:value="${id}" /> 
 		<table class="table table-condensed table-hover" width="100%">
 			<tbody>
+				<tr>
+					<td><label class="control-label x95">所属机构：</label> <select
+						data-toggle="selectpicker" data-width="110" th:field="*{depart}">
+							<option value="">请选择机构</option>
+							<option th:each="item : ${departs}" th:value="${item.id}"
+								th:text="${item.name}">机构信息</option>
+					</select></td>
+				</tr>
 				<tr>
 					<td colspan="2"><label class="control-label x105">生产线：</label>
 						<select id="device_form_productionLine" data-toggle="selectpicker"
@@ -46,15 +53,14 @@
 				</tr>
 				<tr>
 					<td><label class="control-label x105">设备名称：</label> <input
-						type="text" th:field="*{name}" name="name"
-						data-rule="required;" size="15" /></td>
+						type="text" th:field="*{name}" name="name" data-rule="required;"
+						size="15" /></td>
 					<td><label class="control-label x105">规格型号：</label> <input
 						type="text" th:field="*{typeInfo}" name="typeInfo" size="15" /></td>
 				</tr>
 				<tr>
 					<td><label class="control-label x105">设备编号：</label> <input
-						type="text" th:field="*{code}" name="code"
-						data-rule="required;"
+						type="text" th:field="*{code}" name="code" data-rule="required;"
 						size="15" /></td>
 					<td><label class="control-label x105">设备类别：</label> <select
 						id="device_form_productionLine" data-toggle="selectpicker"

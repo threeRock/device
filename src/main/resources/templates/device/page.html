@@ -8,8 +8,14 @@
 			name="orderField" th:value="${orderField}" /> <input type="hidden"
 			name="orderDirection" th:value="${orderDirection}" />
 		<div class="bjui-searchBar">
-			<label>设备名称</label><input type="text" th:value="${name}" value=""
-				name="name" class="form-control" size="8" />&nbsp;<label>设备编码</label><input
+			<label>机构</label><select data-toggle="selectpicker" data-width="110"
+				name="searchDepart">
+				<option value="">请选择机构</option>
+				<option th:each="item : ${departs}" th:value="${item.id}"
+					th:text="${item.name}"
+					th:selected="${item.id.toString() == searchDepart}">机构信息</option>
+			</select>&nbsp;<label>设备名称</label><input type="text" th:value="${name}"
+				value="" name="name" class="form-control" size="8" />&nbsp;<label>设备编码</label><input
 				type="text" th:value="${code}" value="" name="code"
 				class="form-control" size="8" />&nbsp;<label>产线: </label><select
 				data-toggle="selectpicker" data-width="110" name="productionLine">
@@ -33,7 +39,7 @@
 		<button th:if="${createable}"
 			sec:authorize="hasAnyAuthority('DEVICECREATE')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-form-new"
-			data-url="device/create/{#devicedepart}">新增设备</button>
+			th:attr="data-url=${createUrl}">新增设备</button>
 		<button sec:authorize="hasAnyAuthority('DEVICELIST')" type="button"
 			data-toggle="navtab" class="btn-red" data-id="device-detail"
 			data-url="device/detail/{#bjui-selected}">详细信息</button>
@@ -88,7 +94,7 @@
 					sec:authorize="hasAnyAuthority('DEVICEMODIFY')"
 					th:href="@{/device/modify/{id}(id=${e.id})}" href="#"
 					class="btn btn-green" data-toggle="navtab"
-					data-id="storehouse-modify-form" data-title="修改用户">修改</a> <a
+					data-id="storehouse-modify-form" data-title="修改设备">修改</a> <a
 					sec:authorize="hasAnyAuthority('DEVICEREMOVE')"
 					th:href="@{/device/remove/{id}(id=${e.id})}" href="#"
 					class="btn btn-red" data-toggle="doajax" data-confirm-msg="是否确定删除">删除</a>
