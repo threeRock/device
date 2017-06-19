@@ -148,6 +148,22 @@ public class StockInController {
 	}
 
 	/**
+	 * 新增表单页面
+	 */
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('STOCKINCREATE')")
+	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		Depart depart = this.currentLoginInfo.currentLoginUser().getDepart();
+		if (depart == null)
+			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+		model.addAttribute("stockIn", new StockIn());
+		addDepartInfo(model, depart);
+		model.addAttribute("departmentName", depart.getName());
+		util.addCreateFormAction(model);
+		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
 	 * 新增保存
 	 * 
 	 * @param sparePart
@@ -159,7 +175,7 @@ public class StockInController {
 	@ResponseBody
 	ReturnDto createSave(@Valid StockIn stockIn, @RequestParam MultiValueMap<String, String> parameters) {
 		this.stockInService.save(stockIn);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("stockIn.save.successd"), true, "",
+		return ReturnDto.ok(localeMessageSourceService.getMessage("stockin.save.successd"), true, "",
 				"stockIn-page-layout");
 	}
 
@@ -175,7 +191,7 @@ public class StockInController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		StockIn stockin = this.stockInService.findActiveOne(id);
 		model.addAttribute("stockIn", stockin);
-		model.addAttribute("departId", stockin.getDepart() != null ? stockin.getDepart().getId() : null);
+		addDepartInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
 		model.addAttribute("departmentName", stockin.getDepart() != null ? stockin.getDepart().getName() : null);
 		model.addAttribute("sparepartinfo", stockin.getSparepart().toString());
 		util.addModifyFormAction(model);
