@@ -97,6 +97,7 @@ public class StorehouseController {
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		model.addAttribute("url", "page" + depart.getId());
+		model.addAttribute("createUrl", "device/storehouse/create/" + depart.getId());
 		addParentStorehouseInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
@@ -125,13 +126,14 @@ public class StorehouseController {
 		util.addPageInfo(model, parameters, page);
 		util.addSearchInfo(model, parameters);
 		model.addAttribute("url", "page");
+		model.addAttribute("createUrl", "device/storehouse/create");
 		addParentStorehouseInfo(model, depart);
 		return templatePrefix() + Utils.PAGE_TEMPLATE_SUFFIX;
 	}
 
 	private void addParentStorehouseInfo(Model model, Depart depart) {
 		model.addAttribute("depart", depart);
-		List<Depart> departs = Lists.newArrayList();
+		List<Depart> departs = Lists.newArrayList(depart);
 		departService.getSubDeparts(departs, depart);
 		model.addAttribute("departs", departs);
 	}
@@ -150,6 +152,18 @@ public class StorehouseController {
 	}
 
 	/**
+	 * 新增表单页面
+	 */
+	@GetMapping("create")
+	@PreAuthorize("hasAuthority('STOREHOUSECREATE')")
+	String createForm(Model model, @RequestParam MultiValueMap<String, String> parameters) {
+		model.addAttribute("storehouse", new Storehouse());
+		util.addCreateFormAction(model);
+		addParentStorehouseInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
+		return templatePrefix() + Utils.SAVE_TEMPLATE_SUFFIX;
+	}
+
+	/**
 	 * 新增保存
 	 * 
 	 * @param storehouse
@@ -161,8 +175,7 @@ public class StorehouseController {
 	@ResponseBody
 	ReturnDto createSave(@Valid Storehouse storehouse, @RequestParam MultiValueMap<String, String> parameters) {
 		storehouseService.save(storehouse);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "",
-				"storehouse-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "storehouse-page");
 	}
 
 	/**
@@ -177,11 +190,12 @@ public class StorehouseController {
 	public String modify(@PathVariable("id") Long id, Model model) {
 		Storehouse storehouse = storehouseService.findActiveOne(id);
 		model.addAttribute("storehouse", storehouse);
-		model.addAttribute("departId", storehouse.getDepart() != null ? storehouse.getDepart().getId() : null);
+		addParentStorehouseInfo(model, this.currentLoginInfo.currentLoginUser().getDepart());
 		util.addModifyFormAction(model);
 		return templatePrefix() + "form";
 
 	}
+	
 
 	/**
 	 * 修改角色保存
@@ -195,8 +209,7 @@ public class StorehouseController {
 	@ResponseBody
 	public ReturnDto modifySave(@Valid @ModelAttribute(name = "storehouse") Storehouse storehouse, Model model) {
 		storehouseService.save(storehouse);
-		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "",
-				"storehouse-page-layout");
+		return ReturnDto.ok(localeMessageSourceService.getMessage("storehouse.save.successd"), true, "storehouse-page");
 	}
 
 	@PostMapping("remove/{id}")
@@ -216,11 +229,11 @@ public class StorehouseController {
 	 */
 	@RequestMapping("check/nameunique")
 	@ResponseBody
-	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart.id") Long departId,
+	public String checkNameIsUnique(@RequestParam("name") String name, @RequestParam("depart") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+			return localeMessageSourceService.getMessage("depart.notfound");
 		if (!this.storehouseService.validateNameUnique(name, depart, id))
 			return localeMessageSourceService.getMessage("storehouse.name.isUsed", new Object[] { name });
 		return "";
@@ -228,11 +241,11 @@ public class StorehouseController {
 
 	@RequestMapping("check/codeunique")
 	@ResponseBody
-	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart.id") Long departId,
+	public String checkCodeIsUnique(@RequestParam("code") String code, @RequestParam("depart") Long departId,
 			@RequestParam("id") Long id) {
 		Depart depart = this.departService.findActiveOne(departId);
 		if (depart == null)
-			throw new BusinessException(localeMessageSourceService.getMessage("depart.notfound"));
+			return localeMessageSourceService.getMessage("depart.notfound");
 		if (!this.storehouseService.validateCodeUnique(code, depart, id))
 			return localeMessageSourceService.getMessage("storehouse.code.isUsed", new Object[] { code });
 		return "";

@@ -26,7 +26,7 @@
 		<button sec:authorize="hasAnyAuthority('STOREHOUSECREATE')"
 			type="button" data-toggle="navtab" class="btn-red"
 			data-id="storehouse-form-new"
-			data-url="device/storehouse/create/{#storehousedepart}">新增仓库</button>
+			th:attr="data-url=${createUrl}">新增仓库</button>
 	</div>
 </div>
 <div class="bjui-pageContent tableContent">
